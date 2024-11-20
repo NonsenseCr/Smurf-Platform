@@ -1,0 +1,68 @@
+/* components/buttons.css */
+.btn-More a {
+    padding: 10px 20px;
+    font-size: var(--h3-font-size);
+    word-spacing: 1px;
+    color: var(--title-color);
+}
+
+.btn-More {
+    margin: 10px;
+}
+
+.btn-More:hover a {
+    color: var(--first-color);
+}
+
+.btn-pre {
+    position: absolute;
+    align-items: center;
+    background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+    border: 0;
+    border-radius: 5px;
+    box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    display: flex;
+    font-family: Phantomsans, sans-serif;
+    font-size: 20px;
+    justify-content: center;
+    line-height: 1em;
+    max-width: 100%;
+    min-width: 140px;
+    padding: .8rem 1rem;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    cursor: pointer;
+    bottom: 2.5rem;
+    right: 2.5rem;
+}
+
+.btn-pre i {
+    margin-right: .5rem;
+    color: #EBB818;
+}
+
+.btn-pre:hover {
+    color: #fff;
+}
+
+.btn-infor {
+    background-color: var(--containers-color-alt);
+    text-align: center;
+    width: 40%;
+    font-size: var(--body-font);
+    border-radius: 5px;
+    justify-content: center;
+    font-weight: var(--font-medium);
+    margin: auto;
+    padding: .7rem 1.25rem;
+    cursor: pointer;
+}
+
+.btn-infor a {
+    color: var(--title-color);
+}
