@@ -12,7 +12,6 @@ router.post('/create-post', async(req, res) => {
         if (!tacGia) {
             return res.status(404).send({ message: "Tác giả không tìm thấy" });
         }
-
         // Nếu tác giả tồn tại, tạo bộ truyện mới với dữ liệu nhận được
         const newPost = new BoTruyen({
             ...boTruyenData,
@@ -69,10 +68,10 @@ router.get('/', async (req, res) => {
 router.get('/active', async (req, res) => {
     try {
         const activeBoTruyen = await BoTruyen.find({ active: true })
-            .populate('id_tg', 'ten')  // Populate tác giả's name
+            .populate('id_tg', 'ten')  
             .sort({ createdAt: -1 });
 
-        console.log('Active BoTruyen:', activeBoTruyen); // Log dữ liệu trả về
+        console.log('Active BoTruyen:', activeBoTruyen); 
         res.status(200).send(activeBoTruyen);
     } catch (error) {
         console.error('Error fetching active Bo Truyen:', error);
@@ -85,20 +84,45 @@ router.get('/active', async (req, res) => {
 // Lấy chi tiết một bộ truyện (route công khai)
 router.get('/:id', async (req, res) => {
     try {
-        const id = req.params.id;
-
-        const boTruyen = await BoTruyen.findById(id).populate('id_tg', 'ten email');
-
-        if (!boTruyen) {
-            return res.status(404).send({ message: 'Bo Truyen not found' });
-        }
-
-        res.status(200).send(boTruyen);
+        const { id } = req.params;
+        const boTruyen = await BoTruyen.findById(id)
+            .populate('id_tg', 'ten email') 
+            .populate('listloai', 'ten')   
+            .populate('chapters');    
+        if (!boTruyen) return res.status(404).json({ message: 'Không tìm thấy bộ truyện' });
+        res.status(200).json(boTruyen);
     } catch (error) {
-        console.error('Error fetching Bo Truyen:', error);
-        res.status(500).send({ message: 'Failed to fetch Bo Truyen' });
+        console.error('Error fetching Bo Truyen by ID:', error);
+        res.status(500).json({ message: 'Lỗi khi lấy thông tin bộ truyện' });
     }
 });
+
+//Tìm kiếm bộ truyện theo tên
+router.get('/search', async (req, res) => {
+    const { query } = req.query;
+    try {
+        const boTruyen = await BoTruyen.find({
+            tenbo: { $regex: query, $options: 'i' },
+        });
+        res.status(200).json(boTruyen);
+    } catch (error) {
+        console.error('Error searching Bo Truyen:', error);
+        res.status(500).json({ message: 'Lỗi khi tìm kiếm bộ truyện' });
+    }
+});
+
+//Lọc bộ truyện theo trạng thái
+router.get('/filter', async (req, res) => {
+    const { trangthai } = req.query;
+    try {
+        const boTruyen = await BoTruyen.find({ trangthai });
+        res.status(200).json(boTruyen);
+    } catch (error) {
+        console.error('Error filtering Bo Truyen:', error);
+        res.status(500).json({ message: 'Lỗi khi lọc bộ truyện' });
+    }
+});
+
 
 // Cập nhật một bộ truyện 
 // router.patch('/update-post/:id', verifyToken, isAdmin, async (req, res) => {

@@ -82,11 +82,37 @@ function Header() {
               <Dropdown.Menu>
                 <div className="row">
                   <div className="col-3">
-                    <Dropdown.Item as={Link} to="/category/all">Tất cả</Dropdown.Item>
+                    <Dropdown.Item className='item-main' as={Link} to="/category/all">Tất cả</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Xuyên không</Dropdown.Item>
                     <Dropdown.Item as={Link} to="/category/adventure">Adventure</Dropdown.Item>
-                    {/* Add other categories similarly */}
+                    <Dropdown.Item as={Link} to="/category/adventure">One short</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Sports</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Truyện màu</Dropdown.Item>
                   </div>
-                  {/* Repeat for other columns as needed */}
+                  <div className="col-3">
+                    <Dropdown.Item className='item-main' as={Link} to="/category/all">Theo Cảm xúc</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Nhẹ nhàng</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Kinh dị</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Lãng mạng</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Action</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Comedy</Dropdown.Item>
+                  </div>
+                  <div className="col-3">
+                    <Dropdown.Item className='item-main' as={Link} to="/category/all">Theo Khu Vực</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Manwa</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Manhua</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Manga</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Comic</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Webtoon</Dropdown.Item>
+                  </div>
+                  <div className="col-3">
+                    <Dropdown.Item className='item-main' as={Link} to="/category/all">Theo đội tuổi</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Mọi độ tuổi</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Trẻ em</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Thiếu Niên</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Bạo lực</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/category/adventure">Trưởng thành</Dropdown.Item>
+                  </div>
                 </div>
               </Dropdown.Menu>
             </Dropdown>

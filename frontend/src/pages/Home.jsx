@@ -1,43 +1,58 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import CarouselComponent from '../components/Home/CarouselComics'; // Component cho carousel
-import ComicList from '../components/Home/ComicsList'; // Component cho danh sách các bộ truyện
-import RandomComic from '../components/Home/RandomComics'; // Component cho phần "Đọc Ngẫu Nhiên"
+import { fetchActiveBoTruyen } from '../services/BoTruyenServices'; // Import service API
+import CarouselComponent from '../components/Home/CarouselComics'; // Component carousel
+import ComicList from '../components/Home/ComicsList'; // Component danh sách bộ truyện
 
 const Home = () => {
-  const [comics, setComics] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+    const [comics, setComics] = useState([]); // State lưu danh sách bộ truyện
+    const [loading, setLoading] = useState(true); // State loading
+    const [error, setError] = useState(''); // State lỗi
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get('/api/botruyen/active');
-        const data = Array.isArray(response.data) ? response.data : [];
-        setComics(data);
-        setLoading(false);
-        console.log(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Unable to fetch data');
-        setLoading(false);
-      }
+    // Hàm lấy danh sách bộ truyện hoạt động
+    const fetchComics = async () => {
+        try {
+            const data = await fetchActiveBoTruyen(); // Gọi API qua service
+            setComics(data); // Lưu dữ liệu vào state
+            setLoading(false); // Kết thúc trạng thái loading
+        } catch (err) {
+            console.error('Error:', err);
+            setError(err.message); // Lưu lỗi
+            setLoading(false); // Kết thúc trạng thái loading
+        }
+    };
+
+    // useEffect chạy khi component render lần đầu
+    useEffect(() => {
+        fetchComics(); // Gọi hàm fetchComics
+    }, []);
+
+    // Hiển thị trạng thái loading
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <p>Đang tải dữ liệu...</p>
+            </div>
+        );
     }
 
+    // Hiển thị lỗi nếu có
+    if (error) {
+        return (
+            <div className="error-container">
+                <p>{error}</p>
+            </div>
+        );
+    }
 
-    fetchData();
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  return (
-    <div>
-      <CarouselComponent comics={comics.slice(0, 10)} />
-      <ComicList comics={comics} title="Mới Cập Nhật" />
-      <RandomComic handleRandomSelect={() => console.log('Random comic')} />
-    </div>
-  );
+    return (
+        <div className="home-container">
+            {/* Carousel Component nhận 10 bộ truyện đầu tiên */}
+            <CarouselComponent comics={comics.slice(0, 10)} />
+            
+            {/* Comic List Component nhận toàn bộ danh sách bộ truyện */}
+            <ComicList comics={comics} title="Mới Cập Nhật" />
+        </div>
+    );
 };
 
 export default Home;
