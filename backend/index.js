@@ -17,8 +17,13 @@ app.use(cors())
 const boTruyenRoutes = require("./src/routes/botruyen.route")
 app.use("/api/botruyen", boTruyenRoutes);
 
+const loaiTruyenRoutes = require("./src/routes/loaitruyen.route")
+app.use("/api/loaitruyen", loaiTruyenRoutes);
+
 const tacGiaRoutes = require("./src/routes/tacgia.route")
 app.use("/api/tacgia", tacGiaRoutes);
+
+
 
 console.log(process.env)
 

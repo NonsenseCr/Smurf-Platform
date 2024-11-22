@@ -1,6 +1,7 @@
 const express = require('express');
 const BoTruyen = require('../model/botruyen.model');
 const TacGia = require('../model/tacgia.model'); 
+const LoaiTruyen = require('../model/loaitruyen.model');
 const router = express.Router();
 
 router.post('/create-post', async(req, res) => {
@@ -27,6 +28,86 @@ router.post('/create-post', async(req, res) => {
         res.status(500).send({ message: "Lỗi khi tạo bộ truyện" });
     }
 });
+
+// Thêm loại truyện vào bộ truyện 
+router.post('/:id/add-loai', async (req, res) => {
+    const { id } = req.params; 
+    const { loaiTruyenId } = req.body; 
+
+    try {
+        // Cập nhật danh sách loại trong BoTruyen
+        const boTruyen = await BoTruyen.findByIdAndUpdate(
+            id,
+            { $addToSet: { listloai: loaiTruyenId } }, 
+            { new: true }
+        );
+
+        if (!boTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy bộ truyện' });
+        }
+
+        // Cập nhật danh sách bộ truyện trong LoaiTruyen
+        const loaiTruyen = await LoaiTruyen.findByIdAndUpdate(
+            loaiTruyenId,
+            { $addToSet: { listTruyen: id } }, // Tránh thêm trùng lặp
+            { new: true }
+        );
+
+        if (!loaiTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy loại truyện' });
+        }
+
+        res.status(200).json({
+            message: 'Thêm loại truyện vào bộ truyện thành công',
+            boTruyen,
+            loaiTruyen,
+        });
+    } catch (error) {
+        console.error('Error adding LoaiTruyen to BoTruyen:', error);
+        res.status(500).json({ message: 'Lỗi khi thêm loại truyện vào bộ truyện' });
+    }
+});
+
+router.post('/:id/remove-loai', async (req, res) => {
+    const { id } = req.params;
+    const { loaiTruyenId } = req.body; 
+
+    try {
+        // Xóa loại khỏi bộ truyện
+        const boTruyen = await BoTruyen.findByIdAndUpdate(
+            id,
+            { $pull: { listloai: loaiTruyenId } },
+            { new: true }
+        );
+
+        if (!boTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy bộ truyện' });
+        }
+
+        // Xóa bộ truyện khỏi loại
+        const loaiTruyen = await LoaiTruyen.findByIdAndUpdate(
+            loaiTruyenId,
+            { $pull: { listTruyen: id } },
+            { new: true }
+        );
+
+        if (!loaiTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy loại truyện' });
+        }
+
+        res.status(200).json({
+            message: 'Xóa loại truyện khỏi bộ truyện thành công',
+            boTruyen,
+            loaiTruyen,
+        });
+    } catch (error) {
+        console.error('Error removing LoaiTruyen from BoTruyen:', error);
+        res.status(500).json({ message: 'Lỗi khi xóa loại truyện khỏi bộ truyện' });
+    }
+});
+
+
+
 
 // Lấy tất cả bộ truyện
 router.get('/', async (req, res) => {
@@ -63,6 +144,9 @@ router.get('/', async (req, res) => {
         res.status(500).send({ message: 'Failed to fetch Bo Truyen' });
     }
 });
+
+
+
 
 // lấy tất cả bộ truyện còn active 
 router.get('/active', async (req, res) => {

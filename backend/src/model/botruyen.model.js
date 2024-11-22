@@ -24,7 +24,7 @@ const BoTruyenSchema = new mongoose.Schema({
         default: 'hoat_dong' 
     },                                              // Trạng thái bộ truyện
     active: { type: Boolean, default: true },       // Trạng thái hoạt động
-    // listloai: [{ type: String }],                   // Danh sách thể loại
+    listloai: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LoaiTruyen' }],                  // Danh sách thể loại
     features: [FeatureSchema],                      
 }, { timestamps: true });
 
