@@ -325,7 +325,7 @@ img {
 
 
 .sections {
-    padding-block: 9rem 1rem;
+    padding-block: 7.5rem 1rem;
 }
 
 .section__title {
@@ -1049,6 +1049,8 @@ img {
     position: absolute;
     top: 10px;
     right: 20px;
+    width: 50px;
+    height: 20px;
 }
 
 .item-vip-banner {
@@ -1199,13 +1201,13 @@ img {
 
 .recommend__type .col {
     position: relative;
-    height: 175px;
+    height: 225px;
     padding: .5rem;
 }
 
 .recommend__type .col .col-item {
     position: relative;
-    height: 175px;
+    /* height: 300px; */
     width: 100%;
     height: 100%;
     background-size: cover;
@@ -1371,7 +1373,7 @@ img {
 }
 
 
-.update-item img {
+.update-item .poster {
     width: 210px !important;
     height: 290px !important;
     max-width: 190px;

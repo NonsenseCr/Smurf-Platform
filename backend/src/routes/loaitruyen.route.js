@@ -1,0 +1,175 @@
+const express = require('express');
+const LoaiTruyen = require('../model/loaitruyen.model'); // Import model LoaiTruyen
+const BoTruyen = require('../model/botruyen.model'); // Import model BoTruyen
+const router = express.Router();
+
+// Tạo mới một thể loại truyện
+router.post('/create', async (req, res) => {
+    const { ten_loai, active } = req.body;
+
+    try {
+        // Kiểm tra nếu thể loại đã tồn tại
+        const existingLoaiTruyen = await LoaiTruyen.findOne({ ten_loai: ten_loai.trim() });
+        if (existingLoaiTruyen) {
+            return res.status(400).json({ message: 'Thể loại đã tồn tại' });
+        }
+
+        // Tạo thể loại mới
+        const loaiTruyen = new LoaiTruyen({ ten_loai, active });
+        await loaiTruyen.save();
+        res.status(201).json({ message: 'Tạo thể loại thành công', loaiTruyen });
+    } catch (error) {
+        console.error('Error creating Loai Truyen:', error);
+        res.status(500).json({ message: 'Lỗi khi tạo thể loại' });
+    }
+});
+
+// Lấy tất cả các thể loại truyện
+router.get('/', async (req, res) => {
+    try {
+        const loaiTruyen = await LoaiTruyen.find({ active: true }); // Chỉ lấy thể loại đang hoạt động
+        res.status(200).json(loaiTruyen);
+    } catch (error) {
+        console.error('Error fetching Loai Truyen:', error);
+        res.status(500).json({ message: 'Lỗi khi lấy danh sách thể loại' });
+    }
+});
+
+// Thêm bộ truyện vào loại truyện và đồng bộ bộ truyện
+router.post('/:id/add-bo-truyen', async (req, res) => {
+    const { id } = req.params; // ID của LoaiTruyen
+    const { boTruyenId } = req.body; // ID của BoTruyen
+
+    try {
+        // Cập nhật danh sách bộ trong LoaiTruyen
+        const loaiTruyen = await LoaiTruyen.findByIdAndUpdate(
+            id,
+            { $addToSet: { listTruyen: boTruyenId } }, // Tránh thêm trùng lặp
+            { new: true }
+        );
+
+        if (!loaiTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy loại truyện' });
+        }
+
+        // Cập nhật danh sách loại trong BoTruyen
+        const boTruyen = await BoTruyen.findByIdAndUpdate(
+            boTruyenId,
+            { $addToSet: { listloai: id } }, // Tránh thêm trùng lặp
+            { new: true }
+        );
+
+        if (!boTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy bộ truyện' });
+        }
+
+        res.status(200).json({
+            message: 'Thêm bộ truyện vào loại truyện thành công',
+            loaiTruyen,
+            boTruyen,
+        });
+    } catch (error) {
+        console.error('Error adding BoTruyen to LoaiTruyen:', error);
+        res.status(500).json({ message: 'Lỗi khi thêm bộ truyện vào loại truyện' });
+    }
+});
+
+
+router.post('/:id/remove-bo-truyen', async (req, res) => {
+    const { id } = req.params;
+    const { boTruyenId } = req.body; 
+
+    try {
+        // Xóa bộ truyện khỏi loại
+        const loaiTruyen = await LoaiTruyen.findByIdAndUpdate(
+            id,
+            { $pull: { listTruyen: boTruyenId } },
+            { new: true }
+        );
+
+        if (!loaiTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy loại truyện' });
+        }
+
+        // Xóa loại khỏi bộ truyện
+        const boTruyen = await BoTruyen.findByIdAndUpdate(
+            boTruyenId,
+            { $pull: { listloai: id } },
+            { new: true }
+        );
+
+        if (!boTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy bộ truyện' });
+        }
+
+        res.status(200).json({
+            message: 'Xóa bộ truyện khỏi loại truyện thành công',
+            loaiTruyen,
+            boTruyen,
+        });
+    } catch (error) {
+        console.error('Error removing BoTruyen from LoaiTruyen:', error);
+        res.status(500).json({ message: 'Lỗi khi xóa bộ truyện khỏi loại truyện' });
+    }
+});
+
+
+
+// Lấy tất cả bộ truyện theo thể loại
+router.get('/:id/truyen', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const boTruyen = await BoTruyen.find({ listloai: id, active: true }) // Lọc bộ truyện theo thể loại và trạng thái
+            .populate('id_tg', 'ten') // Lấy thông tin tác giả
+            .sort({ createdAt: -1 }); // Sắp xếp theo thời gian tạo mới nhất
+
+        res.status(200).json(boTruyen);
+    } catch (error) {
+        console.error('Error fetching Bo Truyen by Loai:', error);
+        res.status(500).json({ message: 'Lỗi khi lấy danh sách bộ truyện theo thể loại' });
+    }
+});
+
+// Cập nhật thông tin thể loại
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { ten_loai, active } = req.body;
+
+    try {
+        const loaiTruyen = await LoaiTruyen.findByIdAndUpdate(
+            id,
+            { ten_loai, active },
+            { new: true }
+        );
+
+        if (!loaiTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy thể loại' });
+        }
+
+        res.status(200).json({ message: 'Cập nhật thể loại thành công', loaiTruyen });
+    } catch (error) {
+        console.error('Error updating Loai Truyen:', error);
+        res.status(500).json({ message: 'Lỗi khi cập nhật thể loại' });
+    }
+});
+
+// Xóa thể loại
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const loaiTruyen = await LoaiTruyen.findByIdAndDelete(id);
+
+        if (!loaiTruyen) {
+            return res.status(404).json({ message: 'Không tìm thấy thể loại' });
+        }
+
+        res.status(200).json({ message: 'Xóa thể loại thành công' });
+    } catch (error) {
+        console.error('Error deleting Loai Truyen:', error);
+        res.status(500).json({ message: 'Lỗi khi xóa thể loại' });
+    }
+});
+
+module.exports = router;

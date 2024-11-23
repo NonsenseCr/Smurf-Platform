@@ -2,7 +2,7 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import iconPremium from '../../assets/PreDark.png';
-import imgBanner from '../../assets/truyen/banner9.jpg';
+// import imgBanner from '../../assets/truyen/banner15.jpg';
 
 const CarouselComponent = ({ comics = [] }) => {
     const settings = {
@@ -39,10 +39,10 @@ const CarouselComponent = ({ comics = [] }) => {
                                                 style={{ height: '500px', objectFit: 'cover' }}
                                             />
                                         )} */}
-                                        {imgBanner && (
+                                        {comic.imgBanner && (
                                             <img
                                                 loading="lazy"
-                                                src={imgBanner}
+                                                src={`http://localhost:5000${comic.imgBanner}`}
                                                 className="d-block w-100 rounded-1"
                                                 alt="Banner"
                                                 style={{ height: '700px', objectFit: 'cover' }}

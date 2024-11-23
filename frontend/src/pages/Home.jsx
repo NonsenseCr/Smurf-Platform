@@ -1,56 +1,60 @@
 import { useState, useEffect } from 'react';
-import { fetchActiveBoTruyen } from '../services/BoTruyenServices'; // Import service API
-import CarouselComponent from '../components/Home/CarouselComics'; // Component carousel
-import ComicList from '../components/Home/ComicsList'; // Component danh sách bộ truyện
-
+import { fetchActiveBoTruyen, fetchTopReadBoTruyen, fetchBoTruyenLatest} from '../services/BoTruyenServices';
+import { fetchActiveLoaiTruyen } from '../services/LoaiTruyenService';
+import CarouselComponent from '../components/Home/CarouselComics';
+import ComicList from '../components/Home/ComicsList';
+import CategoryList from '../components/Home/CategoryList';
+import TopRankingBanner from '../components/Home/TopRankingBanner';
+import RecommendType from '../components/Home/RecommendTypeList';
+import ShowListComics from '../components/Home/ShowListComics';
 const Home = () => {
-    const [comics, setComics] = useState([]); // State lưu danh sách bộ truyện
-    const [loading, setLoading] = useState(true); // State loading
-    const [error, setError] = useState(''); // State lỗi
+    const [comics, setComics] = useState([]);
+    const [comicsLatest, setlatestComics] = useState([]);
+    const [topReadComics, setTopReadComics] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-    // Hàm lấy danh sách bộ truyện hoạt động
-    const fetchComics = async () => {
-        try {
-            const data = await fetchActiveBoTruyen(); // Gọi API qua service
-            setComics(data); // Lưu dữ liệu vào state
-            setLoading(false); // Kết thúc trạng thái loading
-        } catch (err) {
-            console.error('Error:', err);
-            setError(err.message); // Lưu lỗi
-            setLoading(false); // Kết thúc trạng thái loading
-        }
-    };
-
-    // useEffect chạy khi component render lần đầu
     useEffect(() => {
-        fetchComics(); // Gọi hàm fetchComics
+        const fetchData = async () => {
+            try {
+                const [activeData, topReadData, categoryData, LatestData] = await Promise.all([
+                    fetchActiveBoTruyen(),
+                    fetchTopReadBoTruyen(),
+                    fetchActiveLoaiTruyen(),
+                    fetchBoTruyenLatest(),
+                ]);
+                setComics(activeData);
+                setTopReadComics(topReadData);
+                setCategories(categoryData);
+                setlatestComics(LatestData);
+                setLoading(false);
+
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, []);
 
-    // Hiển thị trạng thái loading
     if (loading) {
-        return (
-            <div className="loading-container">
-                <p>Đang tải dữ liệu...</p>
-            </div>
-        );
+        return <div className="loading-container">Đang tải dữ liệu...</div>;
     }
 
-    // Hiển thị lỗi nếu có
     if (error) {
-        return (
-            <div className="error-container">
-                <p>{error}</p>
-            </div>
-        );
+        return <div className="error-container">Lỗi: {error}</div>;
     }
 
     return (
         <div className="home-container">
-            {/* Carousel Component nhận 10 bộ truyện đầu tiên */}
             <CarouselComponent comics={comics.slice(0, 10)} />
-            
-            {/* Comic List Component nhận toàn bộ danh sách bộ truyện */}
             <ComicList comics={comics} title="Mới Cập Nhật" />
+            <RecommendType/>
+            <CategoryList categories={categories} />
+            <ShowListComics comics={comicsLatest}/>
+            <TopRankingBanner topComics={topReadComics} />
+            
         </div>
     );
 };

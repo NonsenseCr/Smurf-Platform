@@ -7,11 +7,41 @@ const API_BASE_URL = '/api/botruyen';
 export const fetchActiveBoTruyen = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/active`);
-        return response.data; // Trả về dữ liệu
+        return response.data; 
     } catch (error) {
         throw new Error('Không thể tải danh sách bộ truyện hoạt động', error.response);
     }
 };
+
+// Lấy danh sách bộ truyện mới nhất
+export const fetchBoTruyenLatest = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/latest`);
+        return response.data; 
+    } catch (error) {
+        throw new Error('Không thể tải danh sách bộ truyện moi nhat', error.response);
+    }
+};
+
+export const fetchTopReadBoTruyen = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/top-read`);
+        return response.data;
+    } catch (error) {
+        throw new Error('Không thể tải  Top bộ truyện ', error.response);
+    }
+};
+
+export const fetchCategories  = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/categories`);
+    return response.data;
+    } catch (error) {
+        throw new Error('Không thể tải danh sách loaitruyen', error.response);
+    }
+};
+
+
 
 // Lấy thông tin chi tiết một bộ truyện
 export const fetchBoTruyenById = async (id) => {
@@ -22,6 +52,8 @@ export const fetchBoTruyenById = async (id) => {
         throw new Error('Không thể tải thông tin bộ truyện', error.response);
     }
 };
+
+
 
 // Tìm kiếm bộ truyện theo tên
 export const searchBoTruyen = async (query) => {
