@@ -9,7 +9,7 @@
 @import './components/footer.css';
 @import './components/search.css';
 @import './components/scrollToTop.css';
-@import './components/buttons.css';
+
 
 .scroll-to-top {
     position: fixed;
@@ -27,8 +27,8 @@
     font-size: 24px;
     cursor: pointer;
   } */
-
-
+  @import './components/buttons.css';
+  /* @import './styleList.css'; */
 
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
@@ -319,7 +319,7 @@ img {
     position: relative;
     /* max-width: 1024px; */
     /* margin-inline: 1.5rem; */
-    margin: 2rem;
+    margin: 4rem;
 }
 
 
@@ -817,7 +817,7 @@ img {
 .main__bottom {
     position: relative;
     display: grid;
-    grid-template-columns: 73% 25%;
+    grid-template-columns: 80% 20%;
     gap: 1rem;
 }
 
@@ -844,6 +844,12 @@ img {
     padding-top: 3rem;
     align-items: center;
     left: 0;
+}
+
+.banner-img{
+    width: 100%;
+    height: 50%;
+    object-fit: cover;
 }
 
 .top__container .item-chapter {
@@ -1021,7 +1027,7 @@ img {
     top: 0;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 1;
     background: rgb(255, 255, 255);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0) 20%, rgba(0, 0, 0, 0.5942752100840336) 76%, rgba(0, 0, 0, 0.9023984593837535) 100%);
 }
@@ -1061,7 +1067,6 @@ img {
 
 .img-poster {
     width: 100%;
-    border-radius: 8px;
     box-shadow: 0 2px 8px #8f8f8f;
     max-height: 450px;
     object-fit: cover;
@@ -1069,7 +1074,7 @@ img {
 
 .name-poster {
     bottom: 0;
-    left: 10px;
+    left: 80px;
     margin: 2rem;
 }
 
@@ -1086,8 +1091,8 @@ img {
 
 .btn-poster {
     border-radius: 5px;
-    bottom: 30px;
-    right: 20px;
+    bottom: 20px;
+    right: 60px;
     margin: 2rem;
 }
 
@@ -1118,8 +1123,8 @@ img {
 }
 
 .pre-poster {
-    top: 20px;
-    right: 20px;
+    top: 30px;
+    right: 70px;
     margin: 1rem;
 }
 
@@ -1360,9 +1365,9 @@ img {
 }
 
 .update-item {
-    padding: 10px;
+    padding:0 15px;
     margin-bottom: .8rem;
-    width: 210px;
+    width: 260px;
     float: left;
     overflow: hidden;
     -moz-transition: all .3s ease-out;
@@ -1374,9 +1379,9 @@ img {
 
 
 .update-item .poster {
-    width: 210px !important;
-    height: 290px !important;
-    max-width: 190px;
+    width: 260px !important;
+    height: 350px !important;
+    max-width: 300px;
     vertical-align: middle;
     position: relative;
     border-radius: 3px;

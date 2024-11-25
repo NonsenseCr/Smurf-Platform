@@ -7,8 +7,9 @@ import CategoryList from '../components/Home/CategoryList';
 import TopRankingBanner from '../components/Home/TopRankingBanner';
 import RecommendType from '../components/Home/RecommendTypeList';
 import ShowListComics from '../components/Home/ShowListComics';
+import RecommendBanner from '../components/Home/RecommendBanner';
 const Home = () => {
-    const [comics, setComics] = useState([]);
+    const [comic, setComics] = useState([]);
     const [comicsLatest, setlatestComics] = useState([]);
     const [topReadComics, setTopReadComics] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -48,13 +49,21 @@ const Home = () => {
 
     return (
         <div className="home-container">
-            <CarouselComponent comics={comics.slice(0, 10)} />
-            <ComicList comics={comics} title="Mới Cập Nhật" />
+            <CarouselComponent comics={comic.slice(0, 10)} />
+            <ComicList comics={comic} title="Đề Cử Hôm Nay" />
+            <ShowListComics 
+                comics={comicsLatest}
+                subtitle="Mới Cập Nhật"
+                description="Danh sách các truyện mới nhất với chất lượng cao."/>
             <RecommendType/>
-            <CategoryList categories={categories} />
-            <ShowListComics comics={comicsLatest}/>
-            <TopRankingBanner topComics={topReadComics} />
             
+            <ShowListComics 
+                comics={comicsLatest}
+                subtitle="Danh Sách truyện"
+                description="Danh sách các truyện mới nhất cập nhật liên tục"/>
+            <TopRankingBanner topComics={topReadComics} />
+            <CategoryList categories={categories} />
+            <RecommendBanner/>
         </div>
     );
 };

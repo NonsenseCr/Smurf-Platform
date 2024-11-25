@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import manga from '../../assets/img/bg-4.jpg';
-import manwa from '../../assets/img/bg-3.jpg';
+import manwa from '../../assets/img/bg-5.jpg';
+import manhua from '../../assets/img/bg-3.jpg';
 import adventure from '../../assets/img/bg-1.jpg';
 import Comedy from '../../assets/img/bg-2.jpg';
+import romantic from '../../assets/img/bg-6.jpg';
 const RecommendTypeList = () => {
     return (
         <section className="new-update containers mt-3 mb-5" id="update">
@@ -48,6 +50,22 @@ const RecommendTypeList = () => {
                                 </h5>
                             </div>
                         </Link>
+                        {/* Manhua */}
+                        <Link
+                            className="col"
+                            to="/boTruyen/ListTopic/Manhua"
+                        >
+                            <div className="col-item">
+                                <img
+                                    loading="lazy"
+                                    src={manhua}
+                                    alt="Adventure"
+                                />
+                                <h5 className="recommend-content">
+                                Manhua
+                                </h5>
+                            </div>
+                        </Link>
                         {/* Adventure */}
                         <Link
                             className="col"
@@ -80,35 +98,19 @@ const RecommendTypeList = () => {
                                 </h5>
                             </div>
                         </Link>
-                        {/* Comedy */}
+                        {/* Romantic */}
                         <Link
                             className="col"
-                            to="/boTruyen/ListTopic/Comedy"
+                            to="/boTruyen/ListTopic/Romantic"
                         >
                             <div className="col-item">
                                 <img
                                     loading="lazy"
-                                    src={Comedy}
-                                    alt="Comedy"
+                                    src={romantic}
+                                    alt="Romantic"
                                 />
                                 <h5 className="recommend-content">
-                                    Comedy
-                                </h5>
-                            </div>
-                        </Link>
-                        {/* Comedy */}
-                        <Link
-                            className="col"
-                            to="/boTruyen/ListTopic/Comedy"
-                        >
-                            <div className="col-item">
-                                <img
-                                    loading="lazy"
-                                    src={Comedy}
-                                    alt="Comedy"
-                                />
-                                <h5 className="recommend-content">
-                                    Comedy
+                                    Romantic
                                 </h5>
                             </div>
                         </Link>

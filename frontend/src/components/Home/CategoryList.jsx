@@ -10,20 +10,20 @@ const CategoryList = ({ categories }) => {
                         <p className="section__des"></p>
                     </div>
                 </div>
-                <div className="containers">
+                {/* <div className="containers"> */}
                     <div className="row w-100 position-relative">
                         {categories.map((category) => (
                             <Link
                                 key={category._id}
-                                to={`/categories/${category.ten_loai}`} // Đường dẫn chi tiết loại truyện
+                                to={`/categories/${category.ten_loai}`} 
                                 className="col-auto item-loai"
                             >
-                                {category.ten_loai} {/* Hiển thị tên loại truyện */}
+                                {category.ten_loai} 
                             </Link>
                         ))}
                     </div>
                 </div>
-            </div>
+            {/* </div> */}
         </section>
     );
 };

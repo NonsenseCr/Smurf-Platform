@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
 import iconPremium from '../../assets/PreDark.png';
-const ShowListComics = ({ comics }) => {
+
+const ShowListComics = ({ comics, subtitle, description}) => {
     return (
         <section className="new-update containers mt-3" id="update">
             <div className="update__container TruyenNew__Containter grids">
                 <div className="top__content">
                     <div className="title-infor">
-                        <span className="section__subtitle">Mới Cập Nhật</span>
-                        <p className="section__des">Cập nhật nhanh và chất lượng nhất các chương truyện</p>
+                        <span className="section__subtitle">{subtitle}</span>
+                        <p className="section__des">{description}</p>
                     </div>
                     <div className="btn-More">
                         <Link to="/boTruyen/ListTruyenEarliest">XEM THÊM</Link>
@@ -20,20 +21,18 @@ const ShowListComics = ({ comics }) => {
                                 <Link to={`/boTruyen/${comic._id}`}>
                                     <figure className="position-relative">
                                         {comic.AnhBia && (
+                                            
                                             <img
                                                 loading="lazy"
                                                 src={`http://localhost:5000${comic.AnhBia}`}
                                                 alt="Poster"
                                                 className="d-block w-100 poster"
                                             />
+                                            
                                         )}
                                         <figcaption>
-                                            <h6 className="item-title">
-                                                <Link to={`/boTruyen/${comic._id}`}>
-                                                    {comic.TenBo}
-                                                </Link>
-                                            </h6>
-                                            <a className="item-chapter" style={{ fontSize: '13px' }}>
+                                            <h6 className="item-title">{comic.TenBo}</h6>
+                                            <div className="item-chapter" style={{ fontSize: '13px' }}>
                                                 <span className="chap" style={{ marginRight: '10px' }}>
                                                     {comic.latestChapter?.SttChap
                                                         ? `chap ${comic.latestChapter.SttChap}`
@@ -42,7 +41,7 @@ const ShowListComics = ({ comics }) => {
                                                 <span className="time">
                                                     {comic.latestChapter?.ThoiGian || '... giờ trước'}
                                                 </span>
-                                            </a>
+                                            </div>
                                         </figcaption>
                                         {comic.TtPemium && (
                                             <div className="item-vip">

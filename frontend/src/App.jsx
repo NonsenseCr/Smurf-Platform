@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
+import ListTrendingComics from './pages/ListTrendingComics';
 import 'remixicon/fonts/remixicon.css';
 import './styles/main.css';
 
@@ -15,7 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          {/* Thêm các route khác */}
+          <Route path="/trending" element={<ListTrendingComics />} />
         </Routes>
       </main>
       <Footer />

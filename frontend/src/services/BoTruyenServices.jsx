@@ -28,6 +28,7 @@ export const fetchTopReadBoTruyen = async () => {
         const response = await axios.get(`${API_BASE_URL}/top-read`);
         return response.data;
     } catch (error) {
+        console.error('Error fetching top-read comics:', error.response || error);
         throw new Error('Không thể tải  Top bộ truyện ', error.response);
     }
 };
@@ -62,5 +63,18 @@ export const searchBoTruyen = async (query) => {
         return response.data; // Trả về kết quả tìm kiếm
     } catch (error) {
         throw new Error('Không thể tìm kiếm bộ truyện', error.response);
+    }
+};
+
+// lấy danh sách truyen trending
+export const fetchTrendingComics = async (page = 1, limit = 12) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/trending`, {
+            params: { page, limit }, 
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching trending comics:', error);
+        throw new Error('Không thể tải danh sách truyện Trending');
     }
 };
