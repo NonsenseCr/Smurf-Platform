@@ -115,18 +115,37 @@ router.post('/:id/remove-bo-truyen', async (req, res) => {
 
 
 
-// Lấy tất cả bộ truyện theo thể loại
-router.get('/:id/truyen', async (req, res) => {
+// // Lấy tất cả bộ truyện theo thể loại
+// router.get('/:id/truyen', async (req, res) => {
+//     const { id } = req.params;
+
+//     try {
+//         const boTruyen = await BoTruyen.find({ listloai: id, active: true }) // Lọc bộ truyện theo thể loại và trạng thái
+//             .populate('id_tg', 'ten') // Lấy thông tin tác giả
+//             .sort({ createdAt: -1 }); // Sắp xếp theo thời gian tạo mới nhất
+
+//         res.status(200).json(boTruyen);
+//     } catch (error) {
+//         console.error('Error fetching Bo Truyen by Loai:', error);
+//         res.status(500).json({ message: 'Lỗi khi lấy danh sách bộ truyện theo thể loại' });
+//     }
+// });
+
+
+// Lấy danh sách truyện theo idloaitruyen
+router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
-        const boTruyen = await BoTruyen.find({ listloai: id, active: true }) // Lọc bộ truyện theo thể loại và trạng thái
-            .populate('id_tg', 'ten') // Lấy thông tin tác giả
-            .sort({ createdAt: -1 }); // Sắp xếp theo thời gian tạo mới nhất
+        // Tìm các bộ truyện thuộc thể loại cụ thể
+        const boTruyen = await BoTruyen.find({ listloai: id, active: true })
+            .populate('id_tg', 'ten') 
+            .select('tenbo poster TongLuotXem id_tg') 
+            .sort({ createdAt: -1 }); 
 
         res.status(200).json(boTruyen);
     } catch (error) {
-        console.error('Error fetching Bo Truyen by Loai:', error);
+        console.error('Error fetching Bo Truyen by idloaitruyen:', error);
         res.status(500).json({ message: 'Lỗi khi lấy danh sách bộ truyện theo thể loại' });
     }
 });

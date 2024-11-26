@@ -107,12 +107,12 @@ router.post('/:id/add-loai', async (req, res) => {
         // Cập nhật danh sách loại trong BoTruyen
         const boTruyen = await BoTruyen.findByIdAndUpdate(
             id, {
-                $addToSet: {
-                    listloai: loaiTruyenId
-                }
-            }, {
-                new: true
+            $addToSet: {
+                listloai: loaiTruyenId
             }
+        }, {
+            new: true
+        }
         );
 
         if (!boTruyen) {
@@ -124,10 +124,10 @@ router.post('/:id/add-loai', async (req, res) => {
         // Cập nhật danh sách bộ truyện trong LoaiTruyen
         const loaiTruyen = await LoaiTruyen.findByIdAndUpdate(
             loaiTruyenId, {
-                $addToSet: {
-                    listTruyen: id
-                }
-            }, // Tránh thêm trùng lặp
+            $addToSet: {
+                listTruyen: id
+            }
+        }, // Tránh thêm trùng lặp
             {
                 new: true
             }
@@ -166,12 +166,12 @@ router.post('/:id/remove-loai', async (req, res) => {
         // Xóa loại khỏi bộ truyện
         const boTruyen = await BoTruyen.findByIdAndUpdate(
             id, {
-                $pull: {
-                    listloai: loaiTruyenId
-                }
-            }, {
-                new: true
+            $pull: {
+                listloai: loaiTruyenId
             }
+        }, {
+            new: true
+        }
         );
 
         if (!boTruyen) {
@@ -183,12 +183,12 @@ router.post('/:id/remove-loai', async (req, res) => {
         // Xóa bộ truyện khỏi loại
         const loaiTruyen = await LoaiTruyen.findByIdAndUpdate(
             loaiTruyenId, {
-                $pull: {
-                    listTruyen: id
-                }
-            }, {
-                new: true
+            $pull: {
+                listTruyen: id
             }
+        }, {
+            new: true
+        }
         );
 
         if (!loaiTruyen) {
@@ -214,8 +214,8 @@ router.post('/:id/remove-loai', async (req, res) => {
 router.get('/top-read', async (req, res) => {
     try {
         const topReadComics = await BoTruyen.find({
-                active: true
-            })
+            active: true
+        })
             .sort({
                 TongLuotXem: -1
             })
@@ -276,8 +276,8 @@ router.get('/latest', async (req, res) => {
     try {
         // Lấy danh sách truyện mới nhất
         const latestComics = await BoTruyen.find({
-                active: true
-            })
+            active: true
+        })
             .sort({
                 updatedAt: -1
             })
@@ -288,26 +288,26 @@ router.get('/latest', async (req, res) => {
         // Lấy chương mới nhất cho từng truyện
         const comicIds = latestComics.map((comic) => comic._id);
         const latestChapters = await Chapter.aggregate([{
-                $match: {
-                    id_bo: {
-                        $in: comicIds
-                    },
-                    active: true
+            $match: {
+                id_bo: {
+                    $in: comicIds
+                },
+                active: true
+            }
+        },
+        {
+            $sort: {
+                thoi_gian: -1
+            }
+        },
+        {
+            $group: {
+                _id: '$id_bo',
+                latestChapter: {
+                    $first: '$$ROOT'
                 }
-            },
-            {
-                $sort: {
-                    thoi_gian: -1
-                }
-            },
-            {
-                $group: {
-                    _id: '$id_bo',
-                    latestChapter: {
-                        $first: '$$ROOT'
-                    }
-                }
-            },
+            }
+        },
         ]);
 
         // Ghép chương mới nhất vào danh sách truyện
@@ -353,8 +353,8 @@ router.get('/trending', async (req, res) => {
 
         // Lấy danh sách truyện theo phân trang
         const trendingComics = await BoTruyen.find({
-                active: true
-            })
+            active: true
+        })
             .sort({
                 TongLuotXem: -1
             })
@@ -371,26 +371,26 @@ router.get('/trending', async (req, res) => {
         const comicIds = trendingComics.map((comic) => comic._id);
 
         const latestChapters = await Chapter.aggregate([{
-                $match: {
-                    id_bo: {
-                        $in: comicIds
-                    },
-                    active: true
+            $match: {
+                id_bo: {
+                    $in: comicIds
+                },
+                active: true
+            }
+        },
+        {
+            $sort: {
+                thoi_gian: -1
+            }
+        },
+        {
+            $group: {
+                _id: '$id_bo',
+                latestChapter: {
+                    $first: '$$ROOT'
                 }
-            },
-            {
-                $sort: {
-                    thoi_gian: -1
-                }
-            },
-            {
-                $group: {
-                    _id: '$id_bo',
-                    latestChapter: {
-                        $first: '$$ROOT'
-                    }
-                }
-            },
+            }
+        },
         ]);
 
         const chapterMap = latestChapters.reduce((map, chap) => {
@@ -431,8 +431,8 @@ router.get('/trending', async (req, res) => {
 router.get('/active', async (req, res) => {
     try {
         const activeBoTruyen = await BoTruyen.find({
-                active: true
-            })
+            active: true
+        })
             .populate('id_tg', 'ten')
             .sort({
                 createdAt: -1
@@ -510,6 +510,8 @@ router.get('/filter', async (req, res) => {
         });
     }
 });
+
+
 
 
 // Cập nhật một bộ truyện 

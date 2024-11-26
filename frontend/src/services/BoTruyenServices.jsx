@@ -78,3 +78,16 @@ export const fetchTrendingComics = async (page = 1, limit = 12) => {
         throw new Error('Không thể tải danh sách truyện Trending');
     }
 };
+
+
+export const fetchBoTruyenByCategory = async (categoryId, page = 1, limit = 12) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/category/${categoryId}`, {
+        params: { page, limit },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching BoTruyen by category:", error);
+      throw new Error("Không thể tải danh sách bộ truyện theo thể loại");
+    }
+  };

@@ -83,35 +83,35 @@ function Header() {
                 <div className="row">
                   <div className="col-3">
                     <Dropdown.Item className='item-main' as={Link} to="/category/all">Tất cả</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Xuyên không</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Adventure</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">One short</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Sports</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Truyện màu</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406e97c03445f4711481f8">Xuyên không</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406e97c03445f4711481f8">Adventure</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">One short</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Sports</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Truyện màu</Dropdown.Item>
                   </div>
                   <div className="col-3">
                     <Dropdown.Item className='item-main' as={Link} to="/category/all">Theo Cảm xúc</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Nhẹ nhàng</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Kinh dị</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Lãng mạng</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Action</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Comedy</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Nhẹ nhàng</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Kinh dị</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Lãng mạng</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406e4ec03445f4711481f2">Action</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Comedy</Dropdown.Item>
                   </div>
                   <div className="col-3">
                     <Dropdown.Item className='item-main' as={Link} to="/category/all">Theo Khu Vực</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Manwa</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Manhua</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Manga</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Comic</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Webtoon</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Manwa</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Manhua</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Manga</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Comic</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Webtoon</Dropdown.Item>
                   </div>
                   <div className="col-3">
-                    <Dropdown.Item className='item-main' as={Link} to="/category/all">Theo đội tuổi</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Mọi độ tuổi</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Trẻ em</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Thiếu Niên</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Bạo lực</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/adventure">Trưởng thành</Dropdown.Item>
+                    <Dropdown.Item className='item-main' as={Link} to="/all">Theo đội tuổi</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Mọi độ tuổi</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Trẻ em</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Thiếu Niên</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Bạo lực</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Trưởng thành</Dropdown.Item>
                   </div>
                 </div>
               </Dropdown.Menu>

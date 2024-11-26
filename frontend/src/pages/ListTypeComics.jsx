@@ -1,30 +1,60 @@
 import { useState, useEffect } from "react";
-import { fetchTrendingComics } from "../services/BoTruyenServices";
+import { useParams } from "react-router-dom";
+import { fetchBoTruyenByCategory } from "../services/LoaiTruyenService";
 import { Link } from "react-router-dom";
 import "../styles/styleList.css";
 
-const ListTrendingComics = () => {
+const ListTypeComics = () => {
+  const { id } = useParams(); // Lấy id thể loại từ URL
   const [comics, setComics] = useState([]); // Danh sách truyện
+  const [subtitle, setSubtitle] = useState(""); // Tên thể loại
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
   const [totalPages, setTotalPages] = useState(0); // Tổng số trang
   const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
 
+  // Map giữa id và tên thể loại (cố định trong frontend)
+  const categoryMap = {
+    "67406e4ec03445f4711481f2": "Hành động",
+    "67406e8ec03445f4711481f5": "Xuyên không",
+    "67406e97c03445f4711481f8": "Adventure",
+    "67406ea7c03445f4711481fb": "One short",
+    "67406eaec03445f4711481fe": "Sports",
+    "67406eb4c03445f471148201": "Truyện màu",
+    "67406ebec03445f471148204": "Nhẹ nhàng",
+    "67406ec8c03445f471148207": "Kinh dị",
+    "67406ed2c03445f47114820a": "Lãng mạng",
+    "67406ed8c03445f47114820d": "Action",
+    "67406ee0c03445f471148210": "Comedy",
+    "67406ee5c03445f471148213": "Manwa",
+    "67406eedc03445f471148216": "Manga",
+    "67406ef1c03445f471148219": "Comic",
+    "67406ef6c03445f47114821c": "Webtoon",
+    
+  };
+
+  // Hàm load danh sách truyện
   const loadComics = async (page) => {
     setLoading(true);
     try {
-      const { comics: fetchedComics, totalPages } = await fetchTrendingComics(page);
-      setComics(fetchedComics); // Cập nhật danh sách truyện
-      setTotalPages(totalPages); // Cập nhật tổng số trang
+      const fetchedComics = await fetchBoTruyenByCategory(id, page);
+      setComics(fetchedComics);
+      setTotalPages(totalPages);
     } catch (error) {
-      console.error("Error fetching trending comics:", error);
+      console.error("Error fetching BoTruyen by category:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Cập nhật tên thể loại từ categoryMap
   useEffect(() => {
-    loadComics(currentPage); // Tải danh sách truyện khi trang thay đổi
-  }, [currentPage]);
+    setSubtitle(categoryMap[id] || "Không xác định");
+  }, [id]);
+
+  // Gọi API để load dữ liệu khi trang hoặc id thay đổi
+  useEffect(() => {
+    loadComics(currentPage);
+  }, [currentPage, id]);
 
   if (loading) {
     return <div className="loading-container">Đang tải dữ liệu...</div>;
@@ -39,7 +69,7 @@ const ListTrendingComics = () => {
       <div className="list__container containers list">
         {/* Tiêu đề và các nút điều khiển */}
         <div className="top__content">
-          <span className="section__subtitle">DANH SÁCH TRUYỆN HOT</span>
+          <h2 className="section__subtitle">DANH SÁCH TRUYỆN <span style={{color: "#9858F1"}}>{subtitle}</span></h2>
           <div className="controls">
             <div className="dropdown">
               <button className="btn" type="button">
@@ -95,23 +125,23 @@ const ListTrendingComics = () => {
               <div key={comic._id} className="item col-2 update-item">
                 <Link to={`/boTruyen/${comic._id}`}>
                   <figure className="position-relative">
-                    {comic.AnhBia && (
+                    {comic.poster  && (
                       <>
                         <span className="hot-icon">HOT</span>
                         <img
                           loading="lazy"
-                          src={`http://localhost:5000${comic.AnhBia}`}
-                          alt="Truyện Image"
+                          src={`http://localhost:5000${comic.poster}`}
+                          alt={comic.tenbo}
                           className="d-block w-100 poster"
                           onError={(e) => {
                             e.target.onerror = null; // Ngăn lỗi lặp lại
-                            e.target.src = "/path/to/default-image.jpg"; // Đường dẫn ảnh mặc định
+                            e.target.src = "/path/to/default-image.jpg"; // Ảnh mặc định
                           }}
                         />
                       </>
                     )}
                     <figcaption>
-                      <h6 className="item-title">{comic.TenBo}</h6>
+                      <h6 className="item-title">{comic.tenbo}</h6>
                       <div className="item-chapter" style={{ fontSize: "13px" }}>
                         <span className="chap" style={{ marginRight: "10px" }}>
                           {comic.latestChapter?.SttChap
@@ -140,27 +170,28 @@ const ListTrendingComics = () => {
         {/* Điều khiển phân trang */}
         <ul className="listPage">
           <li>
-            <button
+            <a
               className="pagination-button"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
               Previous
-            </button>
+            </a>
           </li>
           <li>
             <span>
-              Trang {currentPage} / {totalPages}
+              {currentPage} 
+              {/* Trang {currentPage} / {totalPages} */}
             </span>
           </li>
           <li>
-            <button
+            <a
               className="pagination-button"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
               Next
-            </button>
+            </a>
           </li>
         </ul>
       </div>
@@ -168,5 +199,4 @@ const ListTrendingComics = () => {
   );
 };
 
-
-export default ListTrendingComics;
+export default ListTypeComics;

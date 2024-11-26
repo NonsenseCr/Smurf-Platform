@@ -4,6 +4,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
 import ListTrendingComics from './pages/ListTrendingComics';
+import ListTypeComics from './pages/ListTypeComics';
 import 'remixicon/fonts/remixicon.css';
 import './styles/main.css';
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/trending" element={<ListTrendingComics />} />
+          <Route path="/:id" element={<ListTypeComics />} />
         </Routes>
       </main>
       <Footer />
