@@ -1,11 +1,12 @@
-﻿
-
-.header {
+﻿.header-login {
     padding: 1rem;
     display: flex;
     justify-content: center;
     background-color: #141519;
     border-radius: 0;
+}
+.header-login a{
+    cursor: pointer;
 }
 
 .nav__logo img {
@@ -18,20 +19,28 @@
     height: 100vh;
 }
 
-.main__top {
+.main-login, .main-register {
     position: relative;
     width: 100%;
     height: 100%;
+    
+}
+
+.main-login{
+    padding-block: 2.5rem 1rem;
+}
+.main-register {
+    padding-block: 2rem 1rem;
 }
 
 .main__title {
     font-size: var(--h1-font-size);
     font-weight: 600;
     margin-bottom: 1rem;
-   color:#fff;
+    color: #fff;
 }
 
-.main__content {
+.main-login__content {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -77,7 +86,7 @@ input:-ms-autofill {
 
 
 .cx-decoration {
-    z-index: 1;
+    z-index: -1;
     position: absolute;
     inset-block: 0;
     inset-inline: 0;
@@ -97,13 +106,13 @@ input:-ms-autofill {
 }
 
 
-    .form-login .content-login {
-        position: relative;
-        background-color: #141519;
-        padding: 2rem 3rem;
-        border-radius: 5px;
-        z-index: 100;
-    }
+.form-login .content-login {
+    position: relative;
+    background-color: #141519;
+    padding: 2rem 3rem;
+    border-radius: 5px;
+    z-index: 100;
+}
 
 .content-login .forgot {
     color: #8f8f8f;
@@ -113,9 +122,9 @@ input:-ms-autofill {
     font-weight: 500;
 }
 
-    .content-login .forgot:hover {
-        color: #fff;
-    }
+.content-login .forgot:hover {
+    color: #fff;
+}
 
 .content-login .regis {
     margin-top: 2rem;
@@ -124,68 +133,70 @@ input:-ms-autofill {
     color: #8f8f8f;
 }
 
-    .content-login .regis a {
-        margin-left: .3rem;
-        font-weight: 600;
-        color: #9858F1;
-        cursor:pointer;
-    }
-
-        .content-login .regis a:hover {
-            transform: translateY(-2px);
-            color: #B142F5;
-        }
-
-.infor-img{
-    width:100%;
-    position:absolute;
-    top:-3rem;
-    left:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    margin:.5rem 0;
-    z-index:1000;
+.content-login .regis a {
+    margin-left: .3rem;
+    font-weight: 600;
+    color: #9858F1;
+    cursor: pointer;
 }
 
-    .infor-img img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-    }
-    .infor-img a{
-        position:absolute;
-        bottom:-1rem;
-        padding:.3rem .6rem;
-        font-size:1.2rem;
-        color: #fff;
-        border-radius:50%;
-        background-color:rgba(0,0,0,.8);
-    }
+.content-login .regis a:hover {
+    transform: translateY(-2px);
+    color: #B142F5;
+}
 
-        .infor-img a:hover {
-            color: #9858F1;
-            background-color: rgba(0,0,0,1);
-        }
+.infor-img {
+    width: 100%;
+    position: absolute;
+    top: -3rem;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: .5rem 0;
+    z-index: 1000;
+}
 
-        .inputBox-item {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: left;
-        }
+.infor-img img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
 
-    .inputBox-item h5 {
-        font-weight: 600;
-        font-size: 1rem;
-        color: #9858F1;
-        padding: .5rem;
-    }
+.infor-img a {
+    position: absolute;
+    bottom: -1rem;
+    padding: .3rem .6rem;
+    font-size: 1.2rem;
+    color: #fff;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, .8);
+}
 
-    .inputBox-item i {
-        background-color: #9858F1 !important;
-    }
+.infor-img a:hover {
+    color: #9858F1;
+    background-color: rgba(0, 0, 0, 1);
+}
+
+.inputBox-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.inputBox-item h5 {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #9858F1;
+    padding: .5rem;
+}
+
+.inputBox-item i {
+    background-color: #9858F1 !important;
+}
+
 .select {
     padding: .5rem;
     width: 100%;
@@ -193,7 +204,7 @@ input:-ms-autofill {
     font-weight: 500;
     background-color: #141519;
     color: #fff;
-    border:none;
+    border: none;
 }
 
 
@@ -214,6 +225,7 @@ input:-ms-autofill {
     left: -200px;
     top: -100px;
 }
+
 .img-regis {
     position: absolute;
     height: 550px;
@@ -244,65 +256,67 @@ input:-internal-autofill-selected {
     margin-top: 35px;
 }
 
-    .inputBox:first-child {
-        margin-top: 10px;
-    }
+.inputBox:first-child {
+    margin-top: 10px;
+}
 
-    .inputBox input {
-        position: relative;
-        width: 100%;
-        padding: 20px 10px 10px;
-        background: transparent;
-        border: none;
-        outline: none;
-        color: #fff;
-        font-size: 1rem;
-        letter-spacing: 0.05em;
-        z-index: 10;
-    }
+.inputBox input {
+    position: relative;
+    width: 100%;
+    padding: 20px 10px 10px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    z-index: 10;
+}
 
-.login, .other, .regis, .content-login > h6 {
+.login,
+.other,
+.regis,
+.content-login>h6 {
     width: 100%;
     display: flex;
     justify-content: center;
     margin: 1rem 0;
 }
 
-    .login a {
-        color: #9858F1!important;
-        font-weight: 500;
-        font-size: 1rem;
-        padding: .5rem 1rem;
-        border: 2px solid #9858F1;
-        margin: 10px .5rem 0 1rem;
-    }
+.login a {
+    color: #9858F1 !important;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: .5rem 1rem;
+    border: 2px solid #9858F1;
+    margin: 10px .5rem 0 1rem;
+}
 
 
-    .other {
-    }
+.other {}
 
-    .other div {
-        padding: .45rem .8rem;
-        margin: 0 .5rem;
-        border-radius: 50%;
-    }
+.other div {
+    padding: .45rem .8rem;
+    margin: 0 .5rem;
+    border-radius: 50%;
+}
 
-    .other a {
-        color: #fff;
-    }
+.other a {
+    color: #fff;
+}
 
-    .other .facebook {
-        background-color: #3572CB;
-    }
+.other .facebook {
+    background-color: #3572CB;
+}
 
-    .other .google {
-        background-color: #F0442C;
-    }
+.other .google {
+    background-color: #F0442C;
+}
 
-    .other i {
-        font-size: 1.2rem;
-        font-weight: 600;
-    }
+.other i {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
 
 
 input[type="submit"] {
@@ -317,14 +331,14 @@ input[type="submit"] {
     cursor: pointer;
 }
 
-    input[type="submit"]:hover {
-        background-color: #B142F5;
-    }
+input[type="submit"]:hover {
+    background-color: #B142F5;
+}
 
-    input[type="submit"]:active {
-        background: linear-gradient(90deg, #9858F1, #d9138a);
-        opacity: 0.8;
-    }
+input[type="submit"]:active {
+    background: linear-gradient(90deg, #9858F1, #d9138a);
+    opacity: 0.8;
+}
 
 
 
@@ -340,8 +354,8 @@ input[type="submit"] {
     transition: 0.5s;
 }
 
-.inputBox input:valid ~ span,
-.inputBox input:focus ~ span {
+.inputBox input:valid~span,
+.inputBox input:focus~span {
     font-weight: 400;
     color: #9858F1;
     transform: translateX(-10px) translateY(-30px);
@@ -361,31 +375,31 @@ input[type="submit"] {
     z-index: 9;
 }
 
-.inputBox input:valid ~ i,
-.inputBox input:focus ~ i {
+.inputBox input:valid~i,
+.inputBox input:focus~i {
     background: #9858F1;
 }
 
 .option {
-    position:absolute;
-    bottom:0;
+    position: absolute;
+    bottom: 0;
     width: 100%;
     display: flex;
     justify-content: center;
     padding: 1rem;
 }
 
-    .option a {
-        color: var(--title-color);
-        font-weight: 500;
-        font-size: 1rem;
-        margin: 0 .5rem;
-        cursor: pointer;
-    }
+.option a {
+    color: var(--title-color);
+    font-weight: 500;
+    font-size: 1rem;
+    margin: 0 .5rem;
+    cursor: pointer;
+}
 
-        .option a:hover {
-            font-weight: 600;
-        }
+.option a:hover {
+    font-weight: 600;
+}
 
 /* =================================== REGISTER ======================================== */
 .passSecurity {
@@ -397,9 +411,9 @@ input[type="submit"] {
     align-items: center;
 }
 
-    .passSecurity span {
-        font-size: var(--small-font-size);
-    }
+.passSecurity span {
+    font-size: var(--small-font-size);
+}
 
 .strengthList {
     display: flex;
@@ -427,8 +441,8 @@ input[type="submit"] {
     background-color: green;
 }
 
-#securityText{
-    color:#8f8f8f;
+#securityText {
+    color: #8f8f8f;
 }
 
 
@@ -463,4 +477,3 @@ input[type="submit"] {
         inset-inline-end: 0;
     }
 }
-
