@@ -13,8 +13,8 @@ const CarouselComponent = ({ comics = [] }) => {
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        // autoplay: true,
-        // autoplaySpeed: 5000,
+        autoplay: true,
+        autoplaySpeed: 5000,
     };
 
     const truncateText = (text, maxLength) => {
@@ -104,7 +104,7 @@ const CarouselComponent = ({ comics = [] }) => {
             </section>
             <div className="main__right">
                 <div className="main__random bg">
-                    <div className="item-content">
+                    <div className="item-random">
                         <div className="content">
                             <a href="#">Hôm nay đọc gì?</a>
                         </div>

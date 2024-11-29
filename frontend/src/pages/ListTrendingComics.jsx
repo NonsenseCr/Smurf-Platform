@@ -38,7 +38,7 @@ const ListTrendingComics = () => {
     <div className="main__top section">
       <div className="list__container containers list">
         {/* Tiêu đề và các nút điều khiển */}
-        <div className="top__content">
+        <div className="top__title">
           <span className="section__subtitle">DANH SÁCH TRUYỆN HOT</span>
           <div className="controls">
             <div className="dropdown">

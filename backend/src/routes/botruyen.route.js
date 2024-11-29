@@ -438,13 +438,155 @@ router.get('/active', async (req, res) => {
                 createdAt: -1
             });
 
-        console.log('Active BoTruyen:', activeBoTruyen);
+        // console.log('Active BoTruyen:', activeBoTruyen);
         res.status(200).send(activeBoTruyen);
     } catch (error) {
         console.error('Error fetching active Bo Truyen:', error);
         res.status(500).send({
             message: 'Failed to fetch active Bo Truyen'
         });
+    }
+});
+
+// API: Lấy danh sách truyện xếp hạng theo tiêu chí
+router.get('/rankings', async (req, res) => {
+    const { type } = req.query;
+
+    try {
+        let sortCriteria = {};
+        let filterCriteria = { active: true };
+
+        // Xác định tiêu chí sắp xếp và lọc
+        switch (type) {
+            case "1": // Lượt đọc cao nhất
+                sortCriteria = { TongLuotXem: -1 };
+                break;
+
+            case "2": // Lượt theo dõi cao nhất
+                sortCriteria = { theodoi: -1 };
+                break;
+
+            case "3": // Đánh giá cao nhất
+                sortCriteria = { danhgia: -1 };
+                break;
+
+            case "4": // Cập nhật hôm nay
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                filterCriteria.updatedAt = { $gte: today };
+                sortCriteria = { updatedAt: -1 };
+                break;
+
+            case "5": // Cập nhật trong tháng này
+                const oneMonthAgo = new Date();
+                oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+                filterCriteria.updatedAt = { $gte: oneMonthAgo };
+                sortCriteria = { TongLuotXem: -1 };
+                break;
+
+            default:
+                return res.status(400).json({ message: 'Invalid type parameter. Accepted values: 1, 2, 3, 4, 5' });
+        }
+
+        // Tìm danh sách bộ truyện theo tiêu chí
+        const rankings = await BoTruyen.find(filterCriteria)
+            .sort(sortCriteria)
+            .limit(10)
+            .populate('listloai', 'ten_loai') // Populate danh sách loại truyện
+            .select('tenbo TongLuotXem theodoi danhgia poster banner updatedAt listloai')
+            .lean();
+
+        // Kiểm tra nếu không có truyện nào
+        if (!rankings || rankings.length === 0) {
+            return res.status(200).json([]); // Trả về mảng rỗng
+        }
+
+        // Lấy danh sách ID của các truyện
+        const comicIds = rankings.map((comic) => comic._id);
+
+        // Lấy chương mới nhất cho từng truyện
+        const latestChapters = await Chapter.aggregate([
+            {
+                $match: {
+                    id_bo: { $in: comicIds },
+                    active: true,
+                },
+            },
+            {
+                $sort: { thoi_gian: -1 },
+            },
+            {
+                $group: {
+                    _id: '$id_bo',
+                    latestChapter: { $first: '$$ROOT' },
+                },
+            },
+        ]);
+
+        // Kiểm tra nếu không có chương nào
+        const chapterMap = latestChapters.reduce((map, chap) => {
+            map[chap._id] = chap.latestChapter;
+            return map;
+        }, {});
+
+        // Ghép chương mới nhất vào danh sách truyện
+        const formattedRankings = rankings.map((comic) => {
+            const latestChapter = chapterMap[comic._id] || null;
+
+            return {
+                _id: comic._id,
+                TenBo: comic.tenbo,
+                TongLuotXem: comic.TongLuotXem,
+                theodoi: comic.theodoi,
+                danhgia: comic.danhgia,
+                poster: comic.poster,
+                banner: comic.banner,
+                updatedAt: comic.updatedAt,
+                listLoai: Array.isArray(comic.listloai) // Kiểm tra xem listloai có tồn tại và là mảng
+                    ? comic.listloai.map((loai) => loai.ten_loai)
+                    : [],
+                latestChapter: latestChapter
+                    ? {
+                          SttChap: latestChapter.stt_chap,
+                          TenChap: latestChapter.ten_chap,
+                          ThoiGian: calculateTimeAgo(latestChapter.thoi_gian),
+                      }
+                    : null,
+            };
+        });
+
+        res.status(200).json(formattedRankings);
+    } catch (error) {
+        console.error('Error fetching rankings:', error);
+        res.status(500).json({
+            message: 'Lỗi khi lấy danh sách xếp hạng',
+        });
+    }
+});
+
+
+router.get('/search', async (req, res) => {
+    const { query } = req.query;
+    if (!query) {
+        return res.status(400).json({ message: 'Query parameter is required' });
+    }
+    try {
+        const results = await BoTruyen.find({
+            tenbo: { $regex: new RegExp(query, 'i') },
+            active: true 
+        }).select('tenbo TongLuotXem poster _id').limit(10); 
+
+        const formattedResults = results.map(boTruyen => ({
+            id: boTruyen._id,
+            img: boTruyen.poster,
+            tenBo: boTruyen.tenbo,
+            view: boTruyen.TongLuotXem
+        }));
+
+        res.json(formattedResults);
+    } catch (error) {
+        console.error('Search error:', error);
+        res.status(500).json({ message: 'Error fetching search results' });
     }
 });
 
@@ -510,6 +652,8 @@ router.get('/filter', async (req, res) => {
         });
     }
 });
+
+
 
 
 

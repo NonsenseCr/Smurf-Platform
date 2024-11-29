@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '../assets/logo2.png';
+import logo from '../../assets/logo2.png';
+import SearchBar from './SearchBar';
 
 
 function Header() {
@@ -30,16 +31,7 @@ function Header() {
             <img className="nav__logo-img" src={logo} alt="logo website" />
           </Link>
           <div className="nav__menu nav__menu-list" id="nav-menu">
-            <div className="search">
-              <div className="icon"><i className="fa-solid fa-magnifying-glass"></i></div>
-              <div className="input">
-                <input type="text" placeholder="Tìm Kiếm ..." id="search-truyen" className="searchInput" />
-              </div>
-              <span className="clear"><i className="ri-close-large-line"></i></span>
-            </div>
-            <div className="results" id="search-results">
-              <ul id="results"></ul>
-            </div>
+            <SearchBar/>
 
             <div className="nav__login">
               {isAuthenticated ? (
@@ -118,6 +110,7 @@ function Header() {
             </Dropdown>
             <Link to="/trending" className="nav__link active-link">Trending</Link>
             <Link to="/new-updates" className="nav__item nav__link active-link">Mới cập nhật</Link>
+            <Link to="/rankings/1" className="nav__item nav__link active-link">Xếp hạng</Link>
             {isAuthenticated ? (
               <Link to="/following" className="nav__item nav__link active-link">Theo dõi</Link>
             ) : (

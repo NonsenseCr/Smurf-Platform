@@ -91,3 +91,17 @@ export const fetchBoTruyenByCategory = async (categoryId, page = 1, limit = 12) 
       throw new Error("Không thể tải danh sách bộ truyện theo thể loại");
     }
   };
+
+// Lấy danh sách xếp hạng theo tiêu chí
+export const fetchRankingsByType = async (type) => {
+    try {
+      const response = await axios.get(`/api/botruyen/rankings`, {
+        params: { type },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching rankings:", error);
+      throw new Error("Không thể tải danh sách xếp hạng");
+    }
+  };
+  

@@ -3,7 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Footer() {
   return (
-    <footer className="footer" style={{ position: 'relative', padding: '2rem 0', lineHeight: '20px' }}>
+    // style={{ position: 'relative', padding: '2rem 0', lineHeight: '20px' }}
+    <footer className="footer" >
       <div className="footer__container containers grid row align-content-md-between">
         <div className="footer__content col-12 col-md-6">
           {/* Main Menu */}
@@ -60,6 +61,7 @@ function Footer() {
 
         {/* Description */}
         <div className="col-12 col-md-6">
+          
           <p className="footer__description">
             Website luôn cập nhật nhanh và sớm nhất các đầu truyện hot. <br />
             Đảm bảo tính bảo mật và trải nghiệm của bạn, <br />
