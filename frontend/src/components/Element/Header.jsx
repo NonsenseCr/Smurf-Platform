@@ -1,8 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../../assets/logo2.png';
+import imgInfo from '../../assets/img/empty-cr-list.png';
 import SearchBar from './SearchBar';
+
 
 
 function Header() {
@@ -10,6 +13,9 @@ function Header() {
   const userName = "Guest"; 
   const navigate = useNavigate();
 
+
+
+  
   const handleLogout = () => {
     navigate('/');
   };
@@ -20,6 +26,30 @@ function Header() {
 
   const handleRegister = () => {
     navigate('/register');
+  };
+
+  const handleAuthAlert = (title, text, imageUrl, redirectPath) => {
+    Swal.fire({
+      title,
+      text,
+      imageUrl,
+      imageWidth: 120,
+      imageHeight: 150,
+      imageAlt: "Custom image",
+      showCancelButton: true,
+      confirmButtonText: "Login Now!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate(redirectPath);
+      }
+    });
   };
 
   return (
@@ -112,14 +142,44 @@ function Header() {
             <Link to="/new-updates" className="nav__item nav__link active-link">Mới cập nhật</Link>
             <Link to="/rankings/1" className="nav__item nav__link active-link">Xếp hạng</Link>
             {isAuthenticated ? (
-              <Link to="/following" className="nav__item nav__link active-link">Theo dõi</Link>
+              <Link to="/following" className="nav__item nav__link active-link">
+                Theo dõi
+              </Link>
             ) : (
-              <a id="follow" className="nav__item nav__link active-link" onClick={() => alert("Login to follow!")}>Theo dõi</a>
+              <a
+                id="follow"
+                className="nav__item nav__link active-link"
+                onClick={() =>
+                  handleAuthAlert(
+                    "Login to Follow!",
+                    "You need to login to access your following list.",
+                    "/images/yuzu.png",
+                    "/login"
+                  )
+                }
+              >
+                Theo dõi
+              </a>
             )}
             {isAuthenticated ? (
-              <Link to="/history" className="nav__item nav__link active-link">Lịch sử</Link>
+              <Link to="/history" className="nav__item nav__link active-link">
+                Lịch sử
+              </Link>
             ) : (
-              <a id="history" className="nav__item nav__link active-link" onClick={() => alert("Login to see history!")}>Lịch sử</a>
+              <a
+                id="history"
+                className="nav__item nav__link active-link"
+                onClick={() =>
+                  handleAuthAlert(
+                    "Login to View History!",
+                    "You need to login to access your history.",
+                    "../../assets/img/empty-cr-list.png",
+                    "/login"
+                  )
+                }
+              >
+                Lịch sử
+              </a>
             )}
             <a href="https://www.facebook.com/share/fFgCruNduDrskWBa/" className="nav__item nav__link active-link">Fanpage</a>
             <div className="nav__buttons nav__buttons-Pre" style={{ marginLeft: '2.5rem' }}>
