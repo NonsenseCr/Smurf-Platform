@@ -322,6 +322,11 @@ img {
     margin: 4rem;
 }
 
+.container-list{
+    position: relative;
+    margin: 2rem 0;
+}
+
 
 
 .sections {
@@ -636,6 +641,7 @@ img {
     margin-top: .7rem !important;
     display: block;
     margin-top: 0;
+    z-index: 9999;
     /* remove the gap so it doesn't close */
 }
 
@@ -675,8 +681,7 @@ img {
 }
 
 .nav__link:hover {
-    color: var(--first-color);
-    font-weight: 600;
+    color: #000;
 }
 
 .nav__close {
@@ -704,7 +709,6 @@ img {
     background-color: var(--containers-color-alt);
     text-align: center;
     font-size: var(--body-font);
-    border-radius: 5px;
     justify-content: center;
     font-weight: var(--font-semi-bold);
     padding: .5rem 1rem;
@@ -718,6 +722,10 @@ img {
 
 .btn-watch:hover {
     background-color: var(--containers-color-yellow);
+}
+
+.btn-watch:hover a{
+    color: #000;
 }
 
 /* Active link */
@@ -963,7 +971,7 @@ img {
     display: grid;
     gap: 2rem;
     grid-template-columns: 1fr 1fr ;
-    bottom: 0;
+    bottom: -90px;
     left: 50%;
     transform: translate(-50%, 0);
     margin: 4rem 0 1rem 0;
@@ -1087,8 +1095,11 @@ img {
     grid-template-columns: 70% 30%;
     padding: 20px;
     align-items: center;
-    left: 120px;
     top: 0;
+}
+
+.main-Banner .item-infor{
+    left: 120px;
 }
 
 .item-infor .item-content{
@@ -1228,7 +1239,7 @@ img {
     line-height: 15px;
     font-size: 10px;
     font-weight: 500;
-    z-index: 1000;
+    z-index: 100;
     border-radius: 3px;
     animation: blink 2s infinite;
 }
@@ -1445,7 +1456,7 @@ img {
 .update-item {
     padding:0 15px;
     margin-bottom: .8rem;
-    width: 260px;
+    width: 230px;
     float: left;
     overflow: hidden;
     -moz-transition: all .3s ease-out;
@@ -1453,12 +1464,13 @@ img {
     -o-transition: all .3s ease-out;
     transition: all .3s ease-out;
     align-items: center;
+    border-radius: 3px;
 }
 
 
 .update-item .poster {
-    width: 260px !important;
-    height: 350px !important;
+    width: 220px !important;
+    height: 310px !important;
     max-width: 300px;
     vertical-align: middle;
     position: relative;
@@ -1903,5 +1915,13 @@ img {
 
     .containers {
         min-width: 1280px;
+    }
+}
+
+
+@media screen and (max-width: 1024px) {
+
+    .containers {
+        max-width: 1024px;
     }
 }

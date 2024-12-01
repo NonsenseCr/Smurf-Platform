@@ -62,7 +62,7 @@ const Home = () => {
                 subtitle="Danh Sách truyện"
                 description="Danh sách các truyện mới nhất cập nhật liên tục"/>
             <TopRankingBanner topComics={topReadComics} />
-            <CategoryList categories={categories} />
+            <CategoryList categories={categories} title={"Loại truyện phổ biến"} />
             <RecommendBanner/>
         </div>
     );

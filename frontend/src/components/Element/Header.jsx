@@ -145,7 +145,7 @@ function Header() {
               </Dropdown.Menu>
             </Dropdown>
             <Link to="/trending" className="nav__link active-link">Trending</Link>
-            <Link to="/new-updates" className="nav__item nav__link active-link">Mới cập nhật</Link>
+            <Link to="/latest" className="nav__item nav__link active-link">Mới cập nhật</Link>
             <Link to="/rankings/1" className="nav__item nav__link active-link">Xếp hạng</Link>
             {isAuthenticated ? (
               <Link to="/following" className="nav__item nav__link active-link">

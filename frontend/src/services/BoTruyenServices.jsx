@@ -79,6 +79,19 @@ export const fetchTrendingComics = async (page = 1, limit = 12) => {
     }
 };
 
+// Lấy danh sách truyện mới cập nhật với phân trang
+export const fetchLatestComics = async (page = 1, limit = 12) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/listlatest`, {
+            params: { page, limit },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching latest comics:', error);
+        throw new Error('Không thể tải danh sách truyện mới cập nhật');
+    }
+};
+
 
 export const fetchBoTruyenByCategory = async (categoryId, page = 1, limit = 12) => {
     try {

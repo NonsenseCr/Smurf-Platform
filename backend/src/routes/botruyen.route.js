@@ -343,6 +343,90 @@ router.get('/latest', async (req, res) => {
     }
 });
 
+
+
+// Lấy danh sách truyện mới cập nhật
+router.get('/listlatest', async (req, res) => {
+    try {
+        const { page = 1, limit = 12 } = req.query;
+        const skip = (page - 1) * limit;
+
+        // Lấy danh sách truyện mới nhất theo phân trang
+        const latestComics = await BoTruyen.find({
+            active: true
+        })
+            .sort({
+                updatedAt: -1
+            })
+            .skip(skip)
+            .limit(parseInt(limit))
+            .select('tenbo poster premium updatedAt')
+            .lean();
+
+        // Tổng số lượng truyện
+        const totalCount = await BoTruyen.countDocuments({
+            active: true
+        });
+
+        // Lấy chương mới nhất cho từng truyện
+        const comicIds = latestComics.map((comic) => comic._id);
+        const latestChapters = await Chapter.aggregate([
+            {
+                $match: {
+                    id_bo: { $in: comicIds },
+                    active: true
+                }
+            },
+            {
+                $sort: { thoi_gian: -1 }
+            },
+            {
+                $group: {
+                    _id: '$id_bo',
+                    latestChapter: { $first: '$$ROOT' }
+                }
+            }
+        ]);
+
+        // Ghép chương mới nhất vào danh sách truyện
+        const chapterMap = latestChapters.reduce((map, chap) => {
+            map[chap._id] = chap.latestChapter;
+            return map;
+        }, {});
+
+        const formattedComics = latestComics.map((comic) => {
+            const latestChapter = chapterMap[comic._id] || null;
+
+            return {
+                _id: comic._id,
+                TenBo: comic.tenbo,
+                AnhBia: comic.poster,
+                TtPemium: comic.premium,
+                latestChapter: latestChapter
+                    ? {
+                          SttChap: latestChapter.stt_chap,
+                          TenChap: latestChapter.ten_chap,
+                          ThoiGian: calculateTimeAgo(latestChapter.thoi_gian),
+                      }
+                    : null, // Nếu không có chương mới nhất, trả về null
+            };
+        });
+
+        res.status(200).json({
+            comics: formattedComics,
+            totalCount,
+            totalPages: Math.ceil(totalCount / limit),
+            currentPage: parseInt(page),
+        });
+    } catch (error) {
+        console.error('Error fetching latest comics:', error);
+        res.status(500).json({
+            message: 'Lỗi khi lấy danh sách truyện mới cập nhật',
+        });
+    }
+});
+
+
 // Lấy danh sách truyện Trending
 router.get('/trending', async (req, res) => {
     try {

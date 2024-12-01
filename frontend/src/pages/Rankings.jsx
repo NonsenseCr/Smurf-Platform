@@ -115,7 +115,7 @@ const Rankings = () => {
                                         </Link>
                                         <div className="item-infor firstRank-infor" style={{ padding: "0 20px" }}>
                                             <Link to={`/comics/${rankings[0]._id}`}>
-                                                <h3 className="item-title">{rankings[0].TenBo}</h3>
+                                                <h3 className="item-title ">{rankings[0].TenBo}</h3>
                                             </Link>
                                             <h6 className="item-type">
                                                 <span style={{ color: "#FAB818", fontSize: "20px", fontWeight: 600 }}>
@@ -151,7 +151,7 @@ const Rankings = () => {
                                             />
                                         </Link>
                                         <div className="item-infor" style={{ padding: "10px 20px" }}>
-                                            <h3 className="item-title">{item.TenBo}</h3>
+                                            <h3 className="rank-title">{item.TenBo}</h3>
                                             <h6 className="item-type">
                                                 <span style={{ color: "#fff" }}>{item.TongLuotXem}</span> Lượt xem
                                             </h6>

@@ -4,10 +4,6 @@
     border-radius: 10px
 }
 
-.top__content {
-    margin-bottom: 2rem
-}
-
 .rank__container {
     position: relative;
     background-color: var(--body-main);
@@ -17,6 +13,13 @@
 
 .rank{
     padding: 0 .5rem 1rem .5rem;
+}
+
+.rank-title{
+    font-size: var(--h2-font-size);
+    color: var(--containers-color-alt) !important;
+    font-weight: var(--font-medium);
+    margin-bottom: 8px;
 }
 
 .item-content,
@@ -52,10 +55,15 @@
     grid-template-columns: 7% 68% 25%;
     justify-content: space-between;
     list-style: none;
-    padding: 15px 0;
+    padding: 15px 0 15px 20px;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid var(--body-color)
+    border-bottom: 1px solid var(--body-color);
+    border-radius: 10px;
+}
+
+.rank-item:hover{
+    background-color: #1a1e27;
 }
 
 .rank__item-infor {
@@ -88,8 +96,9 @@
 
 .item-content .rank-img {
     width: 80px;
-    border-radius: 2px
+    border-radius: 1px;
 }
+
 
 .rating {
     display: flex;
@@ -107,7 +116,7 @@
 
 #firstRank {
     position: relative;
-    height: 250px
+    height: 300px
 }
 
 #firstRank .bg-img {
@@ -116,7 +125,7 @@
     height: 100%;
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center center;
+    background-position: center;
     z-index: 1
 }
 
@@ -154,10 +163,10 @@
 }
 
 #firstRank .rank-img {
-    width: 120px;
     border: 3px solid #fff;
-    border-radius: 5px;
-    cursor: pointer
+    width: 130px;
+    height: 170px;
+    border-radius: 1px;
 }
 
 .firstRank-infor {
@@ -165,4 +174,12 @@
     width: 100%;
     display: flex !important;
     flex-direction: column !important
+}
+
+#firstRank .rank-img:hover{
+    border: 3px solid var(--containers-color-alt);
+}
+
+.firstRank-infor .item-title:hover {
+    color: var(--containers-color-alt) !important;
 }

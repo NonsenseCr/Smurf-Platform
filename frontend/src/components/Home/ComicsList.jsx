@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 
 const ComicList = ({ comics, title }) => {
     return (
-        <section className="new-update containers mt-3" id="update">
+        <section className="new-update containers" style={{paddingTop: '2rem'}} id="update">
             <div className="update__container TruyenNew__Container grids">
 
                     <div className="title-infor">
                         <span className="section__subtitle">{title}</span>
                     </div>
-                <div className="containers">
+                <div className="container-list">
                     <div className="row row-cols-6 justify-content-center">
                         {comics.map(comic => (
                             <div key={comic._id} className="col-2 update-item">

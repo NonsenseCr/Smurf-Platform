@@ -13,7 +13,7 @@ const CarouselComponent = ({ comics = [] }) => {
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        autoplay: false,
+        autoplay: true,
         autoplaySpeed: 5000,
     };
 
@@ -103,13 +103,13 @@ const CarouselComponent = ({ comics = [] }) => {
                     </div>
                 </div>
             </section>
-            <div className="main__right containers">
+            <div className="main__right">
                 <div className="main__random">
                         <div className="content">
                             <a href="#">Hôm nay đọc gì?</a>
                         </div>
                         <div className="horizontal" style={{marginTop:'1rem'}}></div>
-                        <div className="item-des" style={{margin:'1.5rem'}}>
+                        <div className="item-des" >
                             <p>Nếu bạn không biết đọc gì hôm nay. Hãy để tôi chọn cho bạn</p>
                         </div>
                         <div className="btn__regis" >

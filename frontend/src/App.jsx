@@ -11,6 +11,8 @@ import "./styles/main.css";
 import Register from "./pages/Register";
 import Rankings from "./pages/Rankings";
 import ScrollToTopButton from "./components/Element/ScrollToTopButton";
+import Payment from "./pages/Payment";
+import ListLatestComics from "./pages/ListLatestComics";
 
 function App() {
   const location = useLocation();
@@ -26,10 +28,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/trending" element={<ListTrendingComics />} />
+          <Route path="/latest" element={<ListLatestComics />} />
           <Route path="/:id" element={<ListTypeComics />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/rankings/:type" element={<Rankings />} />
+          <Route path="/premium" element={<Payment />} />
         </Routes>
         <ScrollToTopButton/>
       </main>

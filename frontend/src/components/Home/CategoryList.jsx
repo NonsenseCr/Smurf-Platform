@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 
-const CategoryList = ({ categories }) => {
+const CategoryList = ({ categories , title}) => {
     return (
         <section className="new-update containers mt-3" id="update">
             <div className="update__container grids">
                 <div className="top__content">
                     <div className="title-infor">
-                        <span className="section__subtitle">Loại truyện phổ biến</span>
+                        <span className="section__subtitle">{title}</span>
                         <p className="section__des"></p>
                     </div>
                 </div>

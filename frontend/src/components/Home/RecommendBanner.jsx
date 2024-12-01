@@ -4,7 +4,7 @@ const RecommendationBanner = () => {
     return (
         <section className="new-update containers mt-6" id="update">
             <div className="update__container grids">
-                <div className="section-bottom container w-100">
+                <div className="section-bottom container-list w-100">
                     {/* Hình ảnh minh họa */}
                     <img
                         loading="lazy"
