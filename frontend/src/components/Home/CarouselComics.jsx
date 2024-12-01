@@ -13,7 +13,7 @@ const CarouselComponent = ({ comics = [] }) => {
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        autoplay: true,
+        autoplay: false,
         autoplaySpeed: 5000,
     };
 
@@ -29,8 +29,6 @@ const CarouselComponent = ({ comics = [] }) => {
             <section className="home" id="home">
                 <div className="home__container w-100">
                     <div className="carousel-container">
-                    
-                        {/* Slider Component */}
                         <Slider ref={sliderRef} {...settings}>
                             {comics.map((comic, index) => (
                                 <div key={index} className="carousel-item w-100 main-Banner">
@@ -52,7 +50,8 @@ const CarouselComponent = ({ comics = [] }) => {
                                             />
                                         </div>
                                     )}
-                                    <div className="background-item rounded-1"></div>
+                                    <div className="background-item"></div>
+                                    <div className="background-bottom"></div>
                                     <div className="item-infor">
                                         <div className="item-content">
                                             <div className="content">
@@ -74,48 +73,48 @@ const CarouselComponent = ({ comics = [] }) => {
                                             <div className="item-des">
                                                 <p>{truncateText(comic.mota, 35)}</p>
                                             </div>
+                                            <div className=" btn-watch">
+                                                <a href={`/comic/${comic._id}`}>
+                                                    XEM NGAY <i className="fa-solid fa-square-caret-right"></i>
+                                                </a>
+                                            </div>
                                         </div>
+                                        
                                     </div>
-                                    <div className="btn__regis btn-watch w-50">
-                                        <a href={`/comic/${comic._id}`}>
-                                            XEM NGAY <i className="fa-solid fa-square-caret-right"></i>
-                                        </a>
-                                    </div>
+                                    
                                 </div>
                             ))}
                         </Slider>
-                        
+
                         <button
                             className="carousel-control-prev"
                             onClick={() => sliderRef.current.slickPrev()}
-                            style={{ width: "5%", zIndex: 1000 }}
                         >
-                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <div className="carousel-icon"> <span className="carousel-control-prev-icon" aria-hidden="true"></span></div>
+                           
                         </button>
                         <button
                             className="carousel-control-next"
                             onClick={() => sliderRef.current.slickNext()}
-                            style={{ width: "5%", zIndex: 1000 }}
                         >
-                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <div className="carousel-icon"><span className="carousel-control-next-icon" aria-hidden="true"></span></div>
+                            
                         </button>
                     </div>
                 </div>
             </section>
-            <div className="main__right">
-                <div className="main__random bg">
-                    <div className="item-random">
+            <div className="main__right containers">
+                <div className="main__random">
                         <div className="content">
                             <a href="#">Hôm nay đọc gì?</a>
                         </div>
-                        <div className="horizontal"></div>
-                        <div className="item-des">
+                        <div className="horizontal" style={{marginTop:'1rem'}}></div>
+                        <div className="item-des" style={{margin:'1.5rem'}}>
                             <p>Nếu bạn không biết đọc gì hôm nay. Hãy để tôi chọn cho bạn</p>
                         </div>
-                        <div className="btn__regis">
+                        <div className="btn__regis" >
                             <a href="/comic/random">ĐỌC NGẪU NHIÊN</a>
                         </div>
-                    </div>
                 </div>
                 <div className="main__random bg-random">
                     <a id="btnPay" style={{ fontWeight: 600, letterSpacing: '1px' }} className="btn-pre nav__buttons-Pre">

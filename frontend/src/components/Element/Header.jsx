@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../../assets/logo2.png';
 import imgInfo from '../../assets/img/empty-cr-list.png';
+import yuzu from '../../assets/yuzu.png';
 import SearchBar from './SearchBar';
 
 
@@ -28,28 +29,33 @@ function Header() {
     navigate('/register');
   };
 
-  const handleAuthAlert = (title, text, imageUrl, redirectPath) => {
-    Swal.fire({
-      title,
-      text,
-      imageUrl,
-      imageWidth: 120,
-      imageHeight: 150,
-      imageAlt: "Custom image",
-      showCancelButton: true,
-      confirmButtonText: "Login Now!",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
+  const handleAuthAlert = ({width, height, title, text, imageUrl, onConfirm, }) => {
+    const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger",
+        cancelButton: "btn btn-danger mr-3",
       },
       buttonsStyling: false,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate(redirectPath);
-      }
     });
+  
+    swalWithBootstrapButtons
+      .fire({
+        title,
+        text,
+        imageUrl,
+        imageWidth: width,
+        imageHeight: height,
+        imageAlt: "Custom image",
+        showCancelButton: true,
+        confirmButtonText: "Login Now!",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          onConfirm();
+        }
+      });
   };
 
   return (
@@ -150,12 +156,12 @@ function Header() {
                 id="follow"
                 className="nav__item nav__link active-link"
                 onClick={() =>
-                  handleAuthAlert(
-                    "Login to Follow!",
-                    "You need to login to access your following list.",
-                    "/images/yuzu.png",
-                    "/login"
-                  )
+                  handleAuthAlert({
+                    title: "Login Following!",
+                    text: "Có vẻ như bạn cần đăng nhập để xem danh sách theo dõi!",
+                    imageUrl: yuzu, // Đường dẫn ảnh
+                    onConfirm: () => navigate("/login"), // Điều hướng khi xác nhận
+                  })
                 }
               >
                 Theo dõi
@@ -170,12 +176,14 @@ function Header() {
                 id="history"
                 className="nav__item nav__link active-link"
                 onClick={() =>
-                  handleAuthAlert(
-                    "Login to View History!",
-                    "You need to login to access your history.",
-                    "../../assets/img/empty-cr-list.png",
-                    "/login"
-                  )
+                  handleAuthAlert({
+                    width: 120,
+                    height: 150, 
+                    title: "Login History!",
+                    text: "Có vẻ như bạn cần đăng nhập để xem lịch sử đọc!",
+                    imageUrl: imgInfo, // Đường dẫn ảnh
+                    onConfirm: () => navigate("/login"), // Điều hướng khi xác nhận
+                  })
                 }
               >
                 Lịch sử
@@ -192,4 +200,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default Header; 
