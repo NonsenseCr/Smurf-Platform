@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import iconPremium from '../../assets/PreDark.png';
 
-const ShowListComics = ({ comics, subtitle, description }) => {
+const ShowListComics = ({ comics, subtitle, description, link }) => {
     return (
         <section className="new-update containers mt-3" id="update">
             <div className="update__container TruyenNew__Containter grids">
@@ -11,7 +11,7 @@ const ShowListComics = ({ comics, subtitle, description }) => {
                         <p className="section__des">{description}</p>
                     </div>
                     <div className="btn-More">
-                        <Link to="/boTruyen/ListTruyenEarliest">XEM THÊM</Link>
+                        <Link to={link}>XEM THÊM</Link>
                     </div>
                 </div>
                 <div className="row row-cols-6 justify-content-center">

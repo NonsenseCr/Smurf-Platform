@@ -32,6 +32,8 @@
 
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
 
 /*=============== VARIABLES CSS ===============*/
 :root {
@@ -64,7 +66,8 @@
     --body-color:
         /* #141624;*/
         /* #263238;*/
-        #0E1111;
+        /* #0E1111; */
+        #000;
     --body-color-dark: #1a2226;
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;
@@ -74,6 +77,9 @@
     --containers-color-alt: #9858F1;
     --containers-color-yellow: #B142F5;
     --btn-orange: #F47521;
+
+
+    
 
     --header-height: 3rem;
     /*========== Font and typography ==========*/
@@ -130,7 +136,8 @@ body.dark-theme {
     --body-color:
         /* #141624;*/
         /* #263238;*/
-        #0E1111;
+        /* #0E1111; */
+        #000;
     --body-color-dark: #1a2226;
     --body-main: #1a1e24;
     --btn-yellow: #CE29F9;

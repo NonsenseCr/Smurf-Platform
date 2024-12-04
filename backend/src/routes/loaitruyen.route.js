@@ -24,6 +24,41 @@ router.post('/create', async (req, res) => {
     }
 });
 
+// Tạo nhiều thể loại truyện
+router.post('/create-many', async (req, res) => {
+    const loaiTruyens = req.body; 
+
+    if (!Array.isArray(loaiTruyens) || loaiTruyens.length === 0) {
+        return res.status(400).json({ message: 'Dữ liệu đầu vào không hợp lệ hoặc bị trống' });
+    }
+
+    try {
+        const createdLoaiTruyens = [];
+
+        for (const loaiTruyen of loaiTruyens) {
+            const { ten_loai, active } = loaiTruyen;
+            const existingLoaiTruyen = await LoaiTruyen.findOne({ ten_loai: ten_loai.trim() });
+            if (existingLoaiTruyen) {
+                console.log(`Thể loại "${ten_loai}" đã tồn tại. Bỏ qua.`);
+                continue;
+            }
+            const newLoaiTruyen = new LoaiTruyen({ ten_loai, active });
+            await newLoaiTruyen.save();
+            createdLoaiTruyens.push(newLoaiTruyen);
+        }
+
+        res.status(201).json({
+            message: 'Tạo nhiều thể loại thành công',
+            createdLoaiTruyens,
+        });
+    } catch (error) {
+        console.error('Error creating multiple Loai Truyen:', error);
+        res.status(500).json({ message: 'Lỗi khi tạo nhiều thể loại' });
+    }
+});
+
+
+
 // Lấy tất cả các thể loại truyện
 router.get('/', async (req, res) => {
     try {

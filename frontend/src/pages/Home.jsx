@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchActiveBoTruyen, fetchTopReadBoTruyen, fetchBoTruyenLatest} from '../services/BoTruyenServices';
+import { fetchTopReadBoTruyen, fetchBoTruyenLatest} from '../services/BoTruyenServices';
 import { fetchActiveLoaiTruyen } from '../services/LoaiTruyenService';
 import CarouselComponent from '../components/Home/CarouselComics';
 import ComicList from '../components/Home/ComicsList';
@@ -9,7 +9,7 @@ import RecommendType from '../components/Home/RecommendTypeList';
 import ShowListComics from '../components/Home/ShowListComics';
 import RecommendBanner from '../components/Home/RecommendBanner';
 const Home = () => {
-    const [comic, setComics] = useState([]);
+    // const [comic, setComics] = useState([]);
     const [comicsLatest, setlatestComics] = useState([]);
     const [topReadComics, setTopReadComics] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -19,13 +19,13 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [activeData, topReadData, categoryData, LatestData] = await Promise.all([
-                    fetchActiveBoTruyen(),
+                const [ topReadData, categoryData, LatestData] = await Promise.all([
+                    // fetchActiveBoTruyen(),
                     fetchTopReadBoTruyen(),
                     fetchActiveLoaiTruyen(),
                     fetchBoTruyenLatest(),
                 ]);
-                setComics(activeData);
+                // setComics(activeData);
                 setTopReadComics(topReadData);
                 setCategories(categoryData);
                 setlatestComics(LatestData);
@@ -49,18 +49,21 @@ const Home = () => {
 
     return (
         <div className="home-container">
-            <CarouselComponent comics={comic.slice(0, 10)} />
-            <ComicList comics={comic} title="Đề Cử Hôm Nay" />
+            <CarouselComponent comics={topReadComics.slice(0, 10)} />
+            <ComicList comics={topReadComics.slice(0, 10)} title="Đề Cử Hôm Nay" />
             <ShowListComics 
                 comics={comicsLatest}
                 subtitle="Mới Cập Nhật"
-                description="Danh sách các truyện mới nhất với chất lượng cao."/>
+                description="Danh sách các truyện mới nhất với chất lượng cao."
+                link="http://localhost:5173/latest"/>
+                
             <RecommendType/>
             
             <ShowListComics 
                 comics={comicsLatest}
                 subtitle="Danh Sách truyện"
-                description="Danh sách các truyện mới nhất cập nhật liên tục"/>
+                description="Danh sách các truyện mới nhất cập nhật liên tục"
+                link="http://localhost:5173/trending"/>
             <TopRankingBanner topComics={topReadComics} />
             <CategoryList categories={categories} title={"Loại truyện phổ biến"} />
             <RecommendBanner/>

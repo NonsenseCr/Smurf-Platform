@@ -60,7 +60,7 @@ const TopRankingBanner = ({ topComics }) => {
                             {/* Nút xem ngay */}
                             <div className="position-absolute btn-poster">
                                 <Link
-                                    to={`/comics/${topComic._id}`}
+                                    to={`/comic/${topComic._id}`}
                                     className="btn-poster-detail"
                                 >
                                     XEM NGAY <i className="fa-solid fa-square-caret-right"></i>

@@ -20,7 +20,7 @@ const RecommendTypeList = () => {
                         {/* Manga */}
                         <Link
                             className="col"
-                            to="/boTruyen/ListTopic/Manga"
+                            to="/67406eedc03445f471148216"
                         >
                             <div className="col-item">
                                 <img
@@ -37,7 +37,7 @@ const RecommendTypeList = () => {
                         {/* Manwa */}
                         <Link
                             className="col"
-                            to="/boTruyen/ListTopic/Manwa"
+                            to="/67406ee5c03445f471148213"
                         >
                             <div className="col-item">
                                 <img
@@ -69,7 +69,7 @@ const RecommendTypeList = () => {
                         {/* Adventure */}
                         <Link
                             className="col"
-                            to="/boTruyen/ListTopic/Adventure"
+                            to="/67406e97c03445f4711481f8"
                         >
                             <div className="col-item">
                                 <img
@@ -85,7 +85,7 @@ const RecommendTypeList = () => {
                         {/* Comedy */}
                         <Link
                             className="col"
-                            to="/boTruyen/ListTopic/Comedy"
+                            to="/67406ee0c03445f471148210"
                         >
                             <div className="col-item">
                                 <img
@@ -101,7 +101,7 @@ const RecommendTypeList = () => {
                         {/* Romantic */}
                         <Link
                             className="col"
-                            to="/boTruyen/ListTopic/Romantic"
+                            to="/67406ed2c03445f47114820a"
                         >
                             <div className="col-item">
                                 <img

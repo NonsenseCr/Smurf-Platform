@@ -13,6 +13,7 @@ import Rankings from "./pages/Rankings";
 import ScrollToTopButton from "./components/Element/ScrollToTopButton";
 import Payment from "./pages/Payment";
 import ListLatestComics from "./pages/ListLatestComics";
+import CtBoTruyen from "./pages/CTBoTruyen";
 
 function App() {
   const location = useLocation();
@@ -34,6 +35,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/rankings/:type" element={<Rankings />} />
           <Route path="/premium" element={<Payment />} />
+          <Route path="/comic/:id" element={<CtBoTruyen />} />
         </Routes>
         <ScrollToTopButton/>
       </main>
