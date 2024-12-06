@@ -15,6 +15,16 @@ import ScrollToTopButton from "./components/Element/ScrollToTopButton";
 import Payment from "./pages/Payment";
 import ListLatestComics from "./pages/ListLatestComics";
 import CtBoTruyen from "./pages/CTBoTruyen";
+import Infor from "./pages/Infor";
+import AuthSuccess from "./components/Element/AuthSuccess";
+
+
+//nonsense branch
+import Manager from "./area-manager/pages/Manager"
+import ManagerHome from "./area-manager/pages/Home"
+
+import ComicIndex from "./area-manager/pages/comic/Index"
+import ComicDetail from "./area-manager/pages/comic/Detail"
 
 function App() {
   const location = useLocation();
@@ -42,6 +52,7 @@ function App() {
       {!isNoHeaderFooter && !isAreaManager && <Header />}
       <main role="main">
         <Routes>
+          {/* UI CUSTOMER */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/trending" element={<ListTrendingComics />} />
@@ -52,6 +63,18 @@ function App() {
           <Route path="/rankings/:type" element={<Rankings />} />
           <Route path="/premium" element={<Payment />} />
           <Route path="/comic/:id" element={<CtBoTruyen />} />
+          
+          <Route path="/infor" element={<Infor />} />
+          <Route path="/auth/success" element={<AuthSuccess />} /> 
+
+          {/* UI MANAGEMENT */}
+          <Route path="manager" element={<Manager />}>
+            <Route path="home" element={<ManagerHome />} />
+            <Route path="comic-index" element={<ComicIndex />} />
+            <Route path="comic-index/comic-detail/:id" element={<ComicDetail />} />
+          </Route>
+
+
         </Routes>
         <ScrollToTopButton />
       </main>
