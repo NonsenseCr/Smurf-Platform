@@ -2,10 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/module/styleLogin.css";
-import yuri from '../assets/img/log-in-yuzu.png';
-import imgLogin from '../assets/img_login.png';
+import yuri from "../assets/img/log-in-yuzu.png";
+import imgLogin from "../assets/img_login.png";
 import HeaderLogin from "../components/Login/HeaderLogin";
-
 
 const Login = () => {
   const [username, setUsername] = useState(""); // Tên đăng nhập
@@ -15,36 +14,47 @@ const Login = () => {
 
   // Xử lý sự kiện gửi form
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Ngăn không reload trang
+    e.preventDefault(); // Ngăn không reload trang khi submit
 
     try {
-      // Gửi yêu cầu đăng nhập đến backend
-      const response = await axios.post("http://localhost:5000/api/login", {
-        Taikhoan: username,
-        Matkhau: password,
-      });
+        // Gửi yêu cầu đăng nhập đến backend
+        const response = await axios.post("http://localhost:5000/api/login", {
+            username: username.trim(),
+            password: password.trim(),
+        });
 
-      if (response.data.success) {
-        // Lưu thông tin người dùng vào localStorage
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        if (response.data.success) {
+            // Lưu thông tin session vào localStorage
+            localStorage.setItem("session", JSON.stringify(response.data.session));
 
-        // Điều hướng đến trang chính hoặc trang được lưu trước đó
-        const redirectUrl = localStorage.getItem("redirectAfterLogin") || "/";
-        localStorage.removeItem("redirectAfterLogin");
-        navigate(redirectUrl);
-      } else {
-        setErrorMessage(response.data.message || "Đăng nhập thất bại!");
-      }
+            // Lưu thông tin người dùng, bao gồm IdUser, UserName và avatar
+            localStorage.setItem("user", JSON.stringify({
+                id: response.data.user.IdUser,
+                username: response.data.user.UserName,
+                avatar: response.data.user.avatar || "/default-avatar.png", // Sử dụng avatar từ API hoặc avatar mặc định
+            }));
+
+            // Điều hướng đến trang chính hoặc trang lưu trước đó
+            const redirectUrl = localStorage.getItem("redirectAfterLogin") || "/";
+            localStorage.removeItem("redirectAfterLogin");
+            navigate(redirectUrl);
+        } else {
+            // Hiển thị thông báo lỗi nếu đăng nhập thất bại
+            setErrorMessage(response.data.message || "Đăng nhập thất bại!");
+        }
     } catch (error) {
-      setErrorMessage("Có lỗi xảy ra. Vui lòng thử lại sau.", error);
+        // Hiển thị thông báo lỗi khi có vấn đề với yêu cầu
+        setErrorMessage("Có lỗi xảy ra. Vui lòng thử lại sau.");
+        console.error("Login error:", error);
     }
-  };
+};
+
 
   return (
     <>
       <HeaderLogin />
       <div className="main-login">
-        <div className=" main-login__content w-100">
+        <div className="main-login__content w-100">
           <h3 className="main__title">LOGIN</h3>
           <form className="form-login" onSubmit={handleSubmit}>
             <div className="content-login form-group">
@@ -94,7 +104,7 @@ const Login = () => {
                   </a>
                 </div>
                 <div className="google">
-                  <a href="/api/google-login">
+                  <a href={`http://localhost:5000/api/auth/google`}>
                     <i className="ri-google-fill"></i>
                   </a>
                 </div>
@@ -111,16 +121,8 @@ const Login = () => {
 
             {/* Hình ảnh trang login */}
             <div className="img">
-              <img
-                src={imgLogin}
-                alt="anh login"
-                className="img-login"
-              />
-              <img
-                src={yuri}
-                alt="anh login"
-                className="img-login-cat"
-              />
+              <img src={imgLogin} alt="anh login" className="img-login" />
+              <img src={yuri} alt="anh login" className="img-login-cat" />
             </div>
           </form>
         </div>

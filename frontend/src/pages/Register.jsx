@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import HeaderLogin from "../components/Login/HeaderLogin";
 import "../styles/module/styleLogin.css";
 import registerImage from "../assets/img_regis.png";
-// import registerCat from "../assets/imgreg.png";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +12,7 @@ const Register = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   // Xử lý sự kiện khi người dùng nhập dữ liệu
@@ -24,24 +24,41 @@ const Register = () => {
   // Xử lý gửi form
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post("http://localhost:5000/api/register", formData);
+  
       if (response.data.success) {
-        navigate("/login");
+        setSuccessMessage("Đăng ký thành công! Đang chuyển hướng...");
+        setErrorMessage("");
+        setTimeout(() => {
+          navigate("/infor", {
+            state: {
+              user: {
+                IdUser: response.data.user.id, 
+                username: response.data.user.username,
+                email: response.data.user.email,
+              },
+            },
+          });
+        }, 2000);
       } else {
         setErrorMessage(response.data.message || "Đăng ký thất bại!");
+        setSuccessMessage("");
       }
     } catch (error) {
       setErrorMessage("Có lỗi xảy ra. Vui lòng thử lại sau.", error);
+      setSuccessMessage("");
     }
   };
+  
+  
 
   return (
     <>
       <HeaderLogin />
       <div className="main-register">
-        <div className=" main-login__content w-100">
+        <div className="main-login__content w-100">
           <h3 className="main__title">REGISTER NOW!</h3>
           <form className="form-login" onSubmit={handleSubmit}>
             <div className="content-login form-group">
@@ -90,10 +107,11 @@ const Register = () => {
                 <i></i>
               </div>
 
-              {/* Hiển thị lỗi nếu có */}
+              {/* Hiển thị thông báo lỗi */}
               {errorMessage && <div className="text-danger">{errorMessage}</div>}
 
-              {/* Nút đăng ký */}
+              {/* Hiển thị thông báo thành công */}
+              {successMessage && <div className="text-success">{successMessage}</div>}
               <div className="login">
                 <input type="submit" value="Đăng ký" />
               </div>
@@ -106,12 +124,11 @@ const Register = () => {
                   </a>
                 </div>
                 <div className="google">
-                  <a href="/api/google-login">
+                  <a href={`http://localhost:5000/api/auth/google`}>
                     <i className="ri-google-fill"></i>
                   </a>
                 </div>
               </div>
-
               <div className="regis">
                 Bạn đã có tài khoản?{" "}
                 <a href="/login" className="register-link">
@@ -123,7 +140,6 @@ const Register = () => {
             {/* Hình ảnh trang đăng ký */}
             <div className="img">
               <img src={registerImage} alt="Đăng ký" className="img-regis" />
-              {/* <img src={registerCat} alt="Đăng ký" className="img-login-cat" /> */}
             </div>
           </form>
         </div>

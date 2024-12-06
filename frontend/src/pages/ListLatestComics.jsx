@@ -34,7 +34,7 @@ const ListLatestComics = () => {
   }
 
   return (
-    <div className="main__top section">
+    <div className="main__top ">
       <div className="list__container containers list">
         {/* Tiêu đề và các nút điều khiển */}
         <div className="top__title">

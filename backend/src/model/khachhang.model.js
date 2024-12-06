@@ -1,13 +1,31 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const KhachHangSchema = new mongoose.Schema({
-    google_account: { type: String },              // Tài khoản Google
-    facebook_account: { type: String },            // Tài khoản Facebook
-    avatar: { type: mongoose.Schema.Types.ObjectId, ref: 'Avatar' }, // Avatar
-    ticket_salary: { type: Number, default: 0 },   // Số vé còn lại
-    active_premium: { type: Boolean, default: false }, // Trạng thái Premium
-    active_stats: { type: Number, default: 0 },    // Trạng thái thống kê
-});
+const khachHangSchema = new Schema(
+    {
+        IdUser: { type: String, required: true, ref: 'User' }, // Tham chiếu tới bảng User
+        GoogleAccount: { type: String, required: false }, // Tài khoản Google
+        FacebookAccount: { type: String, required: false }, // Tài khoản Facebook
+        IdAvatar: { type: String, required: false }, // ID ảnh đại diện
+        TicketSalary: { type: Number, required: false, default: 0 }, // Vé thưởng
+        ActivePremium: { type: Boolean, default: false }, // Trạng thái Premium
+        ActiveStats: { type: Number, default: 1 }, // Trạng thái hoạt động
 
-const KhachHang = mongoose.model('KhachHang', KhachHangSchema);
+        // Thay thế Customer_Login
+        SocialLogins: [
+            {
+                LoginProvider: { type: String, required: true }, // Nhà cung cấp (Google, Facebook, etc.)
+                ProviderKey: { type: String, required: true }, // ID từ nhà cung cấp
+            },
+        ],
+
+        Payments: [{ type: Schema.Types.ObjectId, ref: 'Payment' }],
+    },
+    {
+        timestamps: false // Không tự động tạo thời gian cập nhật
+    }
+);
+
+// Xuất mô hình
+const KhachHang = model('KhachHang', khachHangSchema);
+
 module.exports = KhachHang;

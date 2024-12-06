@@ -618,11 +618,15 @@ img {
     background-color: var(--body-color);
     width: 700px !important;
     height: 210px !important;
-    top: 1.5rem;
+    /* top: 1.5rem; */
 }
 
 .dropdown:hover .dropdown-menu {
     display: block;
+}
+
+.dropdown-menu li{
+    margin: .3rem 0;
 }
 
 .dropdown-item:hover {
@@ -810,11 +814,20 @@ img {
     color: var(--title-color);
 }
 
+.btn__login button{
+    color: var(--title-color);
+}
+
+.btn__login button>span{
+    margin: .5rem;
+}
+
 .btn__login button>img {
-    width: 35px;
-    height: 35px;
-    margin: 0 .3rem;
+    width: 40px;
+    height: 40px;
+    margin: 0 .5rem;
     border-radius: 50%;
+    border: 2px solid #fff;
 }
 
 

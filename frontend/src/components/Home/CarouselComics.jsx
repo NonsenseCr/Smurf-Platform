@@ -25,7 +25,7 @@ const CarouselComponent = ({ comics = [] }) => {
     };
 
     return (
-        <div className="main__bottom sections">
+        <div className="main__bottom">
             <section className="home" id="home">
                 <div className="home__container w-100">
                     <div className="carousel-container">
