@@ -1,0 +1,166 @@
+/* Font toàn bộ trang */
+body {
+  font-family: 'Rubik', 'Ubuntu', sans-serif;
+}
+
+/* Quick Access Container */
+.quick-access-container {
+  margin-bottom: 30px;
+  text-align: right; /* Đặt ở bên phải */
+}
+
+/* Quick Access Title */
+.quick-access-title {
+  font-size: 50px; /* Kích thước tiêu đề */
+  font-weight: bold;
+  color: #6a1b9a; /* Tím đậm */
+}
+
+/* Line ngăn cách */
+.quick-access-line {
+  width: 80px;
+  height: 4px;
+  background-color: #6a1b9a;
+  margin: 10px 0 20px auto; /* Đẩy sang phải */
+}
+
+/* Quick Access Buttons */
+.quick-access {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end; /* Đặt các nút ở bên phải */
+  gap: 20px;
+}
+
+.quick-access-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 210px; /* Kích thước nút */
+  height: 210px; /* Kích thước nút */
+  border: 3px solid #6A1B9A; /* Viền hồng nhạt */
+  border-radius: 12px;
+  background-color: white;
+  font-weight: bold;
+  color: #6A1B9A; /* Màu chữ và icon */
+  font-size: 20px; /* Kích thước chữ */
+  text-align: center;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.quick-access-item:hover {
+  transform: scale(1.1);
+  background-color: #f9a4d7; /* Màu nền khi hover */
+}
+
+/* Icon trong nút */
+.quick-access-icon {
+  font-size: 50px; /* Kích thước icon */
+  margin-bottom: 10px;
+  color: #6A1B9A; /* Màu icon */
+}
+
+/* Home Container */
+.home-container {
+  padding: 20px;
+}
+
+/* Comics Section */
+.comics-section {
+  margin-top: 30px;
+}
+
+/* Section Header */
+.section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 50px; /* Kích thước tiêu đề */
+  font-weight: bold;
+  color: #6a1b9a; /* Tím đậm */
+}
+
+/* Line dưới tiêu đề */
+.section-line {
+  width: 100px; /* Độ dài của line */
+  height: 4px;
+  background-color: #6a1b9a; /* Tím đậm */
+  margin-top: 5px;
+}
+
+
+.quick-access-item:hover .quick-access-icon {
+  color: #ff008c; /* Màu icon khi hover */
+}
+.quick-access-item .logo {
+  width: 130px; /* Kích thước logo */
+  height: auto;
+  margin-bottom: 10px;
+}
+
+/* Section Title - Hover Effect */
+.section-title {
+  font-size: 50px; /* Kích thước tiêu đề */
+  font-weight: bold;
+  color: #6a1b9a; /* Tím đậm */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.section-title:hover {
+  color: #9858f1; /* Màu tím nhạt hơn khi hover */
+  transform: scale(1.02); /* Phóng to một chút khi hover */
+}
+
+/* Quick Access Title - Hover Effect */
+.quick-access-title {
+  font-size: 50px; /* Kích thước tiêu đề */
+  font-weight: bold;
+  color: #6a1b9a; /* Tím đậm */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.quick-access-title:hover {
+  color: #9858f1; /* Màu tím nhạt hơn khi hover */
+  transform: scale(1.01); /* Phóng to một chút khi hover */
+}
+/* Notification Container */
+.notification-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px; /* Cách Quick Access */
+  padding: 16px;
+  border: 2px dashed #6a1b9a; /* Line đứt màu tím */
+  background-color: #f9f0ff; /* Màu nền nhẹ */
+  border-radius: 8px;
+}
+
+/* Notification Image */
+.notification-image img {
+  width: 63px;
+  height: 63px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #6a1b9a; /* Viền tím */
+}
+
+/* Notification Content */
+.notification-content {
+  font-size: 16px;
+  color: #6a1b9a; /* Màu tím chữ */
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+/* Notification Icon */
+.notification-icon {
+  font-size: 30px; /* Kích thước lớn hơn chữ */
+  color: #6a1b9a;
+}
+

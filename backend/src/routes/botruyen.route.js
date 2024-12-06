@@ -158,6 +158,16 @@ router.get('/', async (req, res) => {
 });
 
 
+router.get('/all-comic-list', async (req, res) => {
+    try {
+        const Botruyen = await BoTruyen.find({ active: true }); 
+        res.status(200).json(Botruyen);
+    } catch (error) {
+        console.error('Error fetching botruyen Truyen:', error);
+        res.status(500).json({ message: 'Lỗi khi lấy danh sách truyện' });
+    }
+});
+
 
 // Thêm loại truyện vào bộ truyện 
 router.post('/:id/add-loai', async (req, res) => {

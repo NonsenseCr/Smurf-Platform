@@ -15,8 +15,6 @@ import ScrollToTopButton from "./components/Element/ScrollToTopButton";
 import Payment from "./pages/Payment";
 import ListLatestComics from "./pages/ListLatestComics";
 import CtBoTruyen from "./pages/CTBoTruyen";
-import Infor from "./pages/Infor";
-import AuthSuccess from "./components/Element/AuthSuccess";
 
 function App() {
   const location = useLocation();
@@ -34,9 +32,14 @@ function App() {
   const noHeaderFooterRoutes = ["/login", "/register", "/infor", "/auth/success"];
   const isNoHeaderFooter = noHeaderFooterRoutes.includes(location.pathname);
 
+  const areaManagerRoutes  = ["/manager"];
+  
+  const isAreaManager = areaManagerRoutes.some((route) =>
+    location.pathname.startsWith(route));
+
   return (
     <>
-      {!isNoHeaderFooter && <Header />}
+      {!isNoHeaderFooter && !isAreaManager && <Header />}
       <main role="main">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -49,12 +52,10 @@ function App() {
           <Route path="/rankings/:type" element={<Rankings />} />
           <Route path="/premium" element={<Payment />} />
           <Route path="/comic/:id" element={<CtBoTruyen />} />
-          <Route path="/infor" element={<Infor />} />
-          <Route path="/auth/success" element={<AuthSuccess />} /> 
         </Routes>
         <ScrollToTopButton />
       </main>
-      {!isNoHeaderFooter && <Footer />}
+      {!isNoHeaderFooter  && !isAreaManager && <Footer />}
     </>
   );
 }

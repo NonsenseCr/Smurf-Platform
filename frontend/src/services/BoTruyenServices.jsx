@@ -13,6 +13,16 @@ export const fetchActiveBoTruyen = async () => {
     }
 };
 
+
+export const fetchAllBoTruyen = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/`);
+        return response.data;
+    } catch (error) {
+        throw new Error('Không thể tải danh sách bộ truyện ', error.response);
+    }
+};
+
 // Lấy danh sách bộ truyện mới nhất
 export const fetchBoTruyenLatest = async () => {
     try {
