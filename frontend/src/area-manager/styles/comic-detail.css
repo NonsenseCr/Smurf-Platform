@@ -1,0 +1,108 @@
+.comic-detail-container {
+    padding: 20px;
+    font-family: 'Rubik', 'Ubuntu', sans-serif;
+  }
+  
+  .section-title {
+    font-size: 28px; /* Kích thước chữ lớn */
+    font-weight: bold; /* Chữ đậm */
+    color: #6a1b9a; /* Màu tím đậm */
+    margin-bottom: 5px; /* Khoảng cách giữa tên và line */
+  }
+  
+  .comic-id {
+    display: inline-block; /* Căn cùng dòng với tên */
+    background-color: yellow; /* Nền vàng */
+    color: black; /* Chữ đen */
+    font-size: 14px; /* Kích thước chữ nhỏ hơn */
+    font-weight: bold; /* Chữ đậm */
+    padding: 2px 8px; /* Khoảng cách bên trong */
+    border-radius: 8px; /* Bo góc */
+    margin-left: 10px; /* Khoảng cách bên trái tên */
+    vertical-align: middle; /* Căn giữa với tên */
+  }
+  
+  .line {
+    border: none;
+    height: 2px;
+    background-color: #ccc; /* Line màu xám nhạt */
+    margin-top: 10px; /* Khoảng cách bên trên line */
+    margin-bottom: 20px; /* Khoảng cách bên dưới line */
+  }
+  
+  
+  
+  
+  .images-section {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .image-container {
+    position: relative;
+    width: 300px; /* Kích thước mặc định */
+    height: 450px;
+  }
+  
+  .banner-container {
+    width: 900px; /* Chiều rộng riêng cho banner */
+    height: auto; /* Giữ nguyên tỷ lệ ảnh */
+  }
+  
+  .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo ảnh không bị méo */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7); /* Nền đen nhạt */
+    color: white; /* Chữ trắng */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase; /* Viết hoa chữ */
+  }
+  
+  .genres-section {
+    margin-bottom: 20px;
+  }
+  
+  .genres-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .genre-item {
+    background-color: #6a1b9a; /* Random colors sẽ thay thế ở JavaScript */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .attributes-section p {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
+  .actions-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .actions-section button {
+    font-size: 14px;
+    padding: 5px 15px;
+  }
+  
