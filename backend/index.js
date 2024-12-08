@@ -40,17 +40,20 @@ const boTruyenRoutes = require("./src/routes/botruyen.route");
 const loaiTruyenRoutes = require("./src/routes/loaitruyen.route");
 const tacGiaRoutes = require("./src/routes/tacgia.route");
 const chapterRoutes = require('./src/routes/chapter.route');
+const ctchapterRoutes = require('./src/routes/CTChapter.route');
 const avatarRoutes = require('./src/routes/avatar.route'); 
 const khachhangRoutes = require('./src/routes/khachhang.route'); 
 const userRoutes = require('./src/routes/user.route'); 
 const registerRoutes = require('./src/routes/register.route'); 
 const loginRoutes = require('./src/routes/login.route');
 const authRoutes = require('./src/routes/auth.route'); 
+
 // Use routes
 app.use("/api/botruyen", boTruyenRoutes);
 app.use("/api/loaitruyen", loaiTruyenRoutes);
 app.use("/api/tacgia", tacGiaRoutes);
 app.use('/api/chapter', chapterRoutes);
+app.use('/api/ctchapter', ctchapterRoutes);
 app.use('/api/avatar', avatarRoutes);
 app.use('/api/khachhang', khachhangRoutes);
 app.use('/api/user', userRoutes);

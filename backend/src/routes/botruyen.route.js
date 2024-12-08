@@ -584,6 +584,25 @@ router.get('/trending', async (req, res) => {
         });
     }
 });
+router.get('/random', async (req, res) => {
+    try {
+        const randomComic = await BoTruyen.aggregate([
+            { $match: { active: true } }, 
+            { $sample: { size: 1 } } 
+        ]);
+
+        if (randomComic.length > 0) {
+            const comicId = randomComic[0]._id; 
+            res.status(200).json({ _id: comicId }); 
+        } else {
+            res.status(404).json({ message: 'Không tìm thấy bộ truyện nào' });
+        }
+    } catch (error) {
+        console.error('Error fetching random comic:', error);
+        res.status(500).json({ message: 'Lỗi khi lấy bộ truyện ngẫu nhiên' });
+    }
+});
+
 
 
 // lấy tất cả bộ truyện còn active 
@@ -838,22 +857,18 @@ router.post("/:id/increase-view", async (req, res) => {
 });
 
 
-/**
- * API: Lấy chi tiết bộ truyện
- */
+// Lấy chi tiết bộ truyện
+
 router.get("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        
-        // Lấy thông tin bộ truyện cùng tên tác giả
         const boTruyen = await BoTruyen.findById(id)
-            .populate("id_tg", "ten_tg") // Populate để lấy tên tác giả
-            .populate("listloai", "ten_loai"); // Populate danh sách thể loại
+            .populate("id_tg", "ten_tg")
+            .populate("listloai", "ten_loai"); 
 
         if (!boTruyen) {
             return res.status(404).json({ message: "Không tìm thấy bộ truyện" });
         }
-
         // Lấy danh sách chương liên quan
         const chapters = await Chapter.find({ id_bo: id, active: true })
             .sort({ stt_chap: 1 }) // Sắp xếp theo thứ tự chương

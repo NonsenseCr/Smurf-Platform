@@ -1,39 +1,39 @@
 /* Container của Breadcrumb */
 .breadcrumb-container {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Khoảng cách giữa các item */
-  padding: 10px 20px;
-  font-family: 'Rubik', 'Ubuntu', sans-serif; 
-  font-size: 25px;
-  font-weight: bold;
-}
-
-/* Item trong Breadcrumb */
-.breadcrumb-item {
-  color: #6a1b9a; /* Màu tím mặc định */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  text-transform: uppercase; /* Viết in hoa */
-  transition: color 0.3s ease;
-}
-
-/* Áp dụng style riêng cho Link (a) */
-.breadcrumb-item Link {
-  color: inherit; /* Kế thừa màu từ breadcrumb-item */
-  text-decoration: none; /* Loại bỏ gạch chân mặc định */
-  transition: color 0.3s ease;
-}
-
-.breadcrumb-item a:hover {
-  color: #FF008C; /* Màu hồng đậm khi hover */
-}
-
-/* Hình mũi tên giữa các item */
-.breadcrumb-arrow {
-  width: 16px;
-  height: 16px;
-  margin: 0 5px; /* Khoảng cách giữa chữ và mũi tên */
-  object-fit: contain;
-}
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa các item */
+    padding: 10px 20px;
+    font-family: 'Rubik', 'Ubuntu', sans-serif; 
+    font-size: 25px;
+    font-weight: bold;
+  }
+  
+  /* Item trong Breadcrumb */
+  .breadcrumb-item {
+    color: #6a1b9a; /* Màu tím mặc định */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase; /* Viết in hoa */
+    transition: color 0.3s ease;
+  }
+  
+  /* Áp dụng style riêng cho Link (a) */
+  .breadcrumb-item Link {
+    color: inherit; /* Kế thừa màu từ breadcrumb-item */
+    text-decoration: none; /* Loại bỏ gạch chân mặc định */
+    transition: color 0.3s ease;
+  }
+  
+  .breadcrumb-item a:hover {
+    color: #FF008C; /* Màu hồng đậm khi hover */
+  }
+  
+  /* Hình mũi tên giữa các item */
+  .breadcrumb-arrow {
+    width: 16px;
+    height: 16px;
+    margin: 0 5px; /* Khoảng cách giữa chữ và mũi tên */
+    object-fit: contain;
+  }

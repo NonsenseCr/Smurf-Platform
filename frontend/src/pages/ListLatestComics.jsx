@@ -34,10 +34,10 @@ const ListLatestComics = () => {
   }
 
   return (
-    <div className="main__top ">
-      <div className="list__container containers list">
+    <div className="main__top containers">
+      <div className="list__container  list">
         {/* Tiêu đề và các nút điều khiển */}
-        <div className="top__title">
+        <div className="top__title ">
           <span className="section__subtitle">DANH SÁCH TRUYỆN MỚI CẬP NHẬT</span>
           <div className="controls">
             <div className="dropdown">
@@ -92,7 +92,7 @@ const ListLatestComics = () => {
           <div className="row justify-content-center">
             {comics.map((comic) => (
               <div key={comic._id} className="item col-2 update-item">
-                <Link to={`/boTruyen/${comic._id}`}>
+                <Link to={`/comic/${comic._id}`}>
                   <figure className="position-relative">
                     {comic.AnhBia && (
                       <>

@@ -8,7 +8,7 @@
     position: relative;
     background-color: var(--body-main);
     padding: 4rem 2.5rem;
-    margin-top: 7rem;
+    /* margin-top: 7rem; */
 }
 
 .rank{

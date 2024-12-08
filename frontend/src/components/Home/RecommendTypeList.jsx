@@ -7,7 +7,7 @@ import Comedy from '../../assets/img/bg-2.jpg';
 import romantic from '../../assets/img/bg-6.jpg';
 const RecommendTypeList = () => {
     return (
-        <section className="new-update containers mt-3 mb-5" id="update">
+        <section className="new-update sections mt-3 mb-5" id="update">
             <div className="update__container TruyenNew__Containter grids">
                 <div className="top__content">
                     <div className="title-infor">

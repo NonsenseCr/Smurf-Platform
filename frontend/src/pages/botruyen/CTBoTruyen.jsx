@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   fetchBoTruyenById,
@@ -7,10 +7,11 @@ import {
   unfollowComic,
   checkPremiumAccess,
   fetchChaptersByComicId,
-} from "../services/BoTruyenServices";
-import "../styles/styleCT.css";
-import "../styles/styleRank.css";
-import iconPremium from "../assets/PreDark.png";
+} from "../../services/BoTruyenServices";
+import "../../styles/styleCT.css";
+import "../../styles/styleRank.css";
+import iconPremium from "../../assets/PreDark.png";
+import Loader from "../../components/Element/Loader";
 const CtBoTruyen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -20,8 +21,10 @@ const CtBoTruyen = () => {
   const [followed, setFollowed] = useState(false);
   const [userTickets, setUserTickets] = useState(0);
   const [isPremium, setIsPremium] = useState(false);
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(null);
   const [contentExpanded, setContentExpanded] = useState(false);
+
+  
 
   const userId = "123"; // Giả lập userId (thay thế bằng logic thực tế)
 
@@ -33,7 +36,7 @@ const CtBoTruyen = () => {
         setFollowed(data.followed);
         setUserTickets(data.userTickets || 0);
         setIsPremium(data.isPremium || false);
-        setRating(data.rating || 0);
+        setRating(data.danhgia || 0);
 
         const chaptersData = await fetchChaptersByComicId(id);
         setChapters(chaptersData);
@@ -86,18 +89,23 @@ const CtBoTruyen = () => {
 
   const toggleContent = () => setContentExpanded(!contentExpanded);
 
-//   const calculateTimeAgo = (time) => {
-//     const diff = Date.now() - new Date(time).getTime();
-//     const hours = Math.floor(diff / (1000 * 60 * 60));
-//     return hours > 0 ? `${hours} giờ trước` : "... giờ trước";
-//   };
+  //   const calculateTimeAgo = (time) => {
+  //     const diff = Date.now() - new Date(time).getTime();
+  //     const hours = Math.floor(diff / (1000 * 60 * 60));
+  //     return hours > 0 ? `${hours} giờ trước` : "... giờ trước";
+  //   };
 
+  const handleChapterClick = (id_bo, stt_chap) => {
+    navigate(`/chapter/${id_bo}/${stt_chap}`);
+  };
+  const [isLoading, setIsLoading] = useState(true);
   if (!boTruyen) {
-    return <div>Đang tải dữ liệu...</div>;
+    return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
+    
   }
 
   return (
-    <div className="main__top detail section containers">
+    <div className="main__top containers">
       <div className="detail__container ">
         {/* Phần thông tin chính */}
         <div className="detail__infor ">
@@ -126,7 +134,7 @@ const CtBoTruyen = () => {
                     ))}
                     <hr />
                     <span className="rating-review">
-                      Average Rating: {rating} ({boTruyen.tongLuotXem || 0} Views)
+                      Average Rating: {rating} ({boTruyen.TongLuotXem || 0} Views)
                     </span>
                     <hr />
                   </div>
@@ -138,31 +146,31 @@ const CtBoTruyen = () => {
             </div>
             <div className="background-item"></div>
             <div className="poster-detail">
-            {chapters.length > 0 ? (
-              <div className="background-detail">
-                <div className="bg-item"></div>
-                <a className="btn-read" onClick={() => navigate(`/chapter/${chapters[0]._id}`)}>
-                  <i className="ri-book-open-fill" title="Click to Read"></i>
-                </a>
-              </div>
-            ) : (
-              <div className="background-detail">
-                <div className="bg-item"></div>
-              </div>
-            )}
-            {boTruyen.poster && (
-              <img
-                src={`http://localhost:5000${boTruyen.poster}`}
-                alt="Poster"
-                style={{ maxWidth: "224px", maxHeight: "336px", objectFit: "scale-down" }}
-              />
-            )}
+              {chapters.length > 0 ? (
+                <div className="background-detail">
+                  <div className="bg-item"></div>
+                  <a className="btn-read" onClick={() => navigate(`/chapter/${chapters[0]._id}`)}>
+                    <i className="ri-book-open-fill" title="Click to Read"></i>
+                  </a>
+                </div>
+              ) : (
+                <div className="background-detail">
+                  <div className="bg-item"></div>
+                </div>
+              )}
+              {boTruyen.poster && (
+                <img
+                  src={`http://localhost:5000${boTruyen.poster}`}
+                  alt="Poster"
+                  style={{ maxWidth: "224px", maxHeight: "336px", objectFit: "scale-down" }}
+                />
+              )}
+            </div>
           </div>
-          </div>
-          
+
 
           {/* Poster và nút đọc */}
-          
+
         </div>
 
         {/* Nội dung chính */}
@@ -170,78 +178,78 @@ const CtBoTruyen = () => {
           <div className="time-detail">
             <i className="ri-time-line"></i>
             {boTruyen.latestChapter ? (
-                <span className="time">{boTruyen.latestChapter.ThoiGian }</span>
+              <span className="time">{boTruyen.latestChapter.ThoiGian}</span>
             ) : (
-                <span className="time">NaN</span>
+              <span className="time">NaN</span>
             )}
           </div>
           <div className="type-detail">
-          {boTruyen.listloai?.map((genre, index) => (
-            <a
-              key={index}
-              href={`/genre/${genre.id}`}
-              className="item-type"
-            >
-              {genre.ten_loai}
-            </a>
-          ))}
-        </div>
+            {boTruyen.listloai?.map((genre, index) => (
+              <a
+                key={index}
+                href={`/genre/${genre.id}`}
+                className="item-type"
+              >
+                {genre.ten_loai}
+              </a>
+            ))}
+          </div>
           {/* Nút thao tác */}
-            <div className="btn-detail">
-                <div className="btn__follow">
-                    {followed ? (
-                    <a
-                        className="btn-follow"
-                        style={{ backgroundColor: "#FE0000", borderRadius: "5px" }}
-                        onClick={handleFollow}
-                    >
-                        <i className="ri-close-fill"></i>
-                        <span>HỦY THEO DÕI</span>
-                    </a>
-                    ) : (
-                    <a
-                        className="btn-follow"
-                        style={{ backgroundColor: "#8f8f8f", color: "#fff" }}
-                        onClick={handleFollow}
-                    >
-                        <i className="fa-solid fa-heart"></i>
-                        <span> THEO DÕI</span>
-                    </a>
-                    )}
-                </div>
-
-                <div className="btn-follow">
-                    {chapters.length > 0 && (
-                    <a
-                        className="btn__action"
-                        style={{
-                        pointerEvents: isPremium || userTickets > 0 ? "auto" : "none",
-                        backgroundColor:
-                            isPremium || userTickets > 0 ? "#007BFF" : "#8f8f8f",
-                        }}
-                        onClick={handleReadChapter}
-                    >
-                        Đọc tiếp chap{" "}
-                        <span className="chapter">{chapters[0]?.stt || "N/A"}</span>
-                    </a>
-                    )}
-                </div>
-                <div className="btn-follow">
-                    {chapters.length > 0 && (
-                    <a
-                        className="btn__action"
-                        style={{
-                        pointerEvents: isPremium || userTickets > 0 ? "auto" : "none",
-                        backgroundColor:
-                            isPremium || userTickets > 0 ? "#007BFF" : "#8f8f8f",
-                        }}
-                        onClick={handleReadChapter}
-                    >
-                        Đọc mới nhất{" "}
-                    </a>
-                    )}
-                </div>
+          <div className="btn-detail">
+            <div className="btn__follow">
+              {followed ? (
+                <a
+                  className="btn-follow"
+                  // style={{ backgroundColor: "#FE0000", borderRadius: "5px" }}
+                  onClick={handleFollow}
+                >
+                  <i className="ri-close-fill"></i>
+                  <span>HỦY THEO DÕI</span>
+                </a>
+              ) : (
+                <a
+                  className="btn-follow"
+                  // style={{ backgroundColor: "#8f8f8f", color: "#fff" }}
+                  onClick={handleFollow}
+                >
+                  <i className="fa-solid fa-heart"></i>
+                  <span> THEO DÕI</span>
+                </a>
+              )}
             </div>
+
+            <div className="btn-follow">
+              {chapters.length > 0 && (
+                <a
+                  className="btn__action"
+                  style={{
+                    // pointerEvents: isPremium || userTickets >= 1 ? "auto" : "none",
+                    // backgroundColor:
+                    //   isPremium || userTickets > 0 ? "#007BFF" : "#8f8f8f",
+                  }}
+                  onClick={handleReadChapter}
+                >
+                  Đọc tiếp chap{" "}
+                  <span className="chapter">{chapters[0]?.stt || "N/A"}</span>
+                </a>
+              )}
+            </div>
+            <div className="btn-follow">
+              {chapters.length > 0 && (
+                <a
+                  className="btn__action"
+                  style={{
+                    // pointerEvents: isPremium || userTickets > 1 ? "auto" : "none",
+                    // backgroundColor:
+                    //   isPremium || userTickets > 0 ? "#007BFF" : "#8f8f8f",
+                  }}
+                  onClick={handleReadChapter}
+                >
+                  Đọc mới nhất{" "}
+                </a>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className={`content-main ${contentExpanded ? "active-content" : ""}`}>
@@ -280,7 +288,7 @@ const CtBoTruyen = () => {
         </div>
 
         {/* Danh sách chương */}
-        <div className="detail__list">
+        {/* <div className="detail__list">
           <div className="content-title">
             <i className="fa-solid fa-list"></i> DANH SÁCH CHƯƠNG TRUYỆN
           </div>
@@ -295,6 +303,36 @@ const CtBoTruyen = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div> */}
+        <div className="detail__list">
+          <div className="content-title">
+            <i className="fa-solid fa-list"></i> DANH SÁCH CHƯƠNG TRUYỆN
+          </div>
+          <div className="chapter-list">
+            {chapters.length > 0 ? (
+              chapters.map((chapter) => (
+                <div
+                  key={chapter._id}
+                  className="chapter-item"
+                  onClick={() => handleChapterClick(boTruyen._id, chapter.stt_chap)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="row">
+                    <div className="col chapter chap-col">Chương {chapter.stt_chap}</div>
+                    <div className="col-6 content chap-col">{chapter.ten_chap}</div>
+                    <div className="col time chap-col">
+                      {new Date(chapter.thoi_gian).toLocaleDateString()}
+                    </div>
+                    <div className="col view chap-col">
+                      {chapter.tk_luotxem || 0} lượt xem
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>Không có chương nào.</div>
+            )}
           </div>
         </div>
       </div>

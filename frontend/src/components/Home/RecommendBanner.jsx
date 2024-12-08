@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 import yuzu from '../../assets/yuzu.png';
 const RecommendationBanner = () => {
     return (
-        <section className="new-update containers mt-6" id="update">
+        <section className="new-update sections mt-6" id="update">
             <div className="update__container grids">
                 <div className="section-bottom container-list w-100">
-                    {/* Hình ảnh minh họa */}
                     <img
                         loading="lazy"
                         src={yuzu}
@@ -19,7 +18,7 @@ const RecommendationBanner = () => {
                     </span>
                     {/* Nút liên kết */}
                     <Link
-                        to="/boTruyen/ListTruyen"
+                        to="/trending"
                         className="btn btn-primary recommendation-btn"
                     >
                         DANH SÁCH

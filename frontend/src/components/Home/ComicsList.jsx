@@ -92,8 +92,8 @@ const ComicList = ({ comics, title }) => {
     }
 
     return (
-        <div className="main__top containers">
-            <div className="top__container" style={{ overflow: "hidden" }}>
+        <div className="main__top containers" style={{marginTop:'4rem'}}>
+            <div className="top__container " style={{ overflow: "hidden" }}>
                 <div className="top__content">
                     <div>
                         <span className="section__subtitle">{title || "Đề Cử Hôm Nay"}</span>

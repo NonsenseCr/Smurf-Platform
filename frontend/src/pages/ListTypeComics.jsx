@@ -65,10 +65,10 @@ const ListTypeComics = () => {
   }
 
   return (
-    <div className="main__top">
+    <div className="main__top ">
       <div className="list__container containers list">
         {/* Tiêu đề và các nút điều khiển */}
-        <div className="top__content">
+        <div className="top__content " style={{padding:'2rem'}}>
           <h2 className="section__subtitle">DANH SÁCH TRUYỆN <span style={{color: "#9858F1"}}>{subtitle}</span></h2>
           <div className="controls">
             <div className="dropdown">
@@ -123,7 +123,7 @@ const ListTypeComics = () => {
           <div className="row justify-content-center">
             {comics.map((comic) => (
               <div key={comic._id} className="item col-2 update-item">
-                <Link to={`/boTruyen/${comic._id}`}>
+                <Link to={`/comic/${comic._id}`}>
                   <figure className="position-relative">
                     {comic.poster  && (
                       <>

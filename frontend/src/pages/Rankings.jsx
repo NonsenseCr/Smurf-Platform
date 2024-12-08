@@ -46,9 +46,9 @@ const Rankings = () => {
     };
 
     return (
-        <div className="home-container">
-            <div className="main__top">
-                <div className=" rank__container containers ">
+        <div className="home-container ">
+            <div className="main__top sections" >
+                <div className=" rank__container">
                     <div className="rank">
                         <h2 className="section__subtitle">Bảng Xếp Hạng</h2>
                         <p className="section__des">
@@ -105,7 +105,7 @@ const Rankings = () => {
 
                                     <span className="item-number">01</span>
                                     <div className="item-content item-rank">
-                                        <Link to={`/comics/${rankings[0]._id}`}>
+                                        <Link to={`/comic/${rankings[0]._id}`}>
                                             <img
                                                 loading="lazy"
                                                 src={`http://localhost:5000${rankings[0].poster}`}

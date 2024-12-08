@@ -35,7 +35,7 @@ const ListTrendingComics = () => {
   }
 
   return (
-    <div className="main__top ">
+    <div className="main__top">
       <div className="list__container containers list">
         {/* Tiêu đề và các nút điều khiển */}
         <div className="top__title">
@@ -93,7 +93,7 @@ const ListTrendingComics = () => {
           <div className="row justify-content-center">
             {comics.map((comic) => (
               <div key={comic._id} className="item col-2 update-item">
-                <Link to={`/boTruyen/${comic._id}`}>
+                <Link to={`/comic/${comic._id}`}>
                   <figure className="position-relative">
                     {comic.AnhBia && (
                       <>

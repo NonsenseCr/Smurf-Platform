@@ -32,7 +32,7 @@ const ScrollToTopButton = () => {
     }, []);
 
     return (
-        <Button
+        <a
             onClick={scrollToTop}
             id="scrollToTopBtn"
             title="Go to top"
@@ -42,7 +42,7 @@ const ScrollToTopButton = () => {
             }}
         >
             <i className="ri-arrow-up-line"></i>
-        </Button>
+        </a>
     );
 };
 

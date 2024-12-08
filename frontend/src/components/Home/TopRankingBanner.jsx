@@ -10,7 +10,7 @@ const TopRankingBanner = ({ topComics }) => {
     console.log('Top Comic:', topComic); // Debug kiểm tra giá trị topComic
 
     return (
-        <section className="new-update TopRank__container containers" id="update">
+        <section className="new-update TopRank__container sections" id="update">
             <div className="update__container grids">
                 <div className="top__content">
                     <div className="title-infor">
@@ -20,7 +20,7 @@ const TopRankingBanner = ({ topComics }) => {
                 </div>
                 {/* <div className="containers"> */}
                     <div className="justify-content-center w-100 position-relative">
-                        <div className="position-relative " style={{ padding: "1rem 4rem" }}>
+                        <div className="position-relative " style={{ padding: "1rem 0" }}>
                             {topComic.banner && (
                                 <img
                                     loading="lazy"
@@ -42,7 +42,7 @@ const TopRankingBanner = ({ topComics }) => {
                                 </div>
                             )}
                             {/* Hiển thị thông tin truyện */}
-                            <div className="position-absolute name-poster">
+                            <div className="position-absolute name-poster ">
                                 <h3>{topComic.tenbo || "Không có tên bộ truyện"}</h3>
                                 <div>
                                     {/* Hiển thị đánh giá */}
@@ -55,6 +55,12 @@ const TopRankingBanner = ({ topComics }) => {
                                             }}
                                         ></i>
                                     ))}
+                                </div>
+                                <div className="author-title">
+                                    Author: <span>{topComic.ta}</span>
+                                </div>
+                                <div className="item-des">
+                                    <p>{topComic.mota}</p>
                                 </div>
                             </div>
                             {/* Nút xem ngay */}

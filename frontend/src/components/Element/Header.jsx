@@ -17,31 +17,6 @@ function Header() {
   const [userName, setUserName] = useState("Guest");
   const [userAvatar, setUserAvatar] = useState("");
 
-  // Lấy thông tin người dùng từ localStorage khi component được tải
-  // useEffect(() => {
-  //   const userData = localStorage.getItem("user");
-  //   if (userData) {
-  //     const { username, avatar } = JSON.parse(userData);
-  //     setIsAuthenticated(true);
-  //     setUserName(username);
-  //     setUserAvatar(avatar);
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   const params = new URLSearchParams(window.location.search);
-  //   const userData = params.get("user");
-  
-  //   if (userData) {
-  //     const parsedUser = JSON.parse(decodeURIComponent(userData));
-  //     localStorage.setItem("user", JSON.stringify(parsedUser));
-  //     setIsAuthenticated(true);
-  //     setUserName(parsedUser.username);
-  //     setUserAvatar(parsedUser.avatar);
-  
-  //     // Xóa user từ URL sau khi xử lý
-  //     window.history.replaceState({}, document.title, "/");
-  //   }
-  // }, []);
   useEffect(() => {
     // Kiểm tra dữ liệu từ URL
     const params = new URLSearchParams(window.location.search);
@@ -55,10 +30,9 @@ function Header() {
   
       // Xóa thông tin từ URL
       window.history.replaceState({}, document.title, "/");
-      console.log("user header:  ", userDataFromStorage)
+      // console.log("user header:  ", userDataFromStorage)
       return;
     }
-  
     // Kiểm tra dữ liệu từ localStorage
     const userDataFromStorage = localStorage.getItem("user");
     if (userDataFromStorage) {
@@ -89,28 +63,52 @@ function Header() {
     navigate('/register');
   };
 
-  const handleAuthAlert = ({ width = 120, height = 150, title, text, imageUrl, onConfirm }) => {
-    Swal.fire({
-      title,
-      text,
-      imageUrl,
-      imageWidth: width,
-      imageHeight: height,
-      imageAlt: "Custom image",
-      showCancelButton: true,
-      confirmButtonText: "Login Now!",
-      cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        onConfirm();
-      }
+  const handleAuthAlert = ({width, height, title, text, imageUrl, onConfirm, }) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-oke",
+        cancelButton: "btn btn-danger mr-3",
+        popup: "custom-swal-popup", 
+        title: "custom-swal-title",
+        htmlContainer: "custom-swal-text",
+      },
+      buttonsStyling: false,
     });
+  
+    swalWithBootstrapButtons
+      .fire({
+        title,
+        text,
+        imageUrl,
+        imageWidth: width,
+        imageHeight: height,
+        imageAlt: "Custom image",
+        showCancelButton: true,
+        confirmButtonText: "Login Now!",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          onConfirm();
+        }
+      });
   };
   const navigateToInfor = () => {
     const userDataFromStorage = localStorage.getItem("user");
     if (userDataFromStorage) {
       const userData = JSON.parse(userDataFromStorage);
       navigate("/infor", { state: { user: userData } }); // Truyền thông tin vào state
+    } else {
+      console.error("No user data found in localStorage.");
+    }
+  };
+
+  const navigateToAccount = () => {
+    const userDataFromStorage = localStorage.getItem("user");
+    if (userDataFromStorage) {
+      const userData = JSON.parse(userDataFromStorage);
+      navigate("/account", { state: { user: userData } }); // Truyền thông tin vào state
     } else {
       console.error("No user data found in localStorage.");
     }
@@ -144,7 +142,7 @@ function Header() {
                       </a>
                     </li>
                     <li >
-                      <a className="dropdown-item text-start" style={{ padding: '.5rem!important' }}>
+                      <a onClick={navigateToAccount} className="dropdown-item text-start" style={{ padding: '.5rem!important' }}>
                         <i className="fa-solid fa-sliders"></i> Settings
                       </a>
                     </li>
@@ -199,16 +197,46 @@ function Header() {
               <Dropdown.Menu>
                 <div className="row">
                   <div className="col-3">
-                    <Dropdown.Item className="item-main" as={Link} to="/category/all">
-                      Tất cả
-                    </Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/category/action">Hành động</Dropdown.Item>
+                    <Dropdown.Item className='item-main' as={Link} to="/latest">Tất cả</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406e8ec03445f4711481f5">Xuyên không</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406e97c03445f4711481f8">Adventure</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406ea7c03445f4711481fb">One short</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406eaec03445f4711481fe">Sports</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406eb4c03445f471148201">Truyện màu</Dropdown.Item>
+                  </div>
+                  <div className="col-3">
+                    <Dropdown.Item className='item-main' as={Link} to="">Theo Cảm xúc</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406ebec03445f471148204">Nhẹ nhàng</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406ec8c03445f471148207">Kinh dị</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406ed2c03445f47114820a">Lãng mạng</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406e4ec03445f4711481f2">Action</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406ee0c03445f471148210">Comedy</Dropdown.Item>
+                  </div>
+                  <div className="col-3">
+                    <Dropdown.Item className='item-main' as={Link} to="">Theo Khu Vực</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406ee5c03445f471148213">Manwa</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Manhua</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406eedc03445f471148216">Manga</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406ef1c03445f471148219">Comic</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/67406ef6c03445f47114821c">Webtoon</Dropdown.Item>
+                  </div>
+                  <div className="col-3">
+                    <Dropdown.Item className='item-main' as={Link} to="">Theo đội tuổi</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Mọi độ tuổi</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Trẻ em</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Thiếu Niên</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Bạo lực</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/adventure">Trưởng thành</Dropdown.Item>
                   </div>
                 </div>
               </Dropdown.Menu>
             </Dropdown>
+            
             <Link to="/trending" className="nav__link">
               Xu Hướng
+            </Link>
+            <Link to="/rankings/1" className="nav__link">
+              Xếp hạng
             </Link>
             <Link to="/latest" className="nav__item nav__link active-link">Mới cập nhật</Link>
             {isAuthenticated ? (
@@ -221,8 +249,10 @@ function Header() {
                 className="nav__item nav__link active-link"
                 onClick={() =>
                   handleAuthAlert({
+                    width: 200,
+                    height: 100,
                     title: "Login Following!",
-                    text: "Có vẻ như bạn cần đăng nhập để xem danh sách theo dõi!",
+                    text: "Bạn cần đăng nhập để xem danh sách theo dõi",
                     imageUrl: yuzu,
                     onConfirm: () => navigate("/login"),
                   })

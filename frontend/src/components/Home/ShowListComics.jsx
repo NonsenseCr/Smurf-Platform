@@ -3,7 +3,7 @@ import iconPremium from '../../assets/PreDark.png';
 
 const ShowListComics = ({ comics, subtitle, description, link }) => {
     return (
-        <section className="new-update containers mt-3" id="update">
+        <section className="new-update sections mt-3" id="update">
             <div className="update__container TruyenNew__Containter grids">
                 <div className="top__content">
                     <div className="title-infor">
@@ -17,7 +17,7 @@ const ShowListComics = ({ comics, subtitle, description, link }) => {
                 <div className="row row-cols-6 justify-content-center">
                     {comics.map((comic) => (
                         <div key={comic._id} className="col-2 update-item">
-                            <Link to={`/boTruyen/${comic._id}`}>
+                            <Link to={`/comic/${comic._id}`}>
                                 <figure className="position-relative">
                                     {comic.AnhBia && (
 

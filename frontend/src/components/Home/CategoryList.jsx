@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const CategoryList = ({ categories , title}) => {
     return (
-        <section className="new-update containers mt-3" id="update">
+        <section className="new-update sections " id="update">
             <div className="update__container grids">
                 <div className="top__content">
                     <div className="title-infor">

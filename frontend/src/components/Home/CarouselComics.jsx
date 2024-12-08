@@ -3,10 +3,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import iconPremium from "../../assets/PreDark.png";
 import { useRef } from "react";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const CarouselComponent = ({ comics = [] }) => {
-    const sliderRef = useRef(null); // Tạo tham chiếu đến Slider
-
+    const sliderRef = useRef(null); 
+    const navigate = useNavigate(); 
     const settings = {
         dots: true,
         infinite: true,
@@ -22,6 +23,17 @@ const CarouselComponent = ({ comics = [] }) => {
             return text.split(" ").slice(0, maxLength).join(" ") + "...";
         }
         return text;
+    };
+
+    const handleRandomClick = async () => {
+        try {
+            const response = await axios.get("http://localhost:5000/api/botruyen/random");
+            const randomComicId = response.data._id; 
+            navigate(`/comic/${randomComicId}`); 
+        } catch (error) {
+            console.error("Lỗi khi lấy bộ truyện ngẫu nhiên:", error);
+            alert("Không thể lấy bộ truyện ngẫu nhiên. Vui lòng thử lại!");
+        }
     };
 
     return (
@@ -113,7 +125,7 @@ const CarouselComponent = ({ comics = [] }) => {
                             <p>Nếu bạn không biết đọc gì hôm nay. Hãy để tôi chọn cho bạn</p>
                         </div>
                         <div className="btn__regis" >
-                            <a href="/comic/random">ĐỌC NGẪU NHIÊN</a>
+                            <a onClick={handleRandomClick}>ĐỌC NGẪU NHIÊN</a>
                         </div>
                 </div>
                 <div className="main__random bg-random">

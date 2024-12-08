@@ -5,7 +5,7 @@ function Footer() {
   return (
     // style={{ position: 'relative', padding: '2rem 0', lineHeight: '20px' }}
     <footer className="footer" >
-      <div className="footer__container containers grid row align-content-md-between">
+      <div className="footer__container sections grid row align-content-md-between pt-5">
         <div className="footer__content col-12 col-md-6">
           {/* Main Menu */}
           <div>
