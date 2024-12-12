@@ -9,7 +9,7 @@ import RecommendType from '../components/Home/RecommendTypeList';
 import ShowListComics from '../components/Home/ShowListComics';
 import RecommendBanner from '../components/Home/RecommendBanner';
 
-
+import Loader from "../components/Element/Loader";
 const Home = () => {
     // const [comic, setComics] = useState([]);
     const [comicsLatest, setlatestComics] = useState([]);
@@ -17,6 +17,7 @@ const Home = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,7 +43,7 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <div className="loading-container">Đang tải dữ liệu...</div>;
+        return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
     }
 
     if (error) {

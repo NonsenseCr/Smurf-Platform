@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { fetchTrendingComics } from "../services/BoTruyenServices";
 import { Link } from "react-router-dom";
-
+import Loader from "../components/Element/Loader";
 const ListTrendingComics = () => {
   const [comics, setComics] = useState([]); // Danh sách truyện
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
   const [totalPages, setTotalPages] = useState(0); // Tổng số trang
   const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
-
+  const [isLoading, setIsLoading] = useState(true);
   const loadComics = async (page) => {
     setLoading(true);
     try {
@@ -22,15 +22,15 @@ const ListTrendingComics = () => {
   };
 
   useEffect(() => {
-    loadComics(currentPage); // Tải danh sách truyện khi trang thay đổi
+    loadComics(currentPage);
   }, [currentPage]);
 
   if (loading) {
-    return <div className="loading-container">Đang tải dữ liệu...</div>;
+    return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
   }
 
   if (!comics || comics.length === 0) {
-    return <div className="loading-container">Không có truyện nào để hiển thị.</div>;
+    return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
   }
 
   return (

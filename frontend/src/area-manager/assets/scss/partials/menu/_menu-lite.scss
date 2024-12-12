@@ -1046,7 +1046,7 @@
       &.active,
       &:focus,
       &:hover {
-        color: #1dc4e9;
+        color: #8770F9;
       }
 
       .pcoded-submenu > li {
@@ -1055,7 +1055,7 @@
         &:hover {
           > a {
             &:before {
-              background: #1dc4e9;
+              background: #8770F9;
             }
           }
         }
@@ -1067,7 +1067,7 @@
       &.pcoded-trigger {
         &:after {
           content: '';
-          background-color: #1dc4e9;
+          background-color: #8770F9;
           z-index: 1027;
           position: absolute;
           left: 0;

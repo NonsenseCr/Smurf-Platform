@@ -4,8 +4,8 @@ const Loader = ({ isLoading, setIsLoading }) => {
   useEffect(() => {
     if (isLoading) {
       setTimeout(() => {
-        setIsLoading(false); // Ẩn loader sau 500ms
-      }, 500);
+        setIsLoading(false); 
+      }, 2000);
     }
   }, [isLoading, setIsLoading]);
 

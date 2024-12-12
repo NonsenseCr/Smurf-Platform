@@ -7,21 +7,21 @@ import "slick-carousel/slick/slick-theme.css";
 const ComicList = ({ comics, title }) => {
     // Cấu hình cho Slick Slider
     const settings = {
-        dots: false, // Ẩn các chấm điều hướng
-        infinite: true, // Vòng lặp vô hạn
-        speed: 500, // Tốc độ chuyển đổi
-        slidesToShow: 6, // Số lượng slide hiển thị
-        slidesToScroll: 1, // Số lượng slide cuộn mỗi lần
-        autoplay: true, // Tự động cuộn
-        autoplaySpeed: 2000, // Tốc độ tự động cuộn
-        cssEase: "linear", // Hiệu ứng cuộn mượt
-        nextArrow: <NextArrow />, // Nút next tùy chỉnh
-        prevArrow: <PrevArrow />, // Nút prev tùy chỉnh
+        dots: false, 
+        infinite: true, 
+        speed: 500, 
+        slidesToShow: 6,
+        slidesToScroll: 1, 
+        autoplay: true, 
+        autoplaySpeed: 2000, 
+        cssEase: "linear", 
+        nextArrow: <NextArrow />, 
+        prevArrow: <PrevArrow />,
         responsive: [
             {
                 breakpoint: 1280,
                 settings: {
-                    slidesToShow: 5,
+                    slidesToShow: 10,
                 },
             },
             {
@@ -99,7 +99,7 @@ const ComicList = ({ comics, title }) => {
                         <span className="section__subtitle">{title || "Đề Cử Hôm Nay"}</span>
                     </div>
                 </div>
-                <Slider {...settings} className="slick-list autoplay row col-6 w-100 d-flex justify-content-center">
+                <Slider {...settings} className="slick-list autoplay row col w-100 d-flex justify-content-center">
                     {comics.map((comic) => (
                         <div key={comic._id} className="col update-item">
                             <Link to={`/comic/${comic._id}`}>

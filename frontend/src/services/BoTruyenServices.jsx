@@ -121,7 +121,7 @@ export const searchAdvancedBoTruyen = async (query, trangthai, loaiTruyenId) => 
 
 
 // lấy danh sách truyen trending
-export const fetchTrendingComics = async (page = 1, limit = 12) => {
+export const fetchTrendingComics = async (page = 1, limit = 15) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/trending`, {
             params: { page, limit },
@@ -134,7 +134,7 @@ export const fetchTrendingComics = async (page = 1, limit = 12) => {
 };
 
 // Lấy danh sách truyện mới cập nhật với phân trang
-export const fetchLatestComics = async (page = 1, limit = 12) => {
+export const fetchLatestComics = async (page = 1, limit = 15) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/listlatest`, {
             params: { page, limit },
@@ -147,7 +147,7 @@ export const fetchLatestComics = async (page = 1, limit = 12) => {
 };
 
 
-export const fetchBoTruyenByCategory = async (categoryId, page = 1, limit = 12) => {
+export const fetchBoTruyenByCategory = async (categoryId, page = 1, limit = 15) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/category/${categoryId}`, {
             params: { page, limit },

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchBoTruyenByCategory } from "../services/LoaiTruyenService";
 import { Link } from "react-router-dom";
-
+import Loader from "../components/Element/Loader";
 const ListTypeComics = () => {
   const { id } = useParams(); // Lấy id thể loại từ URL
   const [comics, setComics] = useState([]); // Danh sách truyện
@@ -10,7 +10,7 @@ const ListTypeComics = () => {
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
   const [totalPages, setTotalPages] = useState(0); // Tổng số trang
   const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
-
+  const [isLoading, setIsLoading] = useState(true);
   // Map giữa id và tên thể loại (cố định trong frontend)
   const categoryMap = {
     "67406e4ec03445f4711481f2": "Hành động",
@@ -56,11 +56,13 @@ const ListTypeComics = () => {
   }, [currentPage, id]);
 
   if (loading) {
-    return <div className="loading-container">Đang tải dữ liệu...</div>;
+    return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
+
   }
 
   if (!comics || comics.length === 0) {
-    return <div className="loading-container">Không có truyện nào để hiển thị.</div>;
+    return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
+
   }
 
   return (
