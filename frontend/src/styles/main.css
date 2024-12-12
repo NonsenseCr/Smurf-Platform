@@ -1,27 +1,24 @@
-/* @import './variables.css';
-@import './base.css';
-@import './theme.css';
-@import './animations.css';
-@import './utilities.css';
-@import './components/loader.css';
-@import './components/header.css';
-@import './components/nav.css';
-@import './components/footer.css';
-@import './components/search.css';
+@import './pages/styleAccount.css';
+@import './pages/styleChapter.css';
+@import './pages/styleCT.css';
+@import './pages/styleList.css';
+@import './pages/stylePayment.css';
+@import './pages/styleRank.css';
+@import './pages/about.css';
+
+@import './module/styleLogin.css';
+@import './module/infor.css';
+
 @import './components/scrollToTop.css';
 
-
-
-  @import './components/buttons.css';
-  
-  /* @import './styleList.css'; */
-
+@import './components/CustomScrollbar.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
-@import './components/CustomScrollbar.css';
+
 /*=============== VARIABLES CSS ===============*/
+
 :root {
     /*========== Colors ==========*/
     /* Color mode HSL(hue, saturation, lightness)*/
@@ -166,6 +163,7 @@ body.dark-theme {
     content: url('../images/logo2.png');
 }
 
+/* .public-root { */
 /*=============== BASE ===============*/
 * {
     box-sizing: border-box;
@@ -177,7 +175,7 @@ html {
     scroll-behavior: smooth;
 }
 
-.scroll-to-top {
+.public-root  .scroll-to-top {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -194,7 +192,7 @@ html {
     cursor: pointer;
   } 
 
-body {
+ body {
     font-family: var(--body-font);
     font-size: var(--normal-font-size);
     background-color: var(--body-color);
@@ -308,7 +306,7 @@ img {
         clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
     }
 }
-
+.public-root 
 
 /*=============== THEME ===============*/
 .nav__buttons {

@@ -8,8 +8,6 @@ import {
   checkPremiumAccess,
   fetchChaptersByComicId,
 } from "../../services/BoTruyenServices";
-import "../../styles/styleCT.css";
-import "../../styles/styleRank.css";
 import iconPremium from "../../assets/PreDark.png";
 import Loader from "../../components/Element/Loader";
 const CtBoTruyen = () => {

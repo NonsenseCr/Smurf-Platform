@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchBoTruyenByCategory } from "../services/LoaiTruyenService";
 import { Link } from "react-router-dom";
-import "../styles/styleList.css";
 
 const ListTypeComics = () => {
   const { id } = useParams(); // Lấy id thể loại từ URL

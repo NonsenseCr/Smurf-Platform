@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/styleAccount.css";
 
 const Account = () => {
   const [activeTab, setActiveTab] = useState("general");

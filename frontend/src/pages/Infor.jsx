@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "../styles/module/infor.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import "../styles/module/styleLogin.css";
 // import avatarPlaceholder from "../assets/1004-the-worlds-finest-assassin-maha.png";
 import HeaderLogin from "../components/Login/HeaderLogin";
 const Infor = () => {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import "../styles/styleRank.css";
 import { fetchRankingsByType } from "../services/BoTruyenServices";
 
 const Rankings = () => {

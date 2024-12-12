@@ -8,6 +8,8 @@ import TopRankingBanner from '../components/Home/TopRankingBanner';
 import RecommendType from '../components/Home/RecommendTypeList';
 import ShowListComics from '../components/Home/ShowListComics';
 import RecommendBanner from '../components/Home/RecommendBanner';
+
+
 const Home = () => {
     // const [comic, setComics] = useState([]);
     const [comicsLatest, setlatestComics] = useState([]);

@@ -1,4 +1,3 @@
-import '../styles/pages/about.css';
 
 function About() {
   return (

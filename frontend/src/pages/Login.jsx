@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/module/styleLogin.css";
 import yuri from "../assets/img/log-in-yuzu.png";
 import imgLogin from "../assets/img_login.png";
 import HeaderLogin from "../components/Login/HeaderLogin";

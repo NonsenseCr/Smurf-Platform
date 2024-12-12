@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchTrendingComics } from "../services/BoTruyenServices";
 import { Link } from "react-router-dom";
-import "../styles/styleList.css";
 
 const ListTrendingComics = () => {
   const [comics, setComics] = useState([]); // Danh sách truyện

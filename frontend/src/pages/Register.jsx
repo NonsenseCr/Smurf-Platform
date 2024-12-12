@@ -2,7 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import HeaderLogin from "../components/Login/HeaderLogin";
-import "../styles/module/styleLogin.css";
 import registerImage from "../assets/img_regis.png";
 
 const Register = () => {

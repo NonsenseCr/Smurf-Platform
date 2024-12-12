@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "../../styles/styleList.css";
 import yuzu from '../../assets/yuzu.png';
 const History = () => {
   const [history, setHistory] = useState([]); // Danh sách lịch sử đọc

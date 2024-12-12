@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import "../../styles/styleCT.css";
-import "../../styles/styleChapter.css";
 
 const Chapter = () => {
     const { id_bo, stt_chap } = useParams(); // Lấy tham số từ URL

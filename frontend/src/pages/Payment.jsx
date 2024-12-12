@@ -1,5 +1,4 @@
 import Swal from "sweetalert2";
-import "../styles/stylePayment.css"; // Đảm bảo bạn có file CSS
 import yuru from "../assets/img/log-in-yuzu.png";
 import imgInfo from '../assets/denied2.png';
 const Payment = () => {

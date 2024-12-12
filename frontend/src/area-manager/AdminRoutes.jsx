@@ -1,0 +1,56 @@
+// AdminRoutes.jsx
+import { Suspense, lazy } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+
+import Loader from './components/Loader/Loader';
+import AdminLayout from './layouts/AdminLayout';
+
+const Dashboard = lazy(() => import('./views/dashboard/index'));
+const SignIn1 = lazy(() => import('./views/auth/signin/SignIn1'));
+const SignUp1 = lazy(() => import('./views/auth/signup/SignUp1'));
+const BasicButton = lazy(() => import('./views/ui-elements/basic/BasicButton'));
+const BasicBreadcrumb = lazy(() => import('./views/ui-elements/basic/BasicBreadcrumb'));
+const BasicBadges = lazy(() => import('./views/ui-elements/basic/BasicBadges'));
+const BasicCollapse = lazy(() => import('./views/ui-elements/basic/BasicCollapse'));
+const BasicTabsPills = lazy(() => import('./views/ui-elements/basic/BasicTabsPills'));
+const BasicTypography = lazy(() => import('./views/ui-elements/basic/BasicTypography'));
+const FormsElements = lazy(() => import('./views/forms/FormsElements'));
+const GoogleMaps = lazy(() => import('./views/maps/GoogleMaps'));
+const Chart = lazy(() => import('./views/charts/nvd3-chart'));
+const SamplePage = lazy(() => import('./views/extra/SamplePage'));
+
+
+export default function AdminRoutes() {
+  return (
+    <div className="admin-root">
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="login" element={<SignIn1 />} />
+          <Route path="auth/signin-1" element={<SignIn1 />} />
+          <Route path="auth/signup-1" element={<SignUp1 />} />
+          <Route path="*" element={
+            <AdminLayout>
+              <Suspense fallback={<Loader />}>
+                <Routes>
+                  <Route index element={<Dashboard />} />
+                  <Route path="basic/button" element={<BasicButton />} />
+                  <Route path="basic/badges" element={<BasicBadges />} />
+                  <Route path="basic/breadcrumb" element={<BasicBreadcrumb />} />
+                  <Route path="basic/collapse" element={<BasicCollapse />} />
+                  <Route path="basic/tabs" element={<BasicTabsPills />} />
+                  <Route path="basic/typography" element={<BasicTypography />} />
+                  <Route path="form" element={<FormsElements />} />
+                  <Route path="bootstrap" element={<BasicBadges />} />
+                  <Route path="nvd3" element={<Chart />} />
+                  <Route path="map" element={<GoogleMaps />} />
+                  <Route path="basic/page" element={<SamplePage />} />
+                  <Route path="*" element={<Navigate to="/admin" />} />
+                </Routes>
+              </Suspense>
+            </AdminLayout>
+          } />
+        </Routes>
+      </Suspense>
+    </div>
+  );
+}

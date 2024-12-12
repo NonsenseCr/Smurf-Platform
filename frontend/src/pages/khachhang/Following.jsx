@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "../../styles/styleList.css";
 import imgInfo from '../../assets/img/empty-cr-list.png';
 const Following = () => {
   const [following, setFollowing] = useState([]); // Danh sách truyện theo dõi
