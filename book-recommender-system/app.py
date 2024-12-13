@@ -55,10 +55,10 @@ def goi_y_sach():
         if book_id:
             try:
                 print(f"Book ID: {book_id}")
-                recommended_books = recommend(int(book_id))
+                recommended_books = recommend(book_id)
                 print(f"Recommended Books: {recommended_books}")
                 if recommended_books:
-                    recommended_books_json = [int(item[0]) for item in recommended_books]
+                    recommended_books_json = [item[0] for item in recommended_books]
                     return jsonify({
                         "status": 200,
                         "recommended_books_id": recommended_books_json
@@ -85,10 +85,8 @@ def goi_y_sach():
             "message": "Request must be in JSON format"
         }), 400
 def recommend(book_id):
-    book_id = int(book_id)
-    # Kiểm tra xem book_name có tồn tại trong pt.index không
+    book_id = str(book_id)
     if book_id in pt.index:
-        # index fetch
         index = np.where(pt.index == book_id)[0][0]
         similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:13]
         
@@ -104,5 +102,6 @@ def recommend(book_id):
     else:
         print("Book not found in database")
         return None
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
