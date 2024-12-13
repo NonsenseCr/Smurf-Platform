@@ -10,6 +10,7 @@ router.post('/create', async (req, res) => {
     try {
         // Kiểm tra nếu thể loại đã tồn tại
         const existingLoaiTruyen = await LoaiTruyen.findOne({ ten_loai: ten_loai.trim() });
+        
         if (existingLoaiTruyen) {
             return res.status(400).json({ message: 'Thể loại đã tồn tại' });
         }
