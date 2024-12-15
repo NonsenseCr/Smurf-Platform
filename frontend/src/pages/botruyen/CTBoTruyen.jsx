@@ -7,9 +7,11 @@ import {
   unfollowComic,
   checkPremiumAccess,
   fetchChaptersByComicId,
+  fetchRecommendedBoTruyen,
 } from "../../services/BoTruyenServices";
 import iconPremium from "../../assets/PreDark.png";
 import Loader from "../../components/Element/Loader";
+import RecommendComics from '../../components/Home/RecommendComics';
 const CtBoTruyen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,21 +23,26 @@ const CtBoTruyen = () => {
   const [isPremium, setIsPremium] = useState(false);
   const [rating, setRating] = useState(null);
   const [contentExpanded, setContentExpanded] = useState(false);
-
+  const [recommendedComics, setRecommendedComics] = useState([]);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const userId = "123";
   
-
-  const userId = "123"; // Giả lập userId (thay thế bằng logic thực tế)
-
   useEffect(() => {
     const loadBoTruyen = async () => {
       try {
         const data = await fetchBoTruyenById(id);
+      //   const bookId = data._id;
+      //   const [recommendedData] = await Promise.all([
+      //     fetchRecommendedBoTruyen(bookId),
+      // ]);
         setBoTruyen(data);
         setFollowed(data.followed);
         setUserTickets(data.userTickets || 0);
         setIsPremium(data.isPremium || false);
         setRating(data.danhgia || 0);
-
+        // setRecommendedComics(recommendedData);
+        
         const chaptersData = await fetchChaptersByComicId(id);
         setChapters(chaptersData);
       } catch (error) {
@@ -46,6 +53,25 @@ const CtBoTruyen = () => {
     loadBoTruyen();
   }, [id]);
 
+  useEffect(() => {
+          const fetchData = async () => {
+              try {
+                  const bookId = "67507c32968ff0f3ba4c2c25";
+                  const [recommendedData] = await Promise.all([
+                      fetchRecommendedBoTruyen(bookId),
+                  ]);
+                  setRecommendedComics(recommendedData);
+              } catch (err) {
+                  setError(err.message);
+              }
+          };
+  
+          fetchData();
+    }, []);
+
+    if (error) {
+      return <div className="error-container">Lỗi: {error}</div>;
+  }
   const handleFollow = async () => {
     try {
       if (followed) {
@@ -96,7 +122,7 @@ const CtBoTruyen = () => {
   const handleChapterClick = (id_bo, stt_chap) => {
     navigate(`/chapter/${id_bo}/${stt_chap}`);
   };
-  const [isLoading, setIsLoading] = useState(true);
+ 
   if (!boTruyen) {
     return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
     
@@ -332,7 +358,9 @@ const CtBoTruyen = () => {
               <div>Không có chương nào.</div>
             )}
           </div>
+          
         </div>
+        <RecommendComics comics={recommendedComics} title="Bộ truyện tương tự" />
       </div>
     </div>
   );

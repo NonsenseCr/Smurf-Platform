@@ -47,7 +47,7 @@ const userRoutes = require('./src/routes/user.route');
 const registerRoutes = require('./src/routes/register.route'); 
 const loginRoutes = require('./src/routes/login.route');
 const authRoutes = require('./src/routes/auth.route'); 
-
+const statisticRoutes = require('./src/routes/Admin/Statistic.route'); 
 // Use routes
 app.use("/api/botruyen", boTruyenRoutes);
 app.use("/api/loaitruyen", loaiTruyenRoutes);
@@ -60,6 +60,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/register', registerRoutes);
 app.use('/api/login', loginRoutes); 
 app.use('/api/auth', authRoutes);
+app.use('/api/statistics', statisticRoutes);
 console.log(process.env);
 
 // MongoDB connection

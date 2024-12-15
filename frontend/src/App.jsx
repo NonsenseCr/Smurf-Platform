@@ -1,41 +1,60 @@
 import { BrowserRouter as Router, useLocation, matchPath, Route, Routes } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AdminRoutes from "area-manager/AdminRoutes";
-import PublicRoutes from "./PublicRoutes"; 
+import PublicRoutes from "./PublicRoutes";
 
 import "remixicon/fonts/remixicon.css";
-
-
 
 function App() {
   const location = useLocation();
   const isAdminPath = matchPath({ path: "/admin/*", end: false }, location.pathname) != null;
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     // Dynamic import CSS theo route
-    if (isAdminPath) {
-      import("./area-manager/index.scss").then(() => {
-        console.log("Admin styles loaded.");
-      });
-    } else {
+    if (!isAdminPath) {
       import("./styles/main.css").then(() => {
         console.log("Public styles loaded.");
+      });
+    } else {
+      import("./area-manager/index.scss").then(() => {
+        console.log("Admin styles loaded.");
       });
     }
   }, [isAdminPath]);
 
-  return (
+  // Ẩn Splash Screen khi ứng dụng sẵn sàng
+  useEffect(() => {
+    const hideSplash = () => {
+      const splashScreen = document.getElementById("splash-screen");
+      if (splashScreen) {
+        splashScreen.classList.add("hidden");
+        setTimeout(() => {
+          splashScreen.style.display = "none";
+        }, 500); // Thời gian để Splash Screen mờ dần
+      }
+      setIsLoaded(true);
+    };
+
+    if (document.readyState === "complete") {
+      hideSplash();
+    } else {
+      window.addEventListener("load", hideSplash);
+      return () => window.removeEventListener("load", hideSplash);
+    }
+  }, []);
+
+  return isLoaded ? (
     <>
       <Routes>
-          {!isAdminPath ? (
-            <Route path="/*" element={<PublicRoutes />} />
-          ) : (
-            // <AdminRoutes />
-            <Route path="/admin/*" element={<AdminRoutes />} />
-          )}
-        </Routes>
+        {!isAdminPath ? (
+          <Route path="/*" element={<PublicRoutes />} />
+        ) : (
+          <Route path="/admin/*" element={<AdminRoutes />} />
+        )}
+      </Routes>
     </>
-  );
+  ) : null; // Chỉ render ứng dụng sau khi Splash Screen bị ẩn
 }
 
 export default function AppWrapper() {

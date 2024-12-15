@@ -6,7 +6,7 @@ const LoaiTruyen = require('../model/loaitruyen.model');
 const Chapter = require('../model/chapter.model');
 const router = express.Router();
 const mongoose = require('mongoose');
-
+const axios = require('axios');
 
 // Taọ mới bộ truyện
 router.post('/create-post', async (req, res) => {
@@ -71,7 +71,7 @@ router.post('/create-many-and-sync', async (req, res) => {
                 for (const loaiId of listloai) {
                     const loaiTruyen = await LoaiTruyen.findByIdAndUpdate(
                         loaiId,
-                        { $addToSet: { listTruyen: newBoTruyen._id } }, 
+                        { $addToSet: { listTruyen: newBoTruyen._id } },
                         { new: true }
                     );
 
@@ -94,7 +94,7 @@ router.post('/create-many-and-sync', async (req, res) => {
         res.status(201).json({
             message: 'Tạo danh sách bộ truyện và đồng bộ loại truyện thành công',
             createdBoTruyens,
-            updatedLoaiTruyens: Array.from(updatedLoaiTruyens.values()), 
+            updatedLoaiTruyens: Array.from(updatedLoaiTruyens.values()),
         });
     } catch (error) {
         console.error('Error creating BoTruyen and syncing LoaiTruyen:', error);
@@ -146,10 +146,9 @@ router.post('/create', upload.single('image'), async (req, res) => {
     }
 });
 
-// Lấy tất cả các truyện
 router.get('/', async (req, res) => {
     try {
-        const Botruyen = await BoTruyen.find({ active: true }); 
+        const Botruyen = await BoTruyen.find({ active: true });
         res.status(200).json(Botruyen);
     } catch (error) {
         console.error('Error fetching botruyen Truyen:', error);
@@ -157,16 +156,41 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Lấy tất cả các truyện theo gợi ýý
+router.post('/get-recommended-books', async (req, res) => {
+    const { bookId } = req.body;
 
-router.get('/all-comic-list', async (req, res) => {
+    if (!bookId) {
+        return res.status(400).json({ message: "Missing 'bookId' in request body" });
+    }
+
     try {
-        const Botruyen = await BoTruyen.find({ active: true }); 
-        res.status(200).json(Botruyen);
+        // Gọi API Python để lấy recommended_books_id
+        const pythonResponse = await axios.post('http://127.0.0.1:5000/goi-y-sach', { "Book-Id": bookId });
+
+        if (pythonResponse.status !== 200 || !pythonResponse.data.recommended_books_id) {
+            return res.status(500).json({ message: "Failed to fetch recommendations from Python API" });
+        }
+        const recommendedIds = pythonResponse.data.recommended_books_id;
+        const objectIds = recommendedIds.map(id => {
+            if (mongoose.Types.ObjectId.isValid(id)) {
+                return new mongoose.Types.ObjectId(id);
+            } else {
+                console.warn(`Invalid ObjectId: ${id}`);
+                return null;
+            }
+        }).filter(id => id !== null);
+        const recommendedBooks = await BoTruyen.find({ _id: { $in: objectIds } });
+        return res.status(200).json({
+            status: 200,
+            recommendedBooks: recommendedBooks
+        });
     } catch (error) {
-        console.error('Error fetching botruyen Truyen:', error);
-        res.status(500).json({ message: 'Lỗi khi lấy danh sách truyện' });
+        console.error('Error fetching Bo Truyen by ID:', error);
+        return res.status(500).json({ message: "An error occurred", error: error.message });
     }
 });
+
 
 
 // Thêm loại truyện vào bộ truyện 
@@ -479,10 +503,10 @@ router.get('/listlatest', async (req, res) => {
                 TtPemium: comic.premium,
                 latestChapter: latestChapter
                     ? {
-                          SttChap: latestChapter.stt_chap,
-                          TenChap: latestChapter.ten_chap,
-                          ThoiGian: calculateTimeAgo(latestChapter.thoi_gian),
-                      }
+                        SttChap: latestChapter.stt_chap,
+                        TenChap: latestChapter.ten_chap,
+                        ThoiGian: calculateTimeAgo(latestChapter.thoi_gian),
+                    }
                     : null, // Nếu không có chương mới nhất, trả về null
             };
         });
@@ -587,13 +611,13 @@ router.get('/trending', async (req, res) => {
 router.get('/random', async (req, res) => {
     try {
         const randomComic = await BoTruyen.aggregate([
-            { $match: { active: true } }, 
-            { $sample: { size: 1 } } 
+            { $match: { active: true } },
+            { $sample: { size: 1 } }
         ]);
 
         if (randomComic.length > 0) {
-            const comicId = randomComic[0]._id; 
-            res.status(200).json({ _id: comicId }); 
+            const comicId = randomComic[0]._id;
+            res.status(200).json({ _id: comicId });
         } else {
             res.status(404).json({ message: 'Không tìm thấy bộ truyện nào' });
         }
@@ -720,15 +744,15 @@ router.get('/rankings', async (req, res) => {
                 poster: comic.poster,
                 banner: comic.banner,
                 updatedAt: comic.updatedAt,
-                listLoai: Array.isArray(comic.listloai) // Kiểm tra xem listloai có tồn tại và là mảng
+                listLoai: Array.isArray(comic.listloai) 
                     ? comic.listloai.map((loai) => loai.ten_loai)
                     : [],
                 latestChapter: latestChapter
                     ? {
-                          SttChap: latestChapter.stt_chap,
-                          TenChap: latestChapter.ten_chap,
-                          ThoiGian: calculateTimeAgo(latestChapter.thoi_gian),
-                      }
+                        SttChap: latestChapter.stt_chap,
+                        TenChap: latestChapter.ten_chap,
+                        ThoiGian: calculateTimeAgo(latestChapter.thoi_gian),
+                    }
                     : null,
             };
         });
@@ -742,7 +766,6 @@ router.get('/rankings', async (req, res) => {
     }
 });
 
-
 router.get('/search', async (req, res) => {
     const { query } = req.query;
     if (!query) {
@@ -751,8 +774,8 @@ router.get('/search', async (req, res) => {
     try {
         const results = await BoTruyen.find({
             tenbo: { $regex: new RegExp(query, 'i') },
-            active: true 
-        }).select('tenbo TongLuotXem poster _id').limit(10); 
+            active: true
+        }).select('tenbo TongLuotXem poster _id').limit(10);
 
         const formattedResults = results.map(boTruyen => ({
             id: boTruyen._id,
@@ -795,7 +818,6 @@ router.get("/search-advanced", async (req, res) => {
     }
 });
 
-
 router.post("/check-premium-access", async (req, res) => {
     try {
         const { userId, chapterId, isPremium, tickets, ticketCost } = req.body;
@@ -827,6 +849,7 @@ router.post("/check-premium-access", async (req, res) => {
         res.status(500).json({ message: "Lỗi khi kiểm tra quyền truy cập" });
     }
 });
+
 router.post("/:id/increase-view", async (req, res) => {
     const { id } = req.params;
 
@@ -858,13 +881,12 @@ router.post("/:id/increase-view", async (req, res) => {
 
 
 // Lấy chi tiết bộ truyện
-
 router.get("/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const boTruyen = await BoTruyen.findById(id)
             .populate("id_tg", "ten_tg")
-            .populate("listloai", "ten_loai"); 
+            .populate("listloai", "ten_loai");
 
         if (!boTruyen) {
             return res.status(404).json({ message: "Không tìm thấy bộ truyện" });
@@ -882,10 +904,10 @@ router.get("/:id", async (req, res) => {
         // Định dạng thông tin chương mới nhất
         const latestChapterInfo = latestChapter
             ? {
-                  SttChap: latestChapter.stt_chap,
-                  TenChap: latestChapter.ten_chap,
-                  ThoiGian: calculateTimeAgo(latestChapter.thoi_gian),
-              }
+                SttChap: latestChapter.stt_chap,
+                TenChap: latestChapter.ten_chap,
+                ThoiGian: calculateTimeAgo(latestChapter.thoi_gian),
+            }
             : null;
 
         // Lấy các bộ truyện tương tự
@@ -899,10 +921,10 @@ router.get("/:id", async (req, res) => {
 
         res.status(200).json({
             ...boTruyen.toObject(),
-            tacgia: boTruyen.id_tg ? boTruyen.id_tg.ten_tg : null, // Thêm tên tác giả vào kết quả trả về
-            chapters, // Thêm danh sách chương
-            similarComics, // Thêm danh sách bộ truyện tương tự
-            latestChapter: latestChapterInfo, // Thêm chương mới nhất
+            tacgia: boTruyen.id_tg ? boTruyen.id_tg.ten_tg : null,
+            chapters,
+            similarComics,
+            latestChapter: latestChapterInfo,
         });
     } catch (error) {
         console.error("Error fetching Bo Truyen by ID:", error);
@@ -911,135 +933,129 @@ router.get("/:id", async (req, res) => {
 });
 
 
-
-/**
- * API: Theo dõi bộ truyện
- */
+// API: Theo dõi bộ truyện
 router.post("/follow/:id", async (req, res) => {
     try {
-      const { id } = req.params;
-      const { userId } = req.body;
-  
-      if (!userId) {
-        return res.status(400).json({ message: "Người dùng không xác định" });
-      }
-  
-      const boTruyen = await BoTruyen.findByIdAndUpdate(
-        id,
-        { $addToSet: { followers: userId } },
-        { new: true }
-      );
-  
-      if (!boTruyen) {
-        return res.status(404).json({ message: "Không tìm thấy bộ truyện" });
-      }
-  
-      res.status(200).json({ message: "Theo dõi thành công", boTruyen });
-    } catch (error) {
-      console.error("Error following Bo Truyen:", error);
-      res.status(500).json({ message: "Lỗi khi theo dõi bộ truyện" });
-    }
-  });
+        const { id } = req.params;
+        const { userId } = req.body;
 
-/**
- * API: Hủy theo dõi bộ truyện
- */
+        if (!userId) {
+            return res.status(400).json({ message: "Người dùng không xác định" });
+        }
+
+        const boTruyen = await BoTruyen.findByIdAndUpdate(
+            id,
+            { $addToSet: { followers: userId } },
+            { new: true }
+        );
+
+        if (!boTruyen) {
+            return res.status(404).json({ message: "Không tìm thấy bộ truyện" });
+        }
+
+        res.status(200).json({ message: "Theo dõi thành công", boTruyen });
+    } catch (error) {
+        console.error("Error following Bo Truyen:", error);
+        res.status(500).json({ message: "Lỗi khi theo dõi bộ truyện" });
+    }
+});
+
+// API: Hủy theo dõi bộ truyện
 router.post("/unfollow/:id", async (req, res) => {
     try {
-      const { id } = req.params;
-      const { userId } = req.body;
-  
-      if (!userId) {
-        return res.status(400).json({ message: "Người dùng không xác định" });
-      }
-  
-      const boTruyen = await BoTruyen.findByIdAndUpdate(
-        id,
-        { $pull: { followers: userId } },
-        { new: true }
-      );
-  
-      if (!boTruyen) {
-        return res.status(404).json({ message: "Không tìm thấy bộ truyện" });
-      }
-  
-      res.status(200).json({ message: "Hủy theo dõi thành công", boTruyen });
-    } catch (error) {
-      console.error("Error unfollowing Bo Truyen:", error);
-      res.status(500).json({ message: "Lỗi khi hủy theo dõi bộ truyện" });
-    }
-  });
+        const { id } = req.params;
+        const { userId } = req.body;
 
-/**
- * API: Kiểm tra quyền truy cập chương Premium
- */
+        if (!userId) {
+            return res.status(400).json({ message: "Người dùng không xác định" });
+        }
+
+        const boTruyen = await BoTruyen.findByIdAndUpdate(
+            id,
+            { $pull: { followers: userId } },
+            { new: true }
+        );
+
+        if (!boTruyen) {
+            return res.status(404).json({ message: "Không tìm thấy bộ truyện" });
+        }
+
+        res.status(200).json({ message: "Hủy theo dõi thành công", boTruyen });
+    } catch (error) {
+        console.error("Error unfollowing Bo Truyen:", error);
+        res.status(500).json({ message: "Lỗi khi hủy theo dõi bộ truyện" });
+    }
+});
+
+
+// API: Kiểm tra quyền truy cập chương Premium
 router.post("/check-access", async (req, res) => {
     try {
-      const { chapterId, userId, isPremium, tickets, ticketCost } = req.body;
-  
-      if (!userId) {
-        return res.status(401).json({ message: "Người dùng chưa đăng nhập" });
-      }
-  
-      if (!isPremium && tickets < ticketCost) {
-        return res.status(403).json({
-          message: "Bạn cần đăng ký Premium hoặc mua thêm vé để truy cập nội dung này",
-        });
-      }
-  
-      const chapter = await Chapter.findById(chapterId);
-  
-      if (!chapter) {
-        return res.status(404).json({ message: "Không tìm thấy chương truyện" });
-      }
-  
-      res.status(200).json({ message: "Truy cập thành công", chapter });
+        const { chapterId, userId, isPremium, tickets, ticketCost } = req.body;
+
+        if (!userId) {
+            return res.status(401).json({ message: "Người dùng chưa đăng nhập" });
+        }
+
+        if (!isPremium && tickets < ticketCost) {
+            return res.status(403).json({
+                message: "Bạn cần đăng ký Premium hoặc mua thêm vé để truy cập nội dung này",
+            });
+        }
+
+        const chapter = await Chapter.findById(chapterId);
+
+        if (!chapter) {
+            return res.status(404).json({ message: "Không tìm thấy chương truyện" });
+        }
+
+        res.status(200).json({ message: "Truy cập thành công", chapter });
     } catch (error) {
-      console.error("Error checking access:", error);
-      res.status(500).json({ message: "Lỗi khi kiểm tra quyền truy cập" });
+        console.error("Error checking access:", error);
+        res.status(500).json({ message: "Lỗi khi kiểm tra quyền truy cập" });
     }
-  });
+});
 
 //Tìm kiếm bộ truyện theo tên
 router.get("/search", async (req, res) => {
     try {
-      const { query } = req.query;
-  
-      if (!query) {
-        return res.status(400).json({ message: "Vui lòng cung cấp từ khóa tìm kiếm" });
-      }
-  
-      const results = await BoTruyen.find({
-        tenbo: { $regex: new RegExp(query, "i") },
-        active: true,
-      })
-        .limit(10)
-        .select("tenbo poster TongLuotXem");
-  
-      res.status(200).json(results);
+        const { query } = req.query;
+
+        if (!query) {
+            return res.status(400).json({ message: "Vui lòng cung cấp từ khóa tìm kiếm" });
+        }
+
+        const results = await BoTruyen.find({
+            tenbo: { $regex: new RegExp(query, "i") },
+            active: true,
+        })
+            .limit(10)
+            .select("tenbo poster TongLuotXem");
+
+        res.status(200).json(results);
     } catch (error) {
-      console.error("Search error:", error);
-      res.status(500).json({ message: "Lỗi khi tìm kiếm bộ truyện" });
+        console.error("Search error:", error);
+        res.status(500).json({ message: "Lỗi khi tìm kiếm bộ truyện" });
     }
-  });
-  
+});
+
 
 //Lọc bộ truyện theo trạng thái
 router.get("/filter", async (req, res) => {
     try {
-      const { trangthai } = req.query;
-  
-      const results = await BoTruyen.find({
-        trangthai,
-        active: true,
-      }).select("tenbo poster TongLuotXem");
-  
-      res.status(200).json(results);
+        const { trangthai } = req.query;
+
+        const results = await BoTruyen.find({
+            trangthai,
+            active: true,
+        }).select("tenbo poster TongLuotXem");
+
+        res.status(200).json(results);
     } catch (error) {
-      console.error("Filter error:", error);
-      res.status(500).json({ message: "Lỗi khi lọc bộ truyện" });
+        console.error("Filter error:", error);
+        res.status(500).json({ message: "Lỗi khi lọc bộ truyện" });
     }
-  });
+});
 // Danh sách chương của một bộ truyện
 router.get("/:id/chapters", async (req, res) => {
     try {

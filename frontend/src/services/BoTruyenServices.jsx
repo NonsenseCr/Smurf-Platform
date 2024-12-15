@@ -23,6 +23,22 @@ export const fetchAllBoTruyen = async () => {
     }
 };
 
+// Gọi API để lấy danh sách bộ truyện được đề xuất
+export const fetchRecommendedBoTruyen = async (bookId) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/get-recommended-books`, {
+            bookId: bookId,
+        });
+        return response.data.recommendedBooks;
+    } catch (error) {
+        console.error('Lỗi khi lấy danh sách bộ truyện đề xuất:', error.response || error.message);
+        throw new Error(
+            error.response?.data?.message || 'Không thể lấy danh sách bộ truyện đề xuất'
+        );
+    }
+};
+
+
 // Lấy danh sách bộ truyện mới nhất
 export const fetchBoTruyenLatest = async () => {
     try {
