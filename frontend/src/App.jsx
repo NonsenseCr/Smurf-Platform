@@ -4,7 +4,7 @@ import AdminRoutes from "area-manager/AdminRoutes";
 import PublicRoutes from "./PublicRoutes";
 
 import "remixicon/fonts/remixicon.css";
-
+import("./App.css");
 function App() {
   const location = useLocation();
   const isAdminPath = matchPath({ path: "/admin/*", end: false }, location.pathname) != null;
@@ -14,11 +14,9 @@ function App() {
     // Dynamic import CSS theo route
     if (!isAdminPath) {
       import("./styles/main.css").then(() => {
-        console.log("Public styles loaded.");
       });
     } else {
       import("./area-manager/index.scss").then(() => {
-        console.log("Admin styles loaded.");
       });
     }
   }, [isAdminPath]);

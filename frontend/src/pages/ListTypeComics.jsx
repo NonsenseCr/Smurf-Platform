@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchBoTruyenByCategory } from "../services/LoaiTruyenService";
 import { Link } from "react-router-dom";
 import Loader from "../components/Element/Loader";
+import imgInfo from '../assets/img/empty-cr-list.png';
 const ListTypeComics = () => {
   const { id } = useParams(); // Lấy id thể loại từ URL
   const [comics, setComics] = useState([]); // Danh sách truyện
@@ -11,6 +12,7 @@ const ListTypeComics = () => {
   const [totalPages, setTotalPages] = useState(0); // Tổng số trang
   const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null); 
   // Map giữa id và tên thể loại (cố định trong frontend)
   const categoryMap = {
     "67406e4ec03445f4711481f2": "Hành động",
@@ -40,6 +42,7 @@ const ListTypeComics = () => {
       setTotalPages(totalPages);
     } catch (error) {
       console.error("Error fetching BoTruyen by category:", error);
+      setError(error.message || "Đã xảy ra lỗi khi tải danh sách.");
     } finally {
       setLoading(false);
     }
@@ -61,9 +64,25 @@ const ListTypeComics = () => {
   }
 
   if (!comics || comics.length === 0) {
-    return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
-
+    return (
+      <>
+        <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
+        <div className="list__container containers list" style={{ padding: '3rem', marginBottom: '1rem' }}>
+          <div className="section-bottom container w-100" style={{ height: "60vh" }}>
+            <img src={imgInfo} alt="cat Image" />
+            <span>
+              <h4 className="section__subtitle" style={{color:"#8770F9"}}>Opps !!!</h4> 
+              <h5 className="section__des">{error || "KHÔNG CÓ TRUYỆN TRONG DANH SÁCH TRUYỆN "} <span style={{ color: "#9858F1",fontSize:"1.5rem" }}>{subtitle}</span></h5>
+            </span>
+            <Link to="/" className="btn" style={{ marginTop: '1rem' }}>
+              Trang Chủ
+            </Link>
+          </div>
+        </div>
+      </>
+    );
   }
+  
 
   return (
     <div className="main__top ">

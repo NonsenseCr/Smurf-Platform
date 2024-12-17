@@ -1,8 +1,9 @@
 const express = require("express");
 const KhachHang = require("../model/khachhang.model");
 const User = require("../model/user.model"); 
+const Avatar = require("../model/Avatar.model"); 
 const router = express.Router();
-
+const mongoose = require("mongoose");
 // Tạo mới một khách hàng
 router.post("/create", async (req, res) => {
     const {
@@ -98,30 +99,37 @@ router.put("/update", async (req, res) => {
   
 
 // Lấy chi tiết khách hàng
+
 router.get("/:id", async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params; // Lấy ID từ URL
 
-    try {
-        const khachHang = await KhachHang.findById(id).populate("IdUser", "UserName Email");
-        if (!khachHang) {
-            return res.status(404).json({ message: "Không tìm thấy khách hàng" });
-        }
-        res.status(200).json(khachHang);
-    } catch (error) {
-        console.error("Error fetching customer details:", error);
-        res.status(500).json({ message: "Lỗi khi lấy thông tin khách hàng" });
-    }
-});
+  try {
+    // Tìm khách hàng với IdUser là chuỗi
+    const khachHang = await KhachHang.findOne({ IdUser: id });
 
-// Lấy danh sách khách hàng
-router.get("/", async (req, res) => {
-    try {
-        const khachHangs = await KhachHang.find().populate("IdUser", "UserName Email");
-        res.status(200).json(khachHangs);
-    } catch (error) {
-        console.error("Error fetching customers:", error);
-        res.status(500).json({ message: "Lỗi khi lấy danh sách khách hàng" });
+    if (!khachHang) {
+      return res.status(404).json({ message: "Không tìm thấy khách hàng" });
     }
+
+    // Tìm thông tin User từ bảng User dựa trên IdUser (chuỗi)
+    const user = await User.findOne({ IdUser: khachHang.IdUser }).select("UserName Email");
+
+    // Lấy thông tin Avatar từ bảng Avatar dựa trên IdAvatar
+    let avatar = null;
+    if (khachHang.IdAvatar) {
+      avatar = await Avatar.findOne({ _id: khachHang.IdAvatar }).select("AvatarContent");
+    }
+
+    // Trả về thông tin khách hàng, User và Avatar
+    res.status(200).json({
+      ...khachHang._doc,    // Thông tin khách hàng
+      UserDetail: user,     // Thông tin chi tiết từ User
+      Avatar: avatar ? avatar.AvatarContent : null, // URL Avatar nếu có
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy thông tin khách hàng:", error);
+    res.status(500).json({ message: "Lỗi khi lấy thông tin khách hàng" });
+  }
 });
 
 // Cập nhật khách hàng
@@ -223,7 +231,5 @@ router.delete("/delete-all", async (req, res) => {
       });
     }
   });
-
-module.exports = router;
 
 module.exports = router;

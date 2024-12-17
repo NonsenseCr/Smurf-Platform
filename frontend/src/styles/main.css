@@ -60,10 +60,6 @@
     --containers-color-alt: #8770F9; /* #9858F1 */
     --containers-color-yellow: #6450CB; /* #B142F5 */
     --btn-orange: #F47521;
-
-
-    
-
     --header-height: 3rem;
     /*========== Font and typography ==========*/
     /*.5rem = 8px | 1rem = 16px ...*/
@@ -108,7 +104,7 @@
 }
 
 /*========== Variables Dark theme ==========*/
-body.dark-theme {
+/* body.dark-theme {
     --body-white: #ffffff;
     --first-color: hsl(19, 100%, 97%);
     --first-color-alt: hsl(19, 100%, 97%);
@@ -117,9 +113,6 @@ body.dark-theme {
     --text-color-light: hsl(19, 8%, 55%);
     --box-color: #181D1F;
     --body-color:
-        /* #141624;*/
-        /* #263238;*/
-        /* #0E1111; */
         #000;
     --body-color-dark: #1a2226;
     --body-main: #1a1e24;
@@ -130,7 +123,7 @@ body.dark-theme {
     --containers-color-alt: #9858F1;
     --containers-color-yellow: #B142F5;
     --btn-orange: #F47521;
-}
+} */
 
 .ri-sun-line {
     color: var(--first-color);
@@ -140,7 +133,7 @@ body.dark-theme {
         Color changes in some parts of
         the website, in light theme
     ==========*/
-.dark-theme .bg-header,
+/* .dark-theme .bg-header,
 .dark-theme .nav__menu,
 .dark-theme .scrollup {
     box-shadow: 0 2px 8px hsla(19, 64%, 4%, .5);
@@ -156,7 +149,7 @@ body.dark-theme {
 
 .dark-theme::-webkit-scrollbar-thumb:hover {
     background-color: hsl(19, 8%, 35%);
-}
+} */
 
 
 .dark-theme .nav__logo-img {

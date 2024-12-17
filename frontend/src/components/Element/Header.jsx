@@ -98,7 +98,8 @@ function Header() {
     const userDataFromStorage = localStorage.getItem("user");
     if (userDataFromStorage) {
       const userData = JSON.parse(userDataFromStorage);
-      navigate("/infor", { state: { user: userData } }); // Truyền thông tin vào state
+      console.log("Navigating with user data:", userData);
+      navigate("/infor", { state: { user: userData } });
     } else {
       console.error("No user data found in localStorage.");
     }

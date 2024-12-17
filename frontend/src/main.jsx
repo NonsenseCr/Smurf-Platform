@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import { ConfigProvider } from './area-manager/contexts/ConfigContext';
 import reportWebVitals from './area-manager/reportWebVitals';
 

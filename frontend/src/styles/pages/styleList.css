@@ -5,9 +5,9 @@
 
 .list__container {
     position: relative;
-    /* width: 100%; */
-    padding: 0 2.5rem;
-    background-color: var(--body-main)
+    padding: 1rem 2.5rem;
+    background-color: var(--body-main);
+    margin-bottom: 1rem;
 }
 /* 
 .section__subtitle {
