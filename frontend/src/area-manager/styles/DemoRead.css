@@ -1,0 +1,35 @@
+.demo-read-container {
+    display: flex;
+    background: #f4f4f4;
+  }
+  
+  .reading-area {
+    flex: 2;
+    background: white;
+    padding: 10px;
+    border-right: 2px solid #ddd;
+  }
+  
+  .page-container {
+    margin-bottom: 20px;
+    border: 2px solid #800080;
+  }
+  
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 5px;
+  }
+  
+  .chapter-info {
+    flex: 1;
+    padding: 10px;
+    background: #fff;
+  }
+  
+  .chapter-info h3 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+  }
+  

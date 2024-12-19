@@ -28,6 +28,7 @@
     "font-awesome": "^4.7.0",
     "formik": "^2.4.5",
     "jquery": "^3.7.1",
+    "mangasmuft": "file:",
     "path-to-regexp": "^8.2.0",
     "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",
@@ -51,7 +52,6 @@
     "styled-components": "^6.1.13",
     "sweetalert2": "^11.14.5",
     "sweetalert2-react-content": "^5.0.7",
-    "vite": "^5.4.11",
     "vite-jsconfig-paths": "^2.0.1",
     "web-vitals": "^3.5.2",
     "yup": "^1.4.0"
@@ -81,7 +81,6 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
     "env-cmd": "^10.1.0",
-    "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-flowtype": "^8.0.3",

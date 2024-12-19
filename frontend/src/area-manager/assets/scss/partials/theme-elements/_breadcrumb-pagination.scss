@@ -27,4 +27,15 @@
     border-color: $primary-color;
   }
 }
+
+
+/* Tiêu đề trang */
+.page-header-title h5 {
+  font-size: 30px; 
+  font-family: 'Roboto', sans-serif; 
+  color: #6A1B9A;
+  text-transform: uppercase; 
+  margin-bottom: 10px; 
+}
+
 /**====== Breadcrumbs & Pagination css end ======**/

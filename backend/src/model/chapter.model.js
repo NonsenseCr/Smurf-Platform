@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 
+// Schema của Page (thay thế cho CT_Chapter)
+const PageSchema = new mongoose.Schema({
+    so_trang: { type: Number, required: true }, // Số thứ tự trang
+    anh_trang: { type: String, required: true }, // Đường dẫn ảnh
+    active: { type: Boolean, default: true }, // Trạng thái hoạt động
+});
+
 const ChapterSchema = new mongoose.Schema({
     id_bo: { type: mongoose.Schema.Types.ObjectId, ref: 'BoTruyen', required: true }, // Liên kết với bộ truyện
     stt_chap: { type: Number, required: true }, // Số thứ tự chương
@@ -11,6 +18,7 @@ const ChapterSchema = new mongoose.Schema({
     ticket_cost: { type: Number, default: 0 }, // Giá vé đọc chương
     luotxem: { type: Number, default: 0 }, // Tổng số lượt xem
     active: { type: Boolean, default: true }, // Trạng thái hoạt động
+    list_pages: [PageSchema], // Mảng chứa danh sách các trang
 }, { timestamps: true }); // Tự động thêm createdAt và updatedAt
 
 const Chapter = mongoose.model('Chapter', ChapterSchema);

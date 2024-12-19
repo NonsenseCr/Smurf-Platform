@@ -30,7 +30,7 @@ import Loader from "./components/Element/Loader";
 function PublicRoutes() {
     const location = useLocation();
     const [isLoading, setIsLoading] = useState(true);
-    const isAdminPath = matchPath({ path: '/admin/*', end: false }, location.pathname) != null;
+    const isAdminPath = matchPath({ path: '/manager/*', end: false }, location.pathname) != null;
 
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
@@ -41,7 +41,7 @@ function PublicRoutes() {
         }
     }, [location]);
 
-    const noHeaderFooterRoutes = ["/login", "/register", "/infor", "/auth/success", "/admin/*"];
+    const noHeaderFooterRoutes = ["/login", "/register", "/infor", "/auth/success", "/manager/*"];
     const isNoHeaderFooter = noHeaderFooterRoutes.some(path =>
         matchPath({ path, end: false }, location.pathname)
     );

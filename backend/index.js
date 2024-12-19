@@ -13,6 +13,7 @@ const port = process.env.PORT || 5000;
 // Middleware for serving static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
 // Import models
 const TacGia = require('./src/model/tacgia.model');
 const BoTruyen = require('./src/model/botruyen.model');
@@ -48,6 +49,7 @@ const registerRoutes = require('./src/routes/register.route');
 const loginRoutes = require('./src/routes/login.route');
 const authRoutes = require('./src/routes/auth.route'); 
 
+
 // Use routes
 app.use("/api/botruyen", boTruyenRoutes);
 app.use("/api/loaitruyen", loaiTruyenRoutes);
@@ -61,6 +63,22 @@ app.use('/api/register', registerRoutes);
 app.use('/api/login', loginRoutes); 
 app.use('/api/auth', authRoutes);
 console.log(process.env);
+
+
+// area manager 
+const authorManager = require("./src/area-manager/routes/author.route");
+app.use("/api/author", authorManager);
+const comicRoutes = require("./src/area-manager/routes/comic.route");
+app.use("/api/comic", comicRoutes); 
+const genreRoutes = require("./src/area-manager/routes/genre.route");
+app.use("/api/genres", genreRoutes); 
+const userMRoutes = require("./src/area-manager/routes/user.route");
+// app.use("/api/user-manager", userMRoutes); 
+// const rbacRoutes = require("./src/area-manager/routes/rbac-auth.route");
+// app.use("/api/rbac", rbacRoutes); 
+// const serviceRoutes = require("./src/area-manager/routes/service.route");
+// app.use("/api/service", serviceRoutes); 
+
 
 // MongoDB connection
 async function main() {

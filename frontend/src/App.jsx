@@ -9,7 +9,7 @@ import "remixicon/fonts/remixicon.css";
 
 function App() {
   const location = useLocation();
-  const isAdminPath = matchPath({ path: "/admin/*", end: false }, location.pathname) != null;
+  const isAdminPath = matchPath({ path: "/manager/*", end: false }, location.pathname) != null;
 
   useEffect(() => {
     // Dynamic import CSS theo route
@@ -31,7 +31,7 @@ function App() {
             <Route path="/*" element={<PublicRoutes />} />
           ) : (
             // <AdminRoutes />
-            <Route path="/admin/*" element={<AdminRoutes />} />
+            <Route path="/manager/*" element={<AdminRoutes />} />
           )}
         </Routes>
     </>
