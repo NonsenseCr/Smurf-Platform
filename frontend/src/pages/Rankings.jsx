@@ -113,7 +113,7 @@ const Rankings = () => {
                                             />
                                         </Link>
                                         <div className="item-infor firstRank-infor" style={{ padding: "0 20px" }}>
-                                            <Link to={`/comics/${rankings[0]._id}`}>
+                                            <Link to={`/comic/${rankings[0]._id}`}>
                                                 <h3 className="item-title ">{rankings[0].TenBo}</h3>
                                             </Link>
                                             <h6 className="item-type">
@@ -125,7 +125,7 @@ const Rankings = () => {
                                             <p className="item-type" style={{ marginBottom: ".5rem" }}>
                                                 {rankings[0].listLoai && rankings[0].listLoai.length > 0
                                                     ? rankings[0].listLoai.join(", ")
-                                                    : ""} {/* Hiển thị danh sách loại truyện hoặc thông báo */}
+                                                    : ""}
                                             </p>
                                             <div className="rating">{renderStars(rankings[0].danhgia)}</div>
                                         </div>
@@ -141,7 +141,7 @@ const Rankings = () => {
                                         {String(index + 2).padStart(2, "0")}
                                     </span>
                                     <div className="item-content">
-                                        <Link to={`/comics/${item._id}`}>
+                                        <Link to={`/comic/${item._id}`}>
                                             <img
                                                 loading="lazy"
                                                 src={`http://localhost:5000${item.poster}`}
@@ -151,12 +151,31 @@ const Rankings = () => {
                                         </Link>
                                         <div className="item-infor" style={{ padding: "10px 20px" }}>
                                             <h3 className="rank-title">{item.TenBo}</h3>
-                                            <h6 className="item-type">
+                                            <h6 >
                                                 <span style={{ color: "#fff" }}>{item.TongLuotXem}</span> Lượt xem
                                             </h6>
-                                            <p className="item-type" style={{ marginBottom: ".5rem" }}>
-                                                {item.listLoai?.join(", ")}
-                                            </p>
+                                            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                                                
+                                                {item.listLoai && item.listLoai.length > 0 ? (
+                                                    
+                                                    item.listLoai.map((loai, index) => (
+                                                        <p
+                                                            key={index}
+                                                            className="item-type"
+                                                            style={{ marginBottom: ".5rem", cursor:'pointer'}}>
+                                                            {loai}
+                                                            
+                                                        </p>
+                                                        
+                                                    ))
+                                                    
+                                                ) : (
+                                                    <p className="item-type" style={{ marginBottom: ".5rem" }}>
+                                                        Chưa có loại truyện
+                                                    </p>
+                                                )
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="rank__item-infor ml-auto">

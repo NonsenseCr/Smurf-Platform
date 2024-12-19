@@ -32,7 +32,7 @@ const Login = () => {
                 username: response.data.user.UserName,
                 avatar: response.data.user.avatar || "/default-avatar.png", // Sử dụng avatar từ API hoặc avatar mặc định
             }));
-
+            
             // Điều hướng đến trang chính hoặc trang lưu trước đó
             const redirectUrl = localStorage.getItem("redirectAfterLogin") || "/";
             localStorage.removeItem("redirectAfterLogin");
@@ -46,6 +46,7 @@ const Login = () => {
         setErrorMessage("Có lỗi xảy ra. Vui lòng thử lại sau.");
         console.error("Login error:", error);
     }
+    console.log( "localStorage : ", localStorage);
 };
 
 

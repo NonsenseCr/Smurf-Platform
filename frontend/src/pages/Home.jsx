@@ -44,7 +44,7 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />;
+        return  <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
     }
 
     if (error) {
@@ -67,7 +67,7 @@ const Home = () => {
             <ShowListComics 
                 comics={comicsLatest}
                 subtitle="Danh Sách Truyện"
-                description="Danh sách các truyện mới nhất cập nhật liên tục."
+                description="Danh sách các truyện cập nhật liên tục."
                 link="http://localhost:5173/trending"
             />
             

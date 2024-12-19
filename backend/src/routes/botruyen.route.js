@@ -3,6 +3,7 @@ const upload = require('../middleware/upload.middleware');
 const BoTruyen = require('../model/botruyen.model');
 const TacGia = require('../model/tacgia.model');
 const LoaiTruyen = require('../model/loaitruyen.model');
+const CTBoTruyen = require('../model/CTBoTruyen.model');
 const Chapter = require('../model/chapter.model');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -744,7 +745,7 @@ router.get('/rankings', async (req, res) => {
                 poster: comic.poster,
                 banner: comic.banner,
                 updatedAt: comic.updatedAt,
-                listLoai: Array.isArray(comic.listloai) 
+                listLoai: Array.isArray(comic.listloai)
                     ? comic.listloai.map((loai) => loai.ten_loai)
                     : [],
                 latestChapter: latestChapter
@@ -931,62 +932,146 @@ router.get("/:id", async (req, res) => {
         res.status(500).json({ message: "Lỗi khi lấy thông tin bộ truyện" });
     }
 });
+router.post("/save-history/:comicId", async (req, res) => {
+    try {
+        const { comicId } = req.params; // Lấy ID bộ truyện từ params
+        const { userId, latestChapter } = req.body; // Lấy thông tin user và lịch sử đọc mới nhất từ body
+
+        // Kiểm tra dữ liệu
+        if (!userId || !comicId) {
+            return res.status(400).json({ message: "Thiếu thông tin cần thiết" });
+        }
+
+        // Tìm hoặc tạo mới CTBoTruyen
+        let ctBoTruyen = await CTBoTruyen.findOne({ user: userId, bo_truyen: comicId });
+
+        if (!ctBoTruyen) {
+            ctBoTruyen = new CTBoTruyen({
+                user: userId, // Lưu IdUser của KhachHang
+                bo_truyen: comicId,
+                ls_moi: latestChapter || null,
+            });
+        } else {
+            ctBoTruyen.ls_moi = latestChapter || ctBoTruyen.ls_moi;
+        }
+
+        await ctBoTruyen.save();
+
+        res.status(200).json({ message: "Lịch sử đọc đã được lưu thành công", ctBoTruyen });
+    } catch (error) {
+        console.error("Error saving history:", error);
+        res.status(500).json({ message: "Lỗi khi lưu lịch sử đọc" });
+    }
+});
 
 
 // API: Theo dõi bộ truyện
-router.post("/follow/:id", async (req, res) => {
+router.post("/follow/:comicId", async (req, res) => {
     try {
-        const { id } = req.params;
+        const { comicId } = req.params;
         const { userId } = req.body;
 
-        if (!userId) {
-            return res.status(400).json({ message: "Người dùng không xác định" });
+        // Kiểm tra dữ liệu đầu vào
+        if (!userId || !comicId) {
+            return res.status(400).json({ message: "Thiếu thông tin userId hoặc comicId" });
+        }
+        // Tìm hoặc tạo mới CTBoTruyen
+        let ctBoTruyen = await CTBoTruyen.findOne({ user: userId, bo_truyen: comicId });
+
+        if (!ctBoTruyen) {
+            ctBoTruyen = new CTBoTruyen({
+                user: userId,
+                bo_truyen: comicId,
+                theodoi: true,
+            });
+            await BoTruyen.findByIdAndUpdate(
+                comicId,
+                { $inc: { theodoi: 1 } },
+                { new: true }
+            );
+        } else {
+            ctBoTruyen.theodoi = true;
+            await ctBoTruyen.save();
+            await BoTruyen.findByIdAndUpdate(
+                comicId,
+                { $inc: { theodoi: 1 } },
+                { new: true }
+            );
+
         }
 
-        const boTruyen = await BoTruyen.findByIdAndUpdate(
-            id,
-            { $addToSet: { followers: userId } },
-            { new: true }
-        );
+        // Lưu thông tin vào database
+        await ctBoTruyen.save();
 
-        if (!boTruyen) {
-            return res.status(404).json({ message: "Không tìm thấy bộ truyện" });
-        }
-
-        res.status(200).json({ message: "Theo dõi thành công", boTruyen });
+        res.status(200).json({ success: true, message: "Đã theo dõi bộ truyện thành công", data: ctBoTruyen });
     } catch (error) {
-        console.error("Error following Bo Truyen:", error);
-        res.status(500).json({ message: "Lỗi khi theo dõi bộ truyện" });
+        console.error("Error following BoTruyen:", error);
+        res.status(500).json({ success: false, message: "Lỗi khi theo dõi bộ truyện" });
     }
 });
-
 // API: Hủy theo dõi bộ truyện
-router.post("/unfollow/:id", async (req, res) => {
+router.post("/unfollow/:comicId", async (req, res) => {
     try {
-        const { id } = req.params;
-        const { userId } = req.body;
+        const { comicId } = req.params; // Lấy comicId từ params
+        const { userId } = req.body;   // Lấy userId từ body
 
-        if (!userId) {
-            return res.status(400).json({ message: "Người dùng không xác định" });
+        // Kiểm tra dữ liệu đầu vào
+        if (!userId || !comicId) {
+            return res.status(400).json({ message: "Thiếu thông tin userId hoặc comicId" });
         }
 
-        const boTruyen = await BoTruyen.findByIdAndUpdate(
-            id,
-            { $pull: { followers: userId } },
+        // Tìm CTBoTruyen dựa trên userId và comicId
+        let ctBoTruyen = await CTBoTruyen.findOne({ user: userId, bo_truyen: comicId });
+
+        if (!ctBoTruyen || !ctBoTruyen.theodoi) {
+            // Nếu không tìm thấy bản ghi hoặc theodoi đã là false
+            return res.status(404).json({ message: "Không tìm thấy bản ghi đang theo dõi" });
+        }
+
+        // Cập nhật theodoi = false trong CTBoTruyen
+        ctBoTruyen.theodoi = false;
+        await ctBoTruyen.save();
+
+        // Giảm lượt theo dõi trong BoTruyen
+        await BoTruyen.findByIdAndUpdate(
+            comicId,
+            { $inc: { theodoi: -1 } }, // Giảm theodoi đi 1
             { new: true }
         );
 
-        if (!boTruyen) {
-            return res.status(404).json({ message: "Không tìm thấy bộ truyện" });
-        }
-
-        res.status(200).json({ message: "Hủy theo dõi thành công", boTruyen });
+        res.status(200).json({ success: true, message: "Đã hủy theo dõi bộ truyện thành công", data: ctBoTruyen });
     } catch (error) {
-        console.error("Error unfollowing Bo Truyen:", error);
-        res.status(500).json({ message: "Lỗi khi hủy theo dõi bộ truyện" });
+        console.error("Error unfollowing BoTruyen:", error);
+        res.status(500).json({ success: false, message: "Lỗi khi hủy theo dõi bộ truyện" });
     }
 });
 
+// API: Tìm CTBoTruyen dựa vào comicId và userId
+router.get("/find/:comicId", async (req, res) => {
+    try {
+        const { comicId } = req.params;
+        const { userId } = req.query;
+
+        // Kiểm tra dữ liệu đầu vào
+        if (!userId || !comicId) {
+            return res.status(400).json({ message: "Thiếu thông tin userId hoặc comicId" });
+        }
+
+        // Tìm CTBoTruyen dựa vào userId và comicId
+        const ctBoTruyen = await CTBoTruyen.findOne({ user: userId, bo_truyen: comicId });
+
+        if (!ctBoTruyen) {
+            // Nếu không tìm thấy bản ghi, trả về lỗi
+            return res.status(404).json({ message: "Không tìm thấy CTBoTruyen cho bộ truyện và người dùng này" });
+        }
+
+        // Trả về kết quả nếu tìm thấy
+        res.status(200).json({ success: true, data: ctBoTruyen });
+    } catch (error) {
+        console.error("Error fetching CTBoTruyen:", error);
+        res.status(500).json({ success: false, message: "Lỗi khi tìm kiếm CTBoTruyen" });
+    }
+});
 
 // API: Kiểm tra quyền truy cập chương Premium
 router.post("/check-access", async (req, res) => {
@@ -1079,45 +1164,5 @@ router.get("/:id/chapters", async (req, res) => {
         res.status(500).json({ message: "Lỗi khi lấy danh sách chương" });
     }
 });
-
-
-
-
-// Cập nhật một bộ truyện 
-// router.patch('/update-post/:id', verifyToken, isAdmin, async (req, res) => {
-//     try {
-//         const id = req.params.id;
-
-//         const updatedBoTruyen = await BoTruyen.findByIdAndUpdate(id, { ...req.body }, { new: true });
-
-//         if (!updatedBoTruyen) {
-//             return res.status(404).send({ message: 'Bo Truyen not found' });
-//         }
-
-//         res.status(200).send({ message: 'Bo Truyen updated successfully', post: updatedBoTruyen });
-//     } catch (error) {
-//         console.error('Error updating Bo Truyen:', error);
-//         res.status(500).send({ message: 'Failed to update Bo Truyen' });
-//     }
-// });
-
-// Xóa một bộ truyện 
-// router.delete('/:id', verifyToken, isAdmin, async (req, res) => {
-//     try {
-//         const id = req.params.id;
-
-//         const deletedBoTruyen = await BoTruyen.findByIdAndDelete(id);
-
-//         if (!deletedBoTruyen) {
-//             return res.status(404).send({ message: 'Bo Truyen not found' });
-//         }
-
-//         res.status(200).send({ message: 'Bo Truyen deleted successfully' });
-//     } catch (error) {
-//         console.error('Error deleting Bo Truyen:', error);
-//         res.status(500).send({ message: 'Failed to delete Bo Truyen' });
-//     }
-// });
-
 module.exports = router;
 

@@ -6,6 +6,7 @@
 }
 
 .reading {
+    position: relative;
     margin-top: 3rem;
 }
 
@@ -31,11 +32,12 @@ img {
 
 .reading__container {
     position: relative;
-    width: 100%;
+    /* width: 100%; */
     border-radius: .5rem;
     background-color: var(--body-main);
     overflow: hidden;
     padding: 1.5rem;
+    margin: 3rem;
 }
 
 .links {
@@ -121,10 +123,10 @@ img {
         .control .btn-home,
         .control .btn-prev,
         .control .btn-next {
-            font-size: var(--h2-font-size);
+            font-size: var(--h3-font-size);
             color: var(--title-color);
             font-weight: var(--font-medium);
-            padding: 0 .3rem;
+            padding:.1rem .6rem;
             background-color: var(--containers-color-alt);
             border-radius: 5px;
         }

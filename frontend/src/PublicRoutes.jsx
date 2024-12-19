@@ -1,6 +1,15 @@
 import  { Suspense, lazy } from "react";
 import { useLocation, matchPath, Routes, Route } from "react-router-dom";
 
+// CSS transitions
+import "./styles/components/Transitions.css";
+
+// Import Header, Footer và các thành phần
+import Header from "./components/Element/Header";
+import Footer from "./components/Element/Footer";
+import ScrollToTopButton from "./components/Element/ScrollToTopButton";
+import Loader from "./components/Element/Loader";
+
 // Lazy-load các component chính
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
@@ -19,15 +28,6 @@ const Account = lazy(() => import("./pages/khachhang/Account"));
 const History = lazy(() => import("./pages/khachhang/History"));
 const Following = lazy(() => import("./pages/khachhang/Following"));
 
-// Import Header, Footer và các thành phần khác
-import Header from "./components/Element/Header";
-import Footer from "./components/Element/Footer";
-import ScrollToTopButton from "./components/Element/ScrollToTopButton";
-import Loader from "./components/Element/Loader";
-
-// CSS transition
-import "./styles/components/Transitions.css";
-
 const PublicRoutes = () => {
     const location = useLocation();
     const isAdminPath = matchPath({ path: "/admin/*", end: false }, location.pathname) != null;
@@ -40,10 +40,7 @@ const PublicRoutes = () => {
 
     return (
         <div className="public-root">
-            {/* Header luôn hiển thị nếu không thuộc các route bị loại trừ */}
             {!isNoHeaderFooter && !isAdminPath && <Header />}
-
-            {/* Main chỉ render nội dung route */}
             <main role="main" className="fade-in">
                 <Suspense fallback={<Loader isLoading={true} />}>
                     <Routes>
@@ -67,8 +64,6 @@ const PublicRoutes = () => {
                 </Suspense>
                 <ScrollToTopButton />
             </main>
-
-            {/* Footer luôn hiển thị nếu không thuộc các route bị loại trừ */}
             {!isNoHeaderFooter && !isAdminPath && <Footer />}
         </div>
     );
