@@ -1,4 +1,4 @@
-import  { Suspense, lazy } from "react";
+import  { Suspense, lazy, useEffect } from "react";
 import { useLocation, matchPath, Routes, Route } from "react-router-dom";
 
 // CSS transitions
@@ -30,11 +30,20 @@ const Following = lazy(() => import("./pages/khachhang/Following"));
 
 const PublicRoutes = () => {
     const location = useLocation();
-    const isAdminPath = matchPath({ path: "/admin/*", end: false }, location.pathname) != null;
+    // const [isLoading, setIsLoading] = useState(true);
+    const isAdminPath = matchPath({ path: '/manager/*', end: false }, location.pathname) != null;
 
-    // Danh sách các route không cần Header/Footer
-    const noHeaderFooterRoutes = ["/login", "/register", "/infor", "/auth/success", "/admin/*"];
-    const isNoHeaderFooter = noHeaderFooterRoutes.some((path) =>
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const userData = queryParams.get("user");
+        if (userData) {
+            localStorage.setItem("user", userData);
+            window.history.replaceState(null, "", "/");
+        }
+    }, [location]);
+
+    const noHeaderFooterRoutes = ["/login", "/register", "/infor", "/auth/success", "/manager/*"];
+    const isNoHeaderFooter = noHeaderFooterRoutes.some(path =>
         matchPath({ path, end: false }, location.pathname)
     );
 

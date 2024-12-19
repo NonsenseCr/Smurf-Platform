@@ -2,18 +2,54 @@ const menuItems = {
   items: [
     {
       id: 'navigation',
-      title: 'Navigation',
+      title: 'COMIC-DATA MANAGER',
       type: 'group',
       icon: 'icon-navigation',
       children: [
         {
-          id: 'dashboard',
-          title: 'HomePage',
+          id: 'main-page',
+          title: 'Main Page',
           type: 'item',
           icon: 'feather icon-home',
-          url: '/admin'
-        }
-      ]
+          url: '/manager',
+        },
+        {
+          id: 'comic-manager',
+          title: 'Comic Manager',
+          type: 'collapse',
+          icon: 'feather icon-layers',
+          children: [
+            {
+              id: 'comic-list',
+              title: 'Comic Index',
+              type: 'item',
+              icon: 'feather icon-book',
+              url: '/manager/comic/comic-index',
+            },
+            {
+              id: 'comic-author',
+              title: 'Author Index',
+              type: 'item',
+              icon: 'feather icon-edit',
+              url: '/manager/comic/author-index',
+            },
+            {
+              id: 'comic-gerne',
+              title: 'Gerne Index',
+              type: 'item',
+              icon: 'feather icon-edit',
+              url: '/manager/comic/gerne-index',
+            },
+            {
+              id: 'chapter-list',
+              title: 'Chapter Manager',
+              type: 'item',
+              icon: 'feather icon-layers',
+              url: '/manager/comic/chapter',
+            },
+          ],
+        },
+      ],
     },
     {
       id: 'ui-element',
@@ -22,8 +58,8 @@ const menuItems = {
       icon: 'icon-ui',
       children: [
         {
-          id: 'component',
-          title: 'Component',
+          id: 'components',
+          title: 'Components',
           type: 'collapse',
           icon: 'feather icon-box',
           children: [
@@ -31,41 +67,41 @@ const menuItems = {
               id: 'button',
               title: 'Button',
               type: 'item',
-              url: '/admin/basic/button'
+              url: '/manager/basic/button',
             },
             {
               id: 'badges',
               title: 'Badges',
               type: 'item',
-              url: '/admin/basic/badges'
+              url: '/manager/basic/badges',
             },
             {
               id: 'breadcrumb',
               title: 'Breadcrumb & Pagination',
               type: 'item',
-              url: '/admin/basic/breadcrumb'
+              url: '/manager/basic/breadcrumb',
             },
             {
               id: 'collapse',
               title: 'Collapse',
               type: 'item',
-              url: '/admin/basic/collapse'
+              url: '/manager/basic/collapse',
             },
             {
               id: 'tabs-pills',
               title: 'Tabs & Pills',
               type: 'item',
-              url: '/admin/basic/tabs'
+              url: '/manager/basic/tabs',
             },
             {
               id: 'typography',
               title: 'Typography',
               type: 'item',
-              url: '/admin/basic/typography'
-            }
-          ]
-        }
-      ]
+              url: '/manager/basic/typography',
+            },
+          ],
+        },
+      ],
     },
     {
       id: 'ui-forms',
@@ -74,24 +110,24 @@ const menuItems = {
       icon: 'icon-group',
       children: [
         {
-          id: 'forms',
+          id: 'form-elements',
           title: 'Form Elements',
           type: 'item',
           icon: 'feather icon-file-text',
-          url: '/admin/form'
+          url: '/manager/form',
         },
         {
           id: 'table',
           title: 'Table',
           type: 'item',
           icon: 'feather icon-server',
-          url: '/admin/bootstrap'
-        }
-      ]
+          url: '/manager/bootstrap',
+        },
+      ],
     },
     {
       id: 'chart-maps',
-      title: 'Chart & Maps',
+      title: 'CHART & MAPS',
       type: 'group',
       icon: 'icon-charts',
       children: [
@@ -100,20 +136,20 @@ const menuItems = {
           title: 'Charts',
           type: 'item',
           icon: 'feather icon-pie-chart',
-          url: '/admin/nvd3'
+          url: '/manager/nvd3',
         },
         {
           id: 'maps',
           title: 'Maps',
           type: 'item',
           icon: 'feather icon-map',
-          url: '/admin/map'
-        }
-      ]
+          url: '/manager/map',
+        },
+      ],
     },
     {
       id: 'pages',
-      title: 'Pages',
+      title: 'PAGES',
       type: 'group',
       icon: 'icon-pages',
       children: [
@@ -124,44 +160,43 @@ const menuItems = {
           icon: 'feather icon-lock',
           badge: {
             title: 'New',
-            type: 'label-danger'
+            type: 'label-danger',
           },
           children: [
             {
-              id: 'signup-1',
+              id: 'signup',
               title: 'Sign up',
               type: 'item',
-              url: '/admin/auth/signup-1',
+              url: '/manager/auth/signup',
               target: true,
-              breadcrumbs: false
+              breadcrumbs: false,
             },
             {
-              id: 'signin-1',
+              id: 'signin',
               title: 'Sign in',
               type: 'item',
-              url: '/admin/auth/signin-1',
+              url: '/manager/auth/signin',
               target: true,
-              breadcrumbs: false
-            }
-          ]
+              breadcrumbs: false,
+            },
+          ],
         },
         {
           id: 'sample-page',
           title: 'Sample Page',
           type: 'item',
-          url: '/admin/page',
+          icon: 'feather icon-sidebar',
+          url: '/manager/page',
           classes: 'nav-item',
-          icon: 'feather icon-sidebar'
         },
         {
           id: 'documentation',
           title: 'Documentation',
           type: 'item',
           icon: 'feather icon-book',
-          classes: 'nav-item',
           url: 'https://codedthemes.gitbook.io/datta/',
           target: true,
-          external: true
+          external: true,
         },
         {
           id: 'menu-level',
@@ -170,56 +205,56 @@ const menuItems = {
           icon: 'feather icon-menu',
           children: [
             {
-              id: 'menu-level-1.1',
-              title: 'Menu Level 1.1',
+              id: 'menu-level-1',
+              title: 'Menu Level 1',
               type: 'item',
-              url: '#!'
+              url: '#',
             },
             {
-              id: 'menu-level-1.2',
-              title: 'Menu Level 2.2',
+              id: 'menu-level-2',
+              title: 'Menu Level 2',
               type: 'collapse',
               children: [
                 {
-                  id: 'menu-level-2.1',
+                  id: 'menu-level-2-1',
                   title: 'Menu Level 2.1',
                   type: 'item',
-                  url: '#'
+                  url: '#',
                 },
                 {
-                  id: 'menu-level-2.2',
+                  id: 'menu-level-2-2',
                   title: 'Menu Level 2.2',
                   type: 'collapse',
                   children: [
                     {
-                      id: 'menu-level-3.1',
+                      id: 'menu-level-3-1',
                       title: 'Menu Level 3.1',
                       type: 'item',
-                      url: '#'
+                      url: '#',
                     },
                     {
-                      id: 'menu-level-3.2',
+                      id: 'menu-level-3-2',
                       title: 'Menu Level 3.2',
                       type: 'item',
-                      url: '#'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+                      url: '#',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
           id: 'disabled-menu',
           title: 'Disabled Menu',
           type: 'item',
+          icon: 'feather icon-power',
           url: '#',
           classes: 'nav-item disabled',
-          icon: 'feather icon-power'
-        }
-      ]
-    }
-  ]
+        },
+      ],
+    },
+  ],
 };
 
 export default menuItems;

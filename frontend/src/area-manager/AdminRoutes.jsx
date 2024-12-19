@@ -19,6 +19,12 @@ const GoogleMaps = lazy(() => import('./views/maps/GoogleMaps'));
 const Chart = lazy(() => import('./views/charts/nvd3-chart'));
 const SamplePage = lazy(() => import('./views/extra/SamplePage'));
 
+const AuthorIndex = lazy(() => import('./pages/comic/author/Index'));
+const ComicIndex = lazy(() => import('./pages/comic/Index'));
+const ChapterDetail = lazy(() => import('./pages/comic/chapter/DemoReadingMode'));
+const ComicDetail = lazy(() => import('./pages/comic/Detail'));
+const GerneIndex = lazy(() => import('./pages/comic/gerne/Index'));
+
 
 export default function AdminRoutes() {
   return (
@@ -44,7 +50,14 @@ export default function AdminRoutes() {
                   <Route path="nvd3" element={<Chart />} />
                   <Route path="map" element={<GoogleMaps />} />
                   <Route path="basic/page" element={<SamplePage />} />
-                  <Route path="*" element={<Navigate to="/admin" />} />
+                  <Route path="*" element={<Navigate to="/manager" />} />
+
+
+                  <Route path="comic/comic-index" element={<ComicIndex />} />
+                  <Route path="comic/comic-index/comic-detail/:id" element={<ComicDetail />} />
+                  <Route path="comic/comic-index/comic-detail/chapter-detail/demo-reading-mode-view/:chapterId" element={<ChapterDetail />} />
+                  <Route path="comic/author-index" element={<AuthorIndex />} />
+                  <Route path="comic/gerne-index" element={<GerneIndex />} />
                 </Routes>
               </Suspense>
             </AdminLayout>

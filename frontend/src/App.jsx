@@ -7,8 +7,8 @@ import "remixicon/fonts/remixicon.css";
 import("./App.css");
 function App() {
   const location = useLocation();
-  const isAdminPath = matchPath({ path: "/admin/*", end: false }, location.pathname) != null;
   const [isLoaded, setIsLoaded] = useState(false);
+  const isAdminPath = matchPath({ path: "/manager/*", end: false }, location.pathname) != null;
 
   useEffect(() => {
     // Dynamic import CSS theo route
@@ -45,12 +45,13 @@ function App() {
   return isLoaded ? (
     <>
       <Routes>
-        {!isAdminPath ? (
-          <Route path="/*" element={<PublicRoutes />} />
-        ) : (
-          <Route path="/admin/*" element={<AdminRoutes />} />
-        )}
-      </Routes>
+          {!isAdminPath ? (
+            <Route path="/*" element={<PublicRoutes />} />
+          ) : (
+            // <AdminRoutes />
+            <Route path="/manager/*" element={<AdminRoutes />} />
+          )}
+        </Routes>
     </>
   ) : null; // Chỉ render ứng dụng sau khi Splash Screen bị ẩn
 }

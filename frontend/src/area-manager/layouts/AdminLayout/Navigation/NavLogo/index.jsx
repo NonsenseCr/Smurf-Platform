@@ -22,7 +22,7 @@ const NavLogo = () => {
             <img src={logo} alt="logo mangasmurf" style={{width:'50px'}}/>
             {/* <i className="feather icon-trending-up" /> */}
           </div>
-          <span className="b-title">MangaSmurf</span>
+          <span className="b-title">MANAGER</span>
         </Link>
         <Link to="#" className={toggleClass.join(' ')} id="mobile-collapse" onClick={() => dispatch({ type: actionType.COLLAPSE_MENU })}>
           <span />
