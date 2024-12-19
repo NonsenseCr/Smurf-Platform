@@ -17,11 +17,12 @@ const buildImageUrl = (poster) => {
 };
 
 const Detail = () => {
+
   const { id } = useParams();
   const [comic, setComic] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [isAddChapterVisible, setIsAddChapterVisible] = useState(false);
-
+  // const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchComic = async () => {
       try {
@@ -35,6 +36,20 @@ const Detail = () => {
     };
     fetchComic();
   }, [id]);
+
+  useEffect(() => {
+    const fetchComic = async () => {
+      try {
+        const data = await fetchBoTruyenById(id);
+        setComic(data);
+        const chaptersData = await fetchChaptersByComicId(id);
+        setChapters(chaptersData);
+      } catch {
+        message.error("Không thể tải thông tin chi tiết!");
+      }
+    };
+    fetchComic();
+  }, []);
 
   const handleAddChapter = () => {
     setIsAddChapterVisible(true);
@@ -166,110 +181,123 @@ const Detail = () => {
     <div className="comic-detail-container">
       <div className="header-section">
         <h2 className="section-title">
-          {comic.tenbo} <span className="comic-id">ID: {comic._id}</span>
+          {comic ? comic.ten_bo : "Đang tải..."} <span className="comic-id">ID: {comic?._id}</span>
         </h2>
         <div className="timestamps">
-          <Tag color="blue">Created: {new Date(comic.createdAt).toLocaleDateString()}</Tag>
-          <Tag color="green">Updated: {new Date(comic.updatedAt).toLocaleDateString()}</Tag>
+          <Tag color="blue">Created: {comic ? new Date(comic.createdAt).toLocaleDateString() : "N/A"}</Tag>
+          <Tag color="green">Updated: {comic ? new Date(comic.updatedAt).toLocaleDateString() : "N/A"}</Tag>
         </div>
       </div>
       <hr className="line" />
 
       <Row gutter={[20, 16]} align="middle">
         <Col span={8} style={{ position: "relative" }}>
-          <div className="image-container">
-            <div
-              className="comic-poster"
-              style={{
-                width: "250px",
-                height: "330px",
-                backgroundImage: `url(${buildImageUrl(comic.poster)})`,
-                backgroundSize: "cover",
-                borderRadius: "5px",
-                position: "relative",
-              }}
-            />
-            <div className="image-tag">Poster</div>
-          </div>
+          {comic && comic.poster ? (
+            <div className="image-container">
+              <div
+                className="comic-poster"
+                style={{
+                  width: "250px",
+                  height: "330px",
+                  backgroundImage: `url(${buildImageUrl(comic.poster)})`,
+                  backgroundSize: "cover",
+                  borderRadius: "5px",
+                  position: "relative",
+                }}
+              />
+              <div className="image-tag">Poster</div>
+            </div>
+          ) : (
+            <div className="placeholder">Đang tải poster...</div>
+          )}
         </Col>
         <Col span={8} style={{ position: "relative", marginLeft: "20px" }}>
-          <div className="image-container">
-            <div
-              className="comic-banner"
-              style={{
-                width: "750px",
-                height: "330px",
-                backgroundImage: `url(${buildImageUrl(comic.banner)})`,
-                backgroundSize: "cover",
-                borderRadius: "5px",
-                position: "relative",
-              }}
-            />
-            <div className="image-tag">Banner</div>
-          </div>
+          {comic && comic.banner ? (
+            <div className="image-container">
+              <div
+                className="comic-banner"
+                style={{
+                  width: "750px",
+                  height: "330px",
+                  backgroundImage: `url(${buildImageUrl(comic.banner)})`,
+                  backgroundSize: "cover",
+                  borderRadius: "5px",
+                  position: "relative",
+                }}
+              />
+              <div className="image-tag">Banner</div>
+            </div>
+          ) : (
+            <div className="placeholder">Đang tải banner...</div>
+          )}
         </Col>
         <Col span={8} style={{ marginLeft: "40px" }}>
-          <div className="stats-section">
-            <Row gutter={[16, 16]}>
-              <Col span={12}>
-                <span>Trạng thái:</span>
-              </Col>
-              <Col span={12}>
-                <Select
-                  defaultValue={comic.trangthai}
-                  onChange={async (value) => {
-                    try {
-                      await updateComicStats(comic._id, { trangthai: value });
-                      setComic({ ...comic, trangthai: value });
-                      message.success(`Trạng thái được chuyển thành: ${value}`);
-                    } catch {
-                      message.error("Không thể cập nhật trạng thái!");
-                    }
-                  }}
-                  style={{ width: "150px" }}
-                >
-                  <Option value="hoat_dong">Hoạt động</Option>
-                  <Option value="tam_ngung">Tạm ngừng</Option>
-                  <Option value="hoan_thanh">Hoàn thành</Option>
-                </Select>
-              </Col>
-              <Col span={12}>
-                <span>Premium:</span>
-              </Col>
-              <Col span={12}>
-                <Button onClick={handleActivatePremium} className="toggle-btn">
-                  {comic.premium ? "Hủy Premium" : "Kích Hoạt Premium"}
-                </Button>
-              </Col>
-              <Col span={12}>
-                <span>Hoạt động:</span>
-              </Col>
-              <Col span={12}>
-                <Button onClick={handleToggleActive} className="toggle-btn">
-                  {comic.active ? "UnActive" : "Active"}
-                </Button>
-              </Col>
-            </Row>
-          </div>
+          {comic ? (
+            <div className="stats-section">
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <span>Trạng thái:</span>
+                </Col>
+                <Col span={12}>
+                  <Select
+                    defaultValue={comic.trangthai}
+                    onChange={async (value) => {
+                      try {
+                        await updateComicStats(comic._id, { trangthai: value });
+                        setComic({ ...comic, trangthai: value });
+                        message.success(`Trạng thái được chuyển thành: ${value}`);
+                      } catch {
+                        message.error("Không thể cập nhật trạng thái!");
+                      }
+                    }}
+                    style={{ width: "150px" }}
+                  >
+                    <Option value="hoat_dong">Hoạt động</Option>
+                    <Option value="tam_ngung">Tạm ngừng</Option>
+                    <Option value="hoan_thanh">Hoàn thành</Option>
+                  </Select>
+                </Col>
+                <Col span={12}>
+                  <span>Premium:</span>
+                </Col>
+                <Col span={12}>
+                  <Button onClick={handleActivatePremium} className="toggle-btn">
+                    {comic.premium ? "Hủy Premium" : "Kích Hoạt Premium"}
+                  </Button>
+                </Col>
+                <Col span={12}>
+                  <span>Hoạt động:</span>
+                </Col>
+                <Col span={12}>
+                  <Button onClick={handleToggleActive} className="toggle-btn">
+                    {comic.active ? "UnActive" : "Active"}
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          ) : (
+            <div className="placeholder">Đang tải thông tin...</div>
+          )}
         </Col>
       </Row>
+
 
       <hr className="line purple-line" />
       <div className="metadata-section">
         <div className="metadata-item">
-          <span className="metadata-icon">👁️</span> Tổng View: {comic.TongLuotXem}
+          <span className="metadata-icon">👁️</span> Tổng View: {comic?.TongLuotXem || "N/A"}
         </div>
         <div className="metadata-item">
-          <span className="metadata-icon">👤</span> Tổng Follow: {comic.theodoi}
+          <span className="metadata-icon">👤</span> Tổng Follow: {comic?.theodoi || "N/A"}
         </div>
         <div className="metadata-item">
-          <span className="metadata-icon">⭐</span> Điểm số: {comic.danhgia}/10
+          <span className="metadata-icon">⭐</span> Điểm số: {comic?.danhgia ? `${comic.danhgia}/10` : "N/A"}
         </div>
         <div className="metadata-item">
-          <span className="metadata-icon">🖊️</span> Tác giả: {comic.id_tg?.ten_tg || "Không rõ"}
+          <span className="metadata-icon">🖊️</span> Tác giả: {comic?.id_tg?.ten_tg || "Không rõ"}
         </div>
         <div className="genres-list">
-          {comic.listloai && comic.listloai.length > 0 ? (
+          {comic?.listloai && comic.listloai.length > 0 ? (
             comic.listloai.map((genre) => {
               const colors = ["#1B5E20", "#B71C1C", "#263238", "#4A148C", "#00695C"];
               const randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -286,17 +314,21 @@ const Detail = () => {
       </div>
 
       <div className="description-section">
-        <p>{comic.mota || "Chưa có mô tả"}</p>
+        <p>{comic?.mota || "Chưa có mô tả"}</p>
       </div>
 
       <div className="chapters-section">
         <h3>Danh Sách Chương</h3>
-        <Table
-          dataSource={chapters}
-          columns={columns}
-          pagination={false}
-          rowKey={(record) => record._id}
-        />
+        {chapters?.length > 0 ? (
+          <Table
+            dataSource={chapters}
+            columns={columns}
+            pagination={false}
+            rowKey={(record) => record._id}
+          />
+        ) : (
+          <p>Không có chương nào được tìm thấy.</p>
+        )}
       </div>
 
       <Button
@@ -308,11 +340,13 @@ const Detail = () => {
         Thêm Chương
       </Button>
 
-      <AddChapter
-        visible={isAddChapterVisible}
-        onClose={handleAddChapterClose}
-        comicId={comic._id}
-      />
+      {comic && (
+        <AddChapter
+          visible={isAddChapterVisible}
+          onClose={handleAddChapterClose}
+          comicId={comic._id}
+        />
+      )}
     </div>
   );
 };

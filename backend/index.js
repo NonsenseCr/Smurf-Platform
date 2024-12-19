@@ -17,7 +17,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Import models
 const TacGia = require('./src/model/tacgia.model');
 const BoTruyen = require('./src/model/botruyen.model');
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "defaultSecret",
@@ -48,12 +47,9 @@ const userRoutes = require('./src/routes/user.route');
 const registerRoutes = require('./src/routes/register.route'); 
 const loginRoutes = require('./src/routes/login.route');
 const authRoutes = require('./src/routes/auth.route'); 
-<<<<<<< HEAD
 const statisticRoutes = require('./src/routes/Admin/Statistic.route'); 
-=======
 
 
->>>>>>> Nonsense2
 // Use routes
 app.use("/api/botruyen", boTruyenRoutes);
 app.use("/api/loaitruyen", loaiTruyenRoutes);
