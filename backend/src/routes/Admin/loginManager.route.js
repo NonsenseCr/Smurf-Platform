@@ -4,7 +4,7 @@ const Staff = require('../../model/Staff.model');
 const router = express.Router();
 
 // Router login cho quản lý
-router.post('/login', async (req, res) => {
+router.post('/login-admin', async (req, res) => {
     const { UserName, Password } = req.body;
 
     try {
@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
         }
 
         // Kiểm tra quyền StaffRole trong bảng Staff
-        const staff = await Staff.findOne({ userId: user._id }); // Xác thực bằng _id
+        const staff = await Staff.findOne({ IdUser: user.IdUser });
         if (!staff || !staff.StaffRole) {
             return res.status(403).json({ message: 'Bạn không có quyền truy cập quản lý' });
         }
@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
         res.status(200).json({
             message: 'Đăng nhập thành công',
             data: {
-                IdUser: user._id,
+                IdUser: user.IdUser,
                 UserName: user.UserName,
                 FullName: user.FullName,
                 Email: user.Email,
@@ -47,6 +47,5 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ message: 'Lỗi hệ thống' });
     }
 });
-
 
 module.exports = router;

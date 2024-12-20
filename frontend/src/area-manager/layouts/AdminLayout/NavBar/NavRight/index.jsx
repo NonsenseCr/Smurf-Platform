@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, ListGroup, Dropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 import ChatList from './ChatList';
@@ -12,27 +12,69 @@ import avatar4 from '../../../../assets/images/user/avatar-4.jpg';
 
 const NavRight = () => {
   const [listOpen, setListOpen] = useState(false);
+  const [userName, setUserName] = useState('John Doe'); // State lưu tên người dùng
+  const [avatar, setAvatar] = useState(avatar1); // State lưu avatar người dùng
+  const navigate = useNavigate();
 
   const notiData = [
     {
       name: 'Joseph William',
       image: avatar2,
       details: 'Purchase New Theme and make payment',
-      activity: '30 min'
+      activity: '30 min',
     },
     {
       name: 'Sara Soudein',
       image: avatar3,
       details: 'currently login',
-      activity: '30 min'
+      activity: '30 min',
     },
     {
       name: 'Suzen',
       image: avatar4,
       details: 'Purchase New Theme and make payment',
-      activity: 'yesterday'
-    }
+      activity: 'yesterday',
+    },
   ];
+
+  // Hàm lấy dữ liệu từ localStorage với thời gian hết hạn
+  const getWithExpiry = (key) => {
+    const itemStr = localStorage.getItem(key);
+
+    if (!itemStr) {
+      return null;
+    }
+
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return item.value;
+  };
+
+  // Lấy dữ liệu từ localStorage
+  useEffect(() => {
+    const userData = getWithExpiry('userM'); // Sử dụng getWithExpiry
+    if (userData) {
+      setUserName(userData.username || 'John Doe');
+    }
+  }, []);
+
+  // Xử lý logout
+  const handleLogout = () => {
+    // Clear các dữ liệu trong localStorage
+    console.log(`Đăng xuất: ${userName}`);
+    localStorage.removeItem('session');
+    localStorage.removeItem('userM');
+
+    // Chuyển hướng về trang login
+    navigate('/manager/login');
+  };
+
 
   return (
     <React.Fragment>
@@ -109,22 +151,15 @@ const NavRight = () => {
           </Dropdown>
         </ListGroup.Item>
         <ListGroup.Item as="li" bsPrefix=" ">
-          <Dropdown>
-            <Dropdown.Toggle as={Link} variant="link" to="#" className="displayChatbox" onClick={() => setListOpen(true)}>
-              <i className="icon feather icon-mail" />
-            </Dropdown.Toggle>
-          </Dropdown>
-        </ListGroup.Item>
-        <ListGroup.Item as="li" bsPrefix=" ">
           <Dropdown align={'end'} className="drp-user">
             <Dropdown.Toggle as={Link} variant="link" to="#" id="dropdown-basic">
               <i className="icon feather icon-settings" />
             </Dropdown.Toggle>
             <Dropdown.Menu align="end" className="profile-notification">
               <div className="pro-head">
-                <img src={avatar1} className="img-radius" alt="User Profile" />
-                <span>John Doe</span>
-                <Link to="#" className="dud-logout" title="Logout">
+                <img src={avatar} className="img-radius" alt="User Profile" />
+                <span>{userName}</span> {/* Hiển thị tên từ localStorage */}
+                <Link to="#" className="dud-logout" title="Logout" onClick={handleLogout}>
                   <i className="feather icon-log-out" />
                 </Link>
               </div>
