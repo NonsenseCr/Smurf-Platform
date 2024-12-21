@@ -3,6 +3,7 @@ const User = require('../../model/user.model');
 const Staff = require('../../model/Staff.model'); 
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const StaffPermissionsDetail = require('../../model/StaffPermissionsDetail.model');
 
 // Router login cho quản lý
 router.post('/login', async (req, res) => {
@@ -39,6 +40,8 @@ router.post('/login', async (req, res) => {
             return res.status(403).json({ message: 'Bạn không có quyền truy cập quản lý' });
         }
 
+        const permissions = await StaffPermissionsDetail.find({ IdUser: user.IdUser }).select('IdPermissions Active');
+
         // Trả về thông tin đăng nhập thành công
         res.status(200).json({
             message: 'Đăng nhập thành công',
@@ -49,6 +52,7 @@ router.post('/login', async (req, res) => {
                 Email: user.Email,
                 StaffRole: staff.StaffRole,
             },
+            permissions,
         });
     } catch (error) {
         console.error(error);

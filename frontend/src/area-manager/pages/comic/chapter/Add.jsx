@@ -41,11 +41,8 @@ const openPreviewPopup = () => setPreviewVisible(true);
       fileList.forEach((file) => {
         formData.append("files", file.originFileObj); // Đặt key là "files"
       });
-
       console.log("Dữ liệu gửi đi:", Array.from(formData.entries()));
-
       await addImagesToChapter(chapterId, formData);
-      
       message.success("Bước 2: Thêm ảnh thành công!");
       setStep(3);
     } catch (error) {

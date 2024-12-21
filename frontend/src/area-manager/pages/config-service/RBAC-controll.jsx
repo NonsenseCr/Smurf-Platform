@@ -8,6 +8,8 @@ import {
   grantPermission,
   updatePermission,
 } from "@/area-manager/services/rbacService";
+// Import HOC withPermission
+import withPermission from "@/area-manager/withPermission";
 import styles from "@/area-manager/styles/author-index.module.css";
 
 const RBACController = () => {
@@ -232,4 +234,4 @@ const RBACController = () => {
   );
 };
 
-export default RBACController;
+export default withPermission(RBACController, 3);

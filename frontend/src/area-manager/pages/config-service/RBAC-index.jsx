@@ -28,13 +28,20 @@ const PermissionsManagement = () => {
     setLoading(true);
     try {
       const data = await fetchPermissions();
-      setPermissions(data.map((permission) => ({ ...permission, key: permission.IdPermissions, active: permission.Active }))); // Cập nhật sử dụng IdPermissions và Active từ API
-    } catch {
+      console.log("Fetched Permissions:", JSON.stringify(data, null, 2)); // Log toàn bộ dữ liệu trả về
+      setPermissions(data.map((permission) => ({
+        ...permission,
+        key: permission.IdPermissions,
+        active: permission.Active,
+      }))); // Cập nhật sử dụng IdPermissions và Active từ API
+    } catch (error) {
+      console.error("Error fetching permissions:", error);
       message.error("Không thể tải danh sách quyền");
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleDelete = (permission) => {
     setConfirmAction({ type: "delete", record: { id: permission.IdPermissions, PermissionsName: permission.PermissionsName } });
@@ -115,7 +122,7 @@ const PermissionsManagement = () => {
         Thêm Quyền
       </Button>
     ),
-    14 // Quyền thêm mới
+    2 // Quyền thêm mới
   );
 
   const ToggleSwitch = withPermission(
@@ -127,7 +134,7 @@ const PermissionsManagement = () => {
         unCheckedChildren="Vô hiệu"
       />
     ),
-    13 // Quyền kích hoạt trạng thái
+    2 // Quyền kích hoạt trạng thái
   );
 
   const columns = [

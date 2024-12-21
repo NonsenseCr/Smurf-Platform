@@ -5,7 +5,8 @@ import { Button, Select, message, Table, Tag, Row, Col } from "antd";
 import { updateComicStats } from "@/area-manager/services/comicService";
 import "@/area-manager/styles/comic-detail.css";
 import AddChapter from "../../../area-manager/pages/comic/chapter/Add";
-
+// Import HOC withPermission
+import withPermission from "@/area-manager/withPermission";
 const { Option } = Select;
 
 const buildImageUrl = (poster) => {
@@ -223,12 +224,12 @@ const Detail = () => {
         </div>
         <div className="genres-list">
   {comic.listloai && comic.listloai.length > 0 ? (
-    comic.listloai.map((genre) => {
+    comic.listloai.map((listloai) => {
       const colors = ["#1B5E20", "#B71C1C", "#263238", "#4A148C", "#00695C"];
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
       return (
-        <Tag key={genre._id} style={{ backgroundColor: randomColor, color: "#fff" }}>
-          {genre.name || "Không rõ"}
+        <Tag key={listloai._id} style={{ backgroundColor: randomColor, color: "#fff" }}>
+          {listloai.ten_loai || "Không rõ"}
         </Tag>
       );
     })
@@ -271,4 +272,4 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+export default withPermission(Detail, 17);

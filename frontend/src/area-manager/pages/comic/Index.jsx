@@ -8,6 +8,9 @@ import CardView from "../../../area-manager/components/CardView";
 import AddComic from "../../../area-manager/pages/comic/Add";
 import styles from "../../../area-manager/styles/ComicIndex.module.css";
 
+// Import HOC withPermission
+import withPermission from "@/area-manager/withPermission";
+
 const ComicIndex = () => {
   const [comics, setComics] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -93,4 +96,4 @@ const ComicIndex = () => {
   );
 };
 
-export default ComicIndex;
+export default withPermission(ComicIndex, 1);

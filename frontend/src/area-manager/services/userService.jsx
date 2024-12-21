@@ -42,3 +42,23 @@ export const toggleStaffActive = async (staffId) => {
     const response = await axios.put(`${API_BASE_URL}/${staffId}/toggle-active`);
     return response.data;
 };
+
+const API_BASE_URL_c = "/api/customer";
+
+// Lấy danh sách khách hàng
+export const fetchCustomers = async () => {
+    const response = await axios.get(API_BASE_URL_c);
+    return response.data;
+};
+
+// Xóa khách hàng
+export const deleteCustomer = async (customerId) => {
+    const response = await axios.delete(`${API_BASE_URL_c}/${customerId}`);
+    return response.data;
+};
+
+// Thay đổi trạng thái Premium
+export const toggleCustomerActive = async (customerId) => {
+    const response = await axios.put(`${API_BASE_URL_c}/${customerId}/toggle-premium`);
+    return response.data;
+};

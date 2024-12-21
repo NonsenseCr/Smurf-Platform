@@ -94,6 +94,14 @@ const userMRoutes = require("./src/area-manager/routes/user.route");
 app.use("/api/user-manager", userMRoutes); 
 const rbacRoutes = require("./src/area-manager/routes/rbac-auth.route");
 app.use("/api/rbac", rbacRoutes); 
+
+const customerRoutes = require("./src/area-manager/routes/customer.route");
+app.use("/api/customer", customerRoutes); 
+
+const payRoutes = require("./src/area-manager/routes/payment.route");
+app.use("/api/payment", payRoutes); 
+
+
 // const serviceRoutes = require("./src/area-manager/routes/service.route");
 // app.use("/api/service", serviceRoutes); 
 

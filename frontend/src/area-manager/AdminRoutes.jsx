@@ -28,8 +28,12 @@ const ChapterDetail = lazy(() => import('./pages/comic/chapter/DemoReadingMode')
 const ComicDetail = lazy(() => import('./pages/comic/Detail'));
 const GerneIndex = lazy(() => import('./pages/comic/gerne/Index'));
 const StaffIndex = lazy(() => import('./pages/user/staff/Index'));
+const CustomerIndex = lazy(() => import('./pages/user/customer/Index'));
 const RBACIndex = lazy(() => import('./pages/config-service/RBAC-index'));
 const RBACDetail = lazy(() => import('./pages/config-service/RBAC-controll'));
+const PaymentDetail = lazy(() => import('./pages/comic/payment/Detail'));
+const PaymentMIndex = lazy(() => import('./pages/comic/payment/Index'));
+
 
 export default function AdminRoutes() {
   return (
@@ -67,8 +71,12 @@ export default function AdminRoutes() {
                       <Route path="comic/payment-index" element={<PaymentIndex />} />
                       <Route path="comic/gerne-index" element={<GerneIndex />} />
                       <Route path="user/staff-index" element={<StaffIndex />} />
+                      <Route path="user/customer-index" element={<CustomerIndex />} />
+                      <Route path="user/customer-index/customer-payment-detail/:id" element={<PaymentDetail />} />
+                      <Route path="payment/payment-index" element={<PaymentMIndex />} />
                       <Route path="config/rbac-control" element={<RBACIndex />} />
                       <Route path="config/rbac-control/rbac-staff-detail" element={<RBACDetail />} />
+                      
                     </Routes>
                   </Suspense>
                 </AdminLayout>

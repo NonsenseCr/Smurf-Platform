@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom"; 
 import { useState, useEffect } from "react";
 import { Table, Button, message, Modal, Form, Input, Popover } from "antd";
+// Import HOC withPermission
+import withPermission from "@/area-manager/withPermission";
 import { SortAscendingOutlined, SortDescendingOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import {
   fetchAuthors,
@@ -557,4 +559,4 @@ const AuthorIndex = () => {
   );
 };
 
-export default AuthorIndex;
+export default withPermission(AuthorIndex, 5);

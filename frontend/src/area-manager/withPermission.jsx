@@ -6,25 +6,37 @@ const withPermission = (Component, requiredPermissionId) => {
     const [isPermissionDenied, setPermissionDenied] = useState(false);
     const permissions = JSON.parse(localStorage.getItem("permissions")) || [];
 
+    console.log("Permissions from localStorage:", permissions);
+    console.log("Required Permission ID:", requiredPermissionId);
+
     useEffect(() => {
-      const hasPermission = permissions.some(
-        (permission) =>
-          permission.IdPermissions === requiredPermissionId && permission.Active
+      const permission = permissions.find(
+        (perm) => perm.IdPermissions === requiredPermissionId
       );
 
+      console.log("Matching permission:", permission);
+
+      const hasPermission = permission && permission.Active;
+
+      console.log("Has required permission:", hasPermission);
+
       if (!hasPermission) {
+        console.log("Permission denied for required ID:", requiredPermissionId);
         setPermissionDenied(true);
+      } else {
+        console.log("Permission granted for required ID:", requiredPermissionId);
+        setPermissionDenied(false);
       }
-    }, [permissions]);
+    }, [permissions, requiredPermissionId]);
 
     if (isPermissionDenied) {
+      console.log("Rendering EntryDenied component for required ID:", requiredPermissionId);
       return <EntryDenied isVisible={isPermissionDenied} onClose={() => setPermissionDenied(false)} />;
     }
 
     return <Component {...props} />;
   };
 
-  // Thêm displayName
   WrappedComponent.displayName = `withPermission(${Component.displayName || Component.name || "Component"})`;
 
   return WrappedComponent;

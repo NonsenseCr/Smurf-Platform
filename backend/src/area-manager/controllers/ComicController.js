@@ -239,16 +239,13 @@ exports.addImagesToChapter = [
     try {
       const { id_chapter } = req.params;
       const images = req.files;
-
       if (!images || images.length === 0) {
         return res.status(400).json({ message: "Không có ảnh nào được upload!" });
       }
-
       const chapter = await Chapter.findById(id_chapter);
       if (!chapter) {
         return res.status(404).json({ message: "Không tìm thấy chương!" });
       }
-
       for (const file of images) {
         const result = await cloudinary.uploader.upload(file.path);
         chapter.list_pages.push({
@@ -257,9 +254,7 @@ exports.addImagesToChapter = [
           active: true,
         });
       }
-
       await chapter.save();
-
       res.status(201).json({
         message: "Thêm ảnh thành công!",
         chapter,

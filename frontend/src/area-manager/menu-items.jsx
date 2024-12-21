@@ -62,20 +62,7 @@ const menuItems = {
               icon: 'feather icon-book',
               url: '/manager/user/staff-index',
             },
-            {
-              id: 'rbac-control',
-              title: 'RBAC Manager',
-              type: 'item',
-              icon: 'feather icon-edit',
-              url: '/manager/config/rbac-control',
-            },
-            {
-              id: 'rbac-control',
-              title: 'RBAC Control',
-              type: 'item',
-              icon: 'feather icon-edit',
-              url: '/manager/config/rbac-control/rbac-staff-detail',
-            },
+            
             {
               id: 'customer-control',
               title: 'Customer Index',
@@ -112,6 +99,20 @@ const menuItems = {
               type: 'item',
               url: '/manager/comic/payment-index',
             },
+            {
+              id: 'rbac-control',
+              title: 'RBAC Manager',
+              type: 'item',
+              icon: 'feather icon-edit',
+              url: '/manager/config/rbac-control',
+            },
+            {
+              id: 'rbac-control',
+              title: 'RBAC Control',
+              type: 'item',
+              icon: 'feather icon-edit',
+              url: '/manager/config/rbac-control/rbac-staff-detail',
+            },
           ],
         },
       ],
@@ -132,14 +133,6 @@ const menuItems = {
           //   type: 'label-danger',
           // },
           children: [
-            {
-              id: 'signup',
-              title: 'Sign up',
-              type: 'item',
-              url: '/manager/auth/signup',
-              target: true,
-              breadcrumbs: false,
-            },
             {
               id: 'signin',
               title: 'Sign in',
