@@ -77,9 +77,8 @@ const staffRoutes = require("./src/area-manager/routes/staff.route");
 app.use("/api/staff", staffRoutes); 
 const userMRoutes = require("./src/area-manager/routes/user.route");
 app.use("/api/user-manager", userMRoutes); 
-
-// const rbacRoutes = require("./src/area-manager/routes/rbac-auth.route");
-// app.use("/api/rbac", rbacRoutes); 
+const rbacRoutes = require("./src/area-manager/routes/rbac-auth.route");
+app.use("/api/rbac", rbacRoutes); 
 // const serviceRoutes = require("./src/area-manager/routes/service.route");
 // app.use("/api/service", serviceRoutes); 
 
