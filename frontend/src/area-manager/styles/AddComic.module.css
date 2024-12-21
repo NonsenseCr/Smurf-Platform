@@ -410,3 +410,173 @@
 .imageActions .anticon:hover {
   color: #ff9900;
 }
+
+.modalContainer {
+  max-width: 600px;
+}
+
+.stepContainer {
+  margin: 10px 0;
+}
+
+.uploadSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.previewButton {
+  margin-left: 10px;
+}
+
+.nextButton {
+  margin-top: 20px;
+}
+
+
+
+/* lmao popup */
+.previewPopup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.previewContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  height: 650px;
+}
+
+.imageWrapper {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageCenter {
+  position: relative;
+  z-index: 2;
+  width: 300px;
+  height: 630px;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pageNumber {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.imageSide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 150px;
+  height: 630px;
+  z-index: 1;
+  filter: blur(8px);
+  opacity: 0.6;
+}
+
+.imageSide:first-of-type {
+  left: -170px;
+}
+
+.imageSide:last-of-type {
+  right: -170px;
+}
+
+.imageBlur {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.controlButton {
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.controlButton:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.controlButton:hover:not(:disabled) {
+  background-color: #d9d9d9;
+}
+.previewContainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.imageCenter {
+  display: flex;
+  position: relative;
+}
+
+.imageSide {
+  position: relative;
+  filter: brightness(0.3);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.controlButton {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 18px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.controlButton:hover {
+  background-color: rgba(211, 22, 22, 0.7);
+  color: rgb(199, 0, 0);
+  transform: scale(1.1);
+}
+
+.controlButton:disabled {
+  background-color: rgba(146, 22, 22, 0.5);
+  color: rgba(191, 0, 0, 0.5);
+  cursor: not-allowed;
+}

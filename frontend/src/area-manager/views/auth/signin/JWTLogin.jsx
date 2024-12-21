@@ -48,31 +48,31 @@ const JWTLogin = () => {
   
       if (response.data.message === "Đăng nhập thành công") {
         // Lưu session và user vào localStorage
-        setWithExpiry("session", response.data.data, 7200000); // Lưu toàn bộ dữ liệu trong 2 giờ
+        const userData = response.data.data;
+        setWithExpiry("session", userData, 7200000);
         setWithExpiry("userM", {
-          id: response.data.data.IdUser,
-          username: response.data.data.UserName,
-          email: response.data.data.Email,
-          staffRole: response.data.data.StaffRole,
-        }, 3600000); // Lưu thông tin người dùng trong 1 giờ
+          id: userData.IdUser,
+          username: userData.UserName,
+          email: userData.Email,
+          staffRole: userData.StaffRole,
+        }, 3600000);
+  
+        // Lấy danh sách quyền
+        const permissionsResponse = await axios.get(`http://localhost:5000/api/rbac/permissions/${userData.IdUser}`);
+        setWithExpiry("permissions", permissionsResponse.data, 3600000);
   
         // Chuyển hướng đến trang /manager
-        console.log("Navigating to /manager...");
         navigate("/manager");
-  
-        // Kiểm tra dữ liệu đã lưu
-        console.log("Session saved:", response.data.data);
       } else {
         setErrorMessage(response.data.message || "Đăng nhập thất bại!");
       }
     } catch (error) {
-      // Xử lý lỗi
       if (error.response) {
         setErrorMessage(error.response.data.message || 'Đăng nhập thất bại.');
       } else {
         setErrorMessage('Lỗi kết nối đến server.');
       }
-      console.error("Error during login:", error); // In lỗi chi tiết
+      console.error("Error during login:", error);
     }
   };
   
