@@ -1,33 +1,12 @@
-/* src/styles/animations.css */
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+.public-root {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
 }
 
-@keyframes prixClipFix {
-    0% {
-        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
-    }
-    50% {
-        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
-    }
-    75%, 100% {
-        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
-    }
+.public-root.fade-in {
+    opacity: 1;
 }
 
-@keyframes blink {
-    50% {
-        opacity: 0.0;
-    }
-}
-
-@keyframes blinkHight {
-    50% {
-        transform: scale(1.1);
-    }
+.public-root.fade-out {
+    opacity: 0;
 }

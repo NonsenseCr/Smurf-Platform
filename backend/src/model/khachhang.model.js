@@ -10,7 +10,6 @@ const khachHangSchema = new Schema(
         ActivePremium: { type: Boolean, default: false }, // Trạng thái Premium
         ActiveStats: { type: Number, default: 1 }, // Trạng thái hoạt động
 
-        // Thay thế Customer_Login
         SocialLogins: [
             {
                 LoginProvider: { type: String, required: true }, // Nhà cung cấp (Google, Facebook, etc.)

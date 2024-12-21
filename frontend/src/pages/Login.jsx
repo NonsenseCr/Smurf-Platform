@@ -6,47 +6,38 @@ import imgLogin from "../assets/img_login.png";
 import HeaderLogin from "../components/Login/HeaderLogin";
 
 const Login = () => {
-  const [username, setUsername] = useState(""); // Tên đăng nhập
-  const [password, setPassword] = useState(""); // Mật khẩu
-  const [errorMessage, setErrorMessage] = useState(""); // Thông báo lỗi
-  const navigate = useNavigate(); // Điều hướng sau khi đăng nhập thành công
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
-  // Xử lý sự kiện gửi form
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Ngăn không reload trang khi submit
+    e.preventDefault();
 
     try {
-        // Gửi yêu cầu đăng nhập đến backend
-        const response = await axios.post("http://localhost:5000/api/login", {
-            username: username.trim(),
-            password: password.trim(),
-        });
+      const response = await axios.post("http://localhost:5000/api/login", {
+        username: username.trim(),
+        password: password.trim(),
+      });
 
-        if (response.data.success) {
-            // Lưu thông tin session vào localStorage
-            localStorage.setItem("session", JSON.stringify(response.data.session));
-
-            // Lưu thông tin người dùng, bao gồm IdUser, UserName và avatar
-            localStorage.setItem("user", JSON.stringify({
-                id: response.data.user.IdUser,
-                username: response.data.user.UserName,
-                avatar: response.data.user.avatar || "/default-avatar.png", // Sử dụng avatar từ API hoặc avatar mặc định
-            }));
-
-            // Điều hướng đến trang chính hoặc trang lưu trước đó
-            const redirectUrl = localStorage.getItem("redirectAfterLogin") || "/";
-            localStorage.removeItem("redirectAfterLogin");
-            navigate(redirectUrl);
-        } else {
-            // Hiển thị thông báo lỗi nếu đăng nhập thất bại
-            setErrorMessage(response.data.message || "Đăng nhập thất bại!");
-        }
+      if (response.data.success) {
+        localStorage.setItem("session", JSON.stringify(response.data.session));
+        localStorage.setItem("user", JSON.stringify({
+          id: response.data.user.IdUser,
+          username: response.data.user.UserName,
+          avatar: response.data.user.avatar || "/default-avatar.png",
+        }));
+        const redirectUrl = localStorage.getItem("redirectAfterLogin") || "/";
+        localStorage.removeItem("redirectAfterLogin");
+        navigate(redirectUrl);
+      } else {
+        setErrorMessage(response.data.message || "Đăng nhập thất bại!");
+      }
     } catch (error) {
-        // Hiển thị thông báo lỗi khi có vấn đề với yêu cầu
-        setErrorMessage("Có lỗi xảy ra. Vui lòng thử lại sau.");
-        console.error("Login error:", error);
+      setErrorMessage("Có lỗi xảy ra. Vui lòng thử lại sau.");
+      console.error("Login error:", error);
     }
-};
+  };
 
 
   return (
@@ -70,8 +61,6 @@ const Login = () => {
                 <span>Username</span>
                 <i></i>
               </div>
-
-              {/* Input cho mật khẩu */}
               <div className="inputBox">
                 <input
                   type="password"
@@ -84,8 +73,6 @@ const Login = () => {
                 <span>Password</span>
                 <i></i>
               </div>
-
-              {/* Hiển thị lỗi nếu có */}
               {errorMessage && <div className="text-danger">{errorMessage}</div>}
 
               {/* Nút đăng nhập */}

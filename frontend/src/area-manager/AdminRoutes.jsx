@@ -52,7 +52,6 @@ export default function AdminRoutes() {
                   <Route path="basic/page" element={<SamplePage />} />
                   <Route path="*" element={<Navigate to="/manager" />} />
 
-
                   <Route path="comic/comic-index" element={<ComicIndex />} />
                   <Route path="comic/comic-index/comic-detail/:id" element={<ComicDetail />} />
                   <Route path="comic/comic-index/comic-detail/chapter-detail/demo-reading-mode-view/:chapterId" element={<ChapterDetail />} />

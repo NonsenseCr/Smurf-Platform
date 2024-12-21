@@ -131,19 +131,25 @@
 }
 
 .btn__follow {
-   /* background-color: var(--containers-color-alt);*/
     color: #fff;
-    border-radius: 3px;
+    border-radius: 5px;
     margin: .5rem 0;
     display:flex;
 }
 
     .btn__follow a {
-        padding:.5rem;
+        /* padding:.5rem; */
         font-size: 1rem;
         font-weight: 600;
     }
 
+
+.btn-unfollow{
+    background-color: #FF2929;
+}
+.btn-unfollow:hover{
+    background-color: #F95454;
+}
 
 .content-main {
     position: relative;

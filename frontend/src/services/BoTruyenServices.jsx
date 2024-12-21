@@ -23,6 +23,22 @@ export const fetchAllBoTruyen = async () => {
     }
 };
 
+// Gọi API để lấy danh sách bộ truyện được đề xuất
+export const fetchRecommendedBoTruyen = async (bookId) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/get-recommended-books`, {
+            bookId: bookId,
+        });
+        return response.data.recommendedBooks;
+    } catch (error) {
+        console.error('Lỗi khi lấy danh sách bộ truyện đề xuất:', error.response || error.message);
+        throw new Error(
+            error.response?.data?.message || 'Không thể lấy danh sách bộ truyện đề xuất'
+        );
+    }
+};
+
+
 // Lấy danh sách bộ truyện mới nhất
 export const fetchBoTruyenLatest = async () => {
     try {
@@ -65,6 +81,18 @@ export const fetchBoTruyenById = async (id) => {
     }
 };
 
+export const saveBoTruyenHistory = async (comicId, userId, latestChapter) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/save-history/${comicId}`, {
+            userId,
+            latestChapter,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error saving Bo Truyen history:", error);
+        throw new Error("Không thể lưu lịch sử đọc bộ truyện");
+    }
+};
 
 // Kiểm tra quyền truy cập chương Premium
 export const checkPremiumAccess = async (chapterId, userId, isPremium, tickets, ticketCost) => {
@@ -173,12 +201,10 @@ export const fetchRankingsByType = async (type) => {
 };
 
 
-/**
- * Follow a comic
- */
-export const followComic = async (comicId) => {
+// Theo dõi bộ truyện
+export const followComic = async (comicId, userId) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/${comicId}/follow`);
+        const response = await axios.post(`${API_BASE_URL}/follow/${comicId}`, { userId });
         return response.data;
     } catch (error) {
         console.error("Error following comic:", error);
@@ -186,15 +212,26 @@ export const followComic = async (comicId) => {
     }
 };
 
-/**
- * Unfollow a comic
- */
-export const unfollowComic = async (comicId) => {
+// Hủy theo dõi bộ truyện
+export const unfollowComic = async (comicId, userId) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/${comicId}/unfollow`);
+        const response = await axios.post(`${API_BASE_URL}/unfollow/${comicId}`, {userId});
         return response.data;
     } catch (error) {
         console.error("Error unfollowing comic:", error);
         throw new Error("Không thể hủy theo dõi bộ truyện");
+    }
+};
+
+export const findCTBoTruyen = async (comicId, userId) => {
+    try {
+        // Gọi API với comicId và userId
+        const response = await axios.get(`${API_BASE_URL}/find/${comicId}`, {
+            params: { userId }, // Truyền userId qua query params
+        });
+        return response.data; // Trả về dữ liệu từ API
+    } catch (error) {
+        console.error("Error fetching CTBoTruyen:", error);
+        throw new Error("Không thể tìm kiếm CTBoTruyen");
     }
 };

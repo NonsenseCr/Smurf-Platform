@@ -3,33 +3,30 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 // import avatarPlaceholder from "../assets/1004-the-worlds-finest-assassin-maha.png";
 import HeaderLogin from "../components/Login/HeaderLogin";
+
 const Infor = () => {
-  const [userInfo, setUserInfo] = useState({
-    username: "",
-    fullName: "",
-    birthDate: "",
-    gender: "1",
-  });
-
+  // khai báo dom và biến
   const navigate = useNavigate();
-
   const location = useLocation();
   const params = new URLSearchParams(window.location.search);
   const userFromParams = params.get("user")
     ? JSON.parse(decodeURIComponent(params.get("user")))
     : null;
-
   const user = location.state?.user || userFromParams;
-
-  console.log("Location state:", user);
-  // console.log("User in state:", location.state?.user);
-
   const [avatar, setAvatar] = useState("");
   const [avatarsList, setAvatarsList] = useState([]);
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    fullName: "",
+    birthDate: "",
+    gender: "1",
+    avatar: "",
+  });
 
+  /* useEffect */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,13 +47,50 @@ const Infor = () => {
     fetchData();
   }, []);
 
+
+  useEffect(() => {
+    const fetchCustomerDetails = async () => {
+      if (!user?.id) {
+        setErrorMessage("User ID is missing!");
+        return;
+      }
+  
+      try {
+        const response = await axios.get(`http://localhost:5000/api/khachhang/${user.id}`);
+        const customerDetails = response.data;
+        // console.log("customerDetails: ", customerDetails);
+        if (customerDetails) {
+          setUserInfo({
+            username: customerDetails.UserDetail?.UserName || "",
+            fullName: customerDetails.FullName || "",
+            birthDate: customerDetails.BirthDate || "",
+            gender: customerDetails.Gender || "1",
+            avatar: customerDetails.Avatar || "",
+          });
+        } else {
+          setErrorMessage("No customer details found!");
+        }
+      } catch (error) {
+        console.error("Error fetching customer details:", error);
+        setErrorMessage("Error fetching customer details. Please try again later.");
+      }
+    };
+  
+    fetchCustomerDetails();
+  }, [user?.id]);
+
   const toggleOverlay = () => {
     setOverlayVisible((prev) => !prev);
   };
 
   const handleAvatarSelect = (avatarUrl) => {
     setAvatar(avatarUrl);
-    setOverlayVisible(false); // Ẩn overlay sau khi chọn avatar
+    setUserInfo({
+      avatar: avatarUrl,
+    });
+    console.log("infor", userInfo);
+    setOverlayVisible(true);
+    // setOverlayVisible(false); // Ẩn overlay sau khi chọn avatar
   };
 
   const handleInputChange = (e) => {
@@ -66,9 +100,9 @@ const Infor = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-
+    console.log("User", user);
     try {
-      if (!user?.IdUser) {
+      if (!user?.id) {
         // console.log("User IdUser is missing:", user?.IdUser);
         setErrorMessage("User ID is missing on the client!");
         return;
@@ -77,7 +111,7 @@ const Infor = () => {
       // console.log("Sending IdUser to backend:", user.IdUser);
 
       const response = await axios.put("http://localhost:5000/api/khachhang/update", {
-        idUser: user.IdUser,
+        idUser: user.id,
         fullName: userInfo.fullName,
         birthDate: userInfo.birthDate,
         gender: userInfo.gender,
@@ -86,12 +120,12 @@ const Infor = () => {
 
       if (response.data.success) {
         localStorage.setItem("user", JSON.stringify({
-          id: user.IdUser,
-          username: userInfo.username || user.username,
+          id: user.id,
+          username: userInfo.fullName || user.username,
           avatar: avatarsList.find((av) => av.AvatarContent === avatar)?.AvatarContent,
         }));
 
-        setSuccessMessage("Information updated successfully!");
+        setSuccessMessage("Cập nhất thông tin thành công!");
         setTimeout(() => {
           navigate("/");
         }, 2000);
@@ -170,7 +204,7 @@ const Infor = () => {
                   <input type="hidden" name="id" id="avatarId" />
                   <a
                     className="btn-cancel"
-                    onClick={() => setOverlayVisible(false)} // Tắt overlay khi click nút "CANCEL"
+                    onClick={() => setOverlayVisible(false)} 
                   >
                     CANCEL
                   </a>
@@ -187,7 +221,9 @@ const Infor = () => {
                 <div
                   key={av._id}
                   className="col item-avatar"
-                  onClick={() => handleAvatarSelect(av.AvatarContent)}
+                  onClick={() => {
+                    handleAvatarSelect(av.AvatarContent);
+                  }}
                 >
                   <img
                     className="img-avatar"
@@ -201,9 +237,6 @@ const Infor = () => {
           </div>
         </>
       )}
-
-
-
       {/* Main Content */}
       <div className="main__top">
         <div className="main-login__content w-100">
@@ -211,12 +244,17 @@ const Infor = () => {
             Account Information
           </h3>
           <form className="form-login" id="formInfor" autoComplete="off" onSubmit={handleSave}>
-            <div
-              className="content-login form-group position-relative"
-              style={{ zIndex: 100000 }}
-            >
+            <div className="content-login form-group position-relative" style={{ zIndex: 100000 }}>
+              {/* Hiển thị Avatar */}
               <div className="infor-img">
-                <img src={`http://localhost:5000${avatar}`} alt="Avatar" />
+                <img
+                  src={
+                    userInfo?.avatar
+                      ? `http://localhost:5000${userInfo.avatar}` 
+                      : `http://localhost:5000${avatar}` 
+                  }
+                  alt="Avatar"
+                />
                 <a
                   type="button"
                   id="btn-avatar"
@@ -233,7 +271,7 @@ const Infor = () => {
                   name="username"
                   id="Username"
                   type="text"
-                  value={user?.username}
+                  value={userInfo.username || ""}
                   onChange={handleInputChange}
                   required
                   autoComplete="off"
@@ -246,7 +284,7 @@ const Infor = () => {
                   name="fullName"
                   id="FullName"
                   type="text"
-                  value={userInfo.fullName}
+                  value={userInfo.fullName || ""} // Chỉ hiển thị nếu có dữ liệu
                   onChange={handleInputChange}
                   required
                   autoComplete="off"
@@ -259,7 +297,7 @@ const Infor = () => {
                   name="birthDate"
                   id="date"
                   type="date"
-                  value={userInfo.birthDate}
+                  value={userInfo.birthDate || ""} // Chỉ hiển thị nếu có dữ liệu
                   onChange={handleInputChange}
                   required
                 />
@@ -272,7 +310,7 @@ const Infor = () => {
                   <select
                     name="gender"
                     id="Gender"
-                    value={userInfo.gender}
+                    value={userInfo.gender || "1"} // Chỉ hiển thị nếu có dữ liệu, mặc định là Male
                     onChange={handleInputChange}
                     className="select"
                     required
@@ -284,6 +322,8 @@ const Infor = () => {
                   <i></i>
                 </div>
               </div>
+
+              {/* Success/Error Messages */}
               {successMessage && (
                 <div className="text-success">
                   {successMessage}
@@ -291,8 +331,6 @@ const Infor = () => {
                   Redirecting to home...
                 </div>
               )}
-              {/* Success/Error Messages */}
-              {/* {successMessage && <div className="text-success">{successMessage}</div>} */}
               {errorMessage && <div className="text-danger">{errorMessage}</div>}
 
               {/* Save/Cancel Buttons */}

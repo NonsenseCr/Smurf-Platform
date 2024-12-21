@@ -1,65 +1,141 @@
-import React from 'react';
+import  { useState } from 'react';
 import { Row, Col, Alert, Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const JWTLogin = () => {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
+
+  // Lưu vào localStorage với thời gian hết hạn
+  const setWithExpiry = (key, value, ttl) => {
+    const now = new Date();
+
+    const item = {
+      value: value,
+      expiry: now.getTime() + ttl, // TTL: thời gian tồn tại (ms)
+    };
+
+    localStorage.setItem(key, JSON.stringify(item));
+  };
+
+  // // Lấy từ localStorage và kiểm tra hết hạn
+  // const getWithExpiry = (key) => {
+  //   const itemStr = localStorage.getItem(key);
+
+  //   if (!itemStr) return null;
+
+  //   const item = JSON.parse(itemStr);
+  //   const now = new Date();
+
+  //   if (now.getTime() > item.expiry) {
+  //     localStorage.removeItem(key); // Xóa nếu hết hạn
+  //     return null;
+  //   }
+
+  //   return item.value;
+  // };
+
+  // Xử lý đăng nhập
+  const handleLogin = async (values) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/user-manager/login', {
+        UserName: values.username.trim(),
+        Password: values.password.trim(),
+      });
+  
+      if (response.data.message === "Đăng nhập thành công") {
+        // Lưu session và user vào localStorage
+        const userData = response.data.data;
+        setWithExpiry("session", userData, 7200000);
+        setWithExpiry("userM", {
+          id: userData.IdUser,
+          username: userData.UserName,
+          email: userData.Email,
+          staffRole: userData.StaffRole,
+        }, 3600000);
+  
+        // Lấy danh sách quyền
+        const permissionsResponse = await axios.get(`http://localhost:5000/api/rbac/permissions/${userData.IdUser}`);
+        setWithExpiry("permissions", permissionsResponse.data, 3600000);
+  
+        // Chuyển hướng đến trang /manager
+        navigate("/manager");
+      } else {
+        setErrorMessage(response.data.message || "Đăng nhập thất bại!");
+      }
+    } catch (error) {
+      if (error.response) {
+        setErrorMessage(error.response.data.message || 'Đăng nhập thất bại.');
+      } else {
+        setErrorMessage('Lỗi kết nối đến server.');
+      }
+      console.error("Error during login:", error);
+    }
+  };
+  
+  
+
   return (
     <Formik
       initialValues={{
-        email: 'info@codedthemes.com',
-        password: '123456',
-        submit: null
+        username: '',
+        password: '',
       }}
       validationSchema={Yup.object().shape({
-        email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-        password: Yup.string().max(255).required('Password is required')
+        username: Yup.string().required('Username là bắt buộc'),
+        password: Yup.string().required('Mật khẩu là bắt buộc'),
       })}
+      onSubmit={(values, { setSubmitting }) => {
+        setSubmitting(true);
+        handleLogin(values).finally(() => setSubmitting(false));
+      }}
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <form noValidate onSubmit={handleSubmit}>
           <div className="form-group mb-3">
             <input
               className="form-control"
-              label="Email Address / Username"
-              name="email"
+              name="username"
               onBlur={handleBlur}
               onChange={handleChange}
-              type="email"
-              value={values.email}
+              type="text"
+              value={values.username}
+              placeholder="Nhập vào Username"
             />
-            {touched.email && errors.email && <small className="text-danger form-text">{errors.email}</small>}
+            {touched.username && errors.username && <small className="text-danger">{errors.username}</small>}
           </div>
           <div className="form-group mb-4">
             <input
               className="form-control"
-              label="Password"
               name="password"
               onBlur={handleBlur}
               onChange={handleChange}
               type="password"
               value={values.password}
+              placeholder="Nhập vào Password"
             />
-            {touched.password && errors.password && <small className="text-danger form-text">{errors.password}</small>}
+            {touched.password && errors.password && <small className="text-danger">{errors.password}</small>}
           </div>
 
-          <div className="custom-control custom-checkbox  text-start mb-4 mt-2">
-            <input type="checkbox" className="custom-control-input mx-2" id="customCheck1" />
-            <label className="custom-control-label" htmlFor="customCheck1">
-              Save credentials.
-            </label>
-          </div>
-
-          {errors.submit && (
+          {errorMessage && (
             <Col sm={12}>
-              <Alert>{errors.submit}</Alert>
+              <Alert variant="danger">{errorMessage}</Alert>
             </Col>
           )}
 
           <Row>
             <Col mt={2}>
-              <Button className="btn-block mb-4" color="primary" disabled={isSubmitting} size="large" type="submit" variant="primary">
-                Signin
+              <Button
+                className="btn-block mb-4"
+                color="primary"
+                disabled={isSubmitting}
+                type="submit"
+                variant="primary"
+              >
+                Đăng nhập
               </Button>
             </Col>
           </Row>

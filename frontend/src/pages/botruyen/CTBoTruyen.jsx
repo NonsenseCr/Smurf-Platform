@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   fetchBoTruyenById,
@@ -7,13 +7,18 @@ import {
   unfollowComic,
   checkPremiumAccess,
   fetchChaptersByComicId,
+  fetchRecommendedBoTruyen,
+  saveBoTruyenHistory,
+  findCTBoTruyen,
 } from "../../services/BoTruyenServices";
 import iconPremium from "../../assets/PreDark.png";
 import Loader from "../../components/Element/Loader";
+import RecommendComics from '../../components/Home/RecommendComics';
 const CtBoTruyen = () => {
+
+  // các usestate cho Botruyen
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [boTruyen, setBoTruyen] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [followed, setFollowed] = useState(false);
@@ -21,44 +26,106 @@ const CtBoTruyen = () => {
   const [isPremium, setIsPremium] = useState(false);
   const [rating, setRating] = useState(null);
   const [contentExpanded, setContentExpanded] = useState(false);
+  const [recommendedComics, setRecommendedComics] = useState([]);
+  // const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-  
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const userId = "123"; // Giả lập userId (thay thế bằng logic thực tế)
+  useEffect(() => {
+    const userDataFromStorage = localStorage.getItem("user");
+    if (userDataFromStorage) {
+      const parsedUser = JSON.parse(userDataFromStorage);
+      setUser(parsedUser); // Lưu thông tin user vào state
+      setIsAuthenticated(true); // Đánh dấu trạng thái đăng nhập
+    }
+  }, []);
+
 
   useEffect(() => {
     const loadBoTruyen = async () => {
       try {
         const data = await fetchBoTruyenById(id);
         setBoTruyen(data);
-        setFollowed(data.followed);
         setUserTickets(data.userTickets || 0);
         setIsPremium(data.isPremium || false);
         setRating(data.danhgia || 0);
 
-        const chaptersData = await fetchChaptersByComicId(id);
+        const chaptersData = await fetchChaptersByComicId(id); // Lấy danh sách chương
         setChapters(chaptersData);
+
+        // Nếu user đã đăng nhập, lưu lịch sử đọc
+        if (isAuthenticated && user) {
+          const latestChapter = data.latestChapter?.SttChap || null;
+          console.log("Gọi API với:", { comicId: id, userId: user.id, latestChapter });
+          await saveBoTruyenHistory(id, user.id, latestChapter);
+          console.log("Lịch sử đọc đã được lưu thành công!");
+        }
       } catch (error) {
-        console.error("Error loading BoTruyen:", error);
+        console.error("Lỗi khi tải thông tin bộ truyện hoặc lưu lịch sử:", error);
       }
     };
 
-    loadBoTruyen();
-  }, [id]);
+    if (id) {
+      loadBoTruyen(); // Chỉ gọi khi `id` tồn tại
+    }
+  }, [id, isAuthenticated, user]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const bookId = "67507c32968ff0f3ba4c2c25";
+        const [recommendedData] = await Promise.all([
+          fetchRecommendedBoTruyen(bookId),
+        ]);
+        setRecommendedComics(recommendedData);
+      } catch (err) {
+        // setError(err.message);
+        console.error("Lỗi khi lấy thông tin CTBoTruyen:", err.message);
+      }
+    };
 
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchCTBoTruyen = async () => {
+      try {
+        if (!id || !user?.id) return;
+
+        const result = await findCTBoTruyen(id, user.id);
+        if (result && result.data) {
+          setFollowed(result.data.theodoi || false);
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin CTBoTruyen:", error.message);
+      }
+    };
+
+    fetchCTBoTruyen();
+  }, [id, user]);
+
+  // Hàm handleFollow tích hợp với API follow/unfollow
   const handleFollow = async () => {
     try {
       if (followed) {
-        await unfollowComic(id, userId);
-        setFollowed(false);
-        Swal.fire("Thành công", "Bạn đã hủy theo dõi bộ truyện.", "success");
+        // Gọi API hủy theo dõi
+        console.log("unfollowComic");
+        const response = await unfollowComic(id, user.id);
+        console.log("unfollowComic", response);
+        if (response.success) {
+          setFollowed(false);
+        }
+
       } else {
-        await followComic(id, userId);
-        setFollowed(true);
-        Swal.fire("Thành công", "Bạn đã theo dõi bộ truyện.", "success");
+        // Gọi API theo dõi
+        const response = await followComic(id, user.id);
+        if (response.success) {
+          setFollowed(true);
+        }
       }
     } catch (error) {
-      Swal.fire("Lỗi", "Không thể cập nhật trạng thái theo dõi.", error);
+      console.error("Lỗi cập nhật trạng thái theo dõi:", error.message);
+      Swal.fire("Lỗi", "Không thể cập nhật trạng thái theo dõi.", "error");
     }
   };
 
@@ -66,7 +133,7 @@ const CtBoTruyen = () => {
     try {
       const hasAccess = await checkPremiumAccess(
         chapter._id,
-        userId,
+        user.id,
         isPremium,
         userTickets,
         chapter.ticket_cost
@@ -86,20 +153,12 @@ const CtBoTruyen = () => {
   };
 
   const toggleContent = () => setContentExpanded(!contentExpanded);
-
-  //   const calculateTimeAgo = (time) => {
-  //     const diff = Date.now() - new Date(time).getTime();
-  //     const hours = Math.floor(diff / (1000 * 60 * 60));
-  //     return hours > 0 ? `${hours} giờ trước` : "... giờ trước";
-  //   };
-
   const handleChapterClick = (id_bo, stt_chap) => {
     navigate(`/chapter/${id_bo}/${stt_chap}`);
   };
-  const [isLoading, setIsLoading] = useState(true);
+
   if (!boTruyen) {
     return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
-    
   }
 
   return (
@@ -166,9 +225,6 @@ const CtBoTruyen = () => {
             </div>
           </div>
 
-
-          {/* Poster và nút đọc */}
-
         </div>
 
         {/* Nội dung chính */}
@@ -185,7 +241,7 @@ const CtBoTruyen = () => {
             {boTruyen.listloai?.map((genre, index) => (
               <a
                 key={index}
-                href={`/genre/${genre.id}`}
+                href={`/${genre._id}`}
                 className="item-type"
               >
                 {genre.ten_loai}
@@ -197,7 +253,7 @@ const CtBoTruyen = () => {
             <div className="btn__follow">
               {followed ? (
                 <a
-                  className="btn-follow"
+                  className="btn-unfollow"
                   // style={{ backgroundColor: "#FE0000", borderRadius: "5px" }}
                   onClick={handleFollow}
                 >
@@ -284,25 +340,6 @@ const CtBoTruyen = () => {
             </div>
           </div>
         </div>
-
-        {/* Danh sách chương */}
-        {/* <div className="detail__list">
-          <div className="content-title">
-            <i className="fa-solid fa-list"></i> DANH SÁCH CHƯƠNG TRUYỆN
-          </div>
-          <div className="chapter-list">
-            {chapters.map((chapter) => (
-              <div key={chapter._id} className="chapter-item">
-                <div className="row">
-                  <div className="col chapter chap-col">Chương {chapter.sttChap}</div>
-                  <div className="col-6 content chap-col">{chapter.tenChap}</div>
-                  <div className="col time chap-col">{chapter.thoiGian}</div>
-                  <div className="col view chap-col">{chapter.tkLuotXem} lượt xem</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div> */}
         <div className="detail__list">
           <div className="content-title">
             <i className="fa-solid fa-list"></i> DANH SÁCH CHƯƠNG TRUYỆN
@@ -324,7 +361,7 @@ const CtBoTruyen = () => {
                     </div>
                     <div className="col view chap-col">
                       {chapter.tk_luotxem || 0} lượt xem
-                    </div>
+                    </div> []
                   </div>
                 </div>
               ))
@@ -332,7 +369,9 @@ const CtBoTruyen = () => {
               <div>Không có chương nào.</div>
             )}
           </div>
+
         </div>
+        <RecommendComics comics={recommendedComics} title="Bộ truyện tương tự" />
       </div>
     </div>
   );

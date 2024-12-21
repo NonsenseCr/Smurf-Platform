@@ -1,18 +1,110 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Table, Tabs, Tab } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import avatar1 from '../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../assets/images/user/avatar-3.jpg';
 
-const dashSalesData = [
-  { title: 'Daily Sales', amount: '$249.95', icon: 'icon-arrow-up text-c-green', value: 50, class: 'progress-c-theme' },
-  { title: 'Monthly Sales', amount: '$2.942.32', icon: 'icon-arrow-down text-c-red', value: 36, class: 'progress-c-theme2' },
-  { title: 'Yearly Sales', amount: '$8.638.32', icon: 'icon-arrow-up text-c-green', value: 70, color: 'progress-c-theme' }
-];
+
+
+
 
 const DashDefault = () => {
+  const [totalSeries, setTotalSeries] = useState('00'); 
+  const [totalChapters, setTotalChapters] = useState('00'); 
+  const [totalAuthors, setTotalAuthors] = useState('00');
+  const [trendingComics, setTrendingComics] = useState([]);
+  const [ratings, setRatings] = useState([]);
+  const [totalRatings, setTotalRatings] = useState(0); 
+
+  const [dashSalesData, setDashSalesData] = useState([
+    { title: 'Doang Thu', amount: '00', icon: 'icon-arrow-up text-c-green', value: 50, class: 'progress-c-theme' },
+    { title: 'Lượt Truy Cập', amount: '00', icon: 'icon-arrow-down text-c-red', value: 36, class: 'progress-c-theme2' },
+    { title: 'User Đang Hoạt Hộng', amount: '00', icon: 'icon-arrow-up text-c-green', value: 70, color: 'progress-c-theme' },
+  ]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Gọi API đồng thời để lấy dữ liệu
+        const [revenueRes, visitsRes, activeUsersRes] = await Promise.all([
+          axios.get('/api/statistics/total-revenue'),
+          axios.get('/api/statistics/total-visits'),
+          axios.get('/api/statistics/active-users'),
+          axios.get('/api/statistics/total-series'),
+        ]);
+  
+        // Cập nhật dữ liệu cho từng phần tử trong dashSalesData
+        setDashSalesData((prevData) => [
+          { ...prevData[0], amount: `${revenueRes.data.amount} VND` }, 
+          { ...prevData[1], amount: visitsRes.data.amount },
+          { ...prevData[2], amount: activeUsersRes.data.amount }, 
+
+        ]);
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu thống kê:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        // Gọi đồng thời 2 API
+        const [seriesResponse, chaptersResponse, authorResponse] = await Promise.all([
+          axios.get('/api/statistics/total-series'),
+          axios.get('/api/statistics/total-chapters'),
+          axios.get('/api/statistics/total-authors')
+        ]);
+
+        // Cập nhật state với giá trị từ API
+        setTotalSeries(seriesResponse.data.amount);
+        setTotalChapters(chaptersResponse.data.amount);
+        setTotalAuthors(authorResponse.data.amount);
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu thống kê:', error);
+      }
+    };
+
+    fetchStatistics();
+  }, []);
+
+  useEffect(() => {
+    const fetchTrendingComics = async () => {
+      try {
+        const response = await axios.get('/api/botruyen/trending', {
+          params: { page: 1, limit: 5 }, // Lấy 5 truyện đầu tiên
+        });
+        setTrendingComics(response.data.comics); // Cập nhật danh sách truyện
+      } catch (error) {
+        console.error('Lỗi khi lấy danh sách truyện Trending:', error);
+      }
+    };
+
+    fetchTrendingComics();
+  }, []);
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const response = await fetch('/api/statistics/ratings');
+        const data = await response.json();
+        const sortedRatings = data.ratings.sort((a, b) => b.star - a.star);
+        setRatings(sortedRatings);
+        const total = data.ratings.reduce((sum, rating) => sum + rating.count, 0); 
+        setTotalRatings(total);
+      } catch (error) {
+        console.error('Lỗi khi lấy số lượng đánh giá:', error);
+      }
+    };
+
+    fetchRatings();
+  }, []);
+
   const tabContent = (
     <React.Fragment>
       <div className="d-flex friendlist-box align-items-center justify-content-center m-b-20">
@@ -113,7 +205,7 @@ const DashDefault = () => {
                   <div className="row d-flex align-items-center">
                     <div className="col-9">
                       <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                        <i className={`feather ${data.icon} f-30 m-r-5`} /> $249.95
+                        <i className={`feather ${data.icon} f-30 m-r-5`} /> {data.amount}
                       </h3>
                     </div>
                     <div className="col-3 text-end">
@@ -136,148 +228,64 @@ const DashDefault = () => {
           );
         })}
         <Col md={6} xl={8}>
-          <Card className="Recent-Users widget-focus-lg">
-            <Card.Header>
-              <Card.Title as="h5">Recent Users</Card.Title>
-            </Card.Header>
+        <Card className="Recent-Users widget-focus-lg">
+          <Card.Header>
+            <Card.Title as="h5">Danh Sách Truyện Tiêu Biểu</Card.Title>
+          </Card.Header>
             <Card.Body className="px-0 py-2">
               <Table responsive hover className="recent-users">
                 <tbody>
-                  <tr className="unread">
-                    <td>
-                      <img className="rounded-circle" style={{ width: '40px' }} src={avatar1} alt="activity-user" />
-                    </td>
-                    <td>
-                      <h6 className="mb-1">Isabella Christensen</h6>
-                      <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                    </td>
-                    <td>
-                      <h6 className="text-muted">
-                        <i className="fa fa-circle text-c-green f-10 m-r-15" />
-                        11 MAY 12:56
-                      </h6>
-                    </td>
-                    <td>
-                      <Link to="#" className="label theme-bg2 text-white f-12">
-                        Reject
-                      </Link>
-                      <Link to="#" className="label theme-bg text-white f-12">
-                        Approve
-                      </Link>
-                    </td>
-                  </tr>
-                  <tr className="unread">
-                    <td>
-                      <img className="rounded-circle" style={{ width: '40px' }} src={avatar2} alt="activity-user" />
-                    </td>
-                    <td>
-                      <h6 className="mb-1">Mathilde Andersen</h6>
-                      <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                    </td>
-                    <td>
-                      <h6 className="text-muted">
-                        <i className="fa fa-circle text-c-red f-10 m-r-15" />
-                        11 MAY 10:35
-                      </h6>
-                    </td>
-                    <td>
-                      <Link to="#" className="label theme-bg2 text-white f-12">
-                        Reject
-                      </Link>
-                      <Link to="#" className="label theme-bg text-white f-12">
-                        Approve
-                      </Link>
-                    </td>
-                  </tr>
-                  <tr className="unread">
-                    <td>
-                      <img className="rounded-circle" style={{ width: '40px' }} src={avatar3} alt="activity-user" />
-                    </td>
-                    <td>
-                      <h6 className="mb-1">Karla Sorensen</h6>
-                      <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                    </td>
-                    <td>
-                      <h6 className="text-muted">
-                        <i className="fa fa-circle text-c-green f-10 m-r-15" />9 MAY 17:38
-                      </h6>
-                    </td>
-                    <td>
-                      <Link to="#" className="label theme-bg2 text-white f-12">
-                        Reject
-                      </Link>
-                      <Link to="#" className="label theme-bg text-white f-12">
-                        Approve
-                      </Link>
-                    </td>
-                  </tr>
-                  <tr className="unread">
-                    <td>
-                      <img className="rounded-circle" style={{ width: '40px' }} src={avatar1} alt="activity-user" />
-                    </td>
-                    <td>
-                      <h6 className="mb-1">Ida Jorgensen</h6>
-                      <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                    </td>
-                    <td>
-                      <h6 className="text-muted f-w-300">
-                        <i className="fa fa-circle text-c-red f-10 m-r-15" />
-                        19 MAY 12:56
-                      </h6>
-                    </td>
-                    <td>
-                      <Link to="#" className="label theme-bg2 text-white f-12">
-                        Reject
-                      </Link>
-                      <Link to="#" className="label theme-bg text-white f-12">
-                        Approve
-                      </Link>
-                    </td>
-                  </tr>
-                  <tr className="unread">
-                    <td>
-                      <img className="rounded-circle" style={{ width: '40px' }} src={avatar2} alt="activity-user" />
-                    </td>
-                    <td>
-                      <h6 className="mb-1">Albert Andersen</h6>
-                      <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                    </td>
-                    <td>
-                      <h6 className="text-muted">
-                        <i className="fa fa-circle text-c-green f-10 m-r-15" />
-                        21 July 12:56
-                      </h6>
-                    </td>
-                    <td>
-                      <Link to="#" className="label theme-bg2 text-white f-12">
-                        Reject
-                      </Link>
-                      <Link to="#" className="label theme-bg text-white f-12">
-                        Approve
-                      </Link>
-                    </td>
-                  </tr>
+                  {trendingComics.map((comic) => (
+                    <tr key={comic._id} className="unread">
+                      <td>
+                        <img
+                          style={{ width: '60px' }}
+                          src={`http://localhost:5000${comic.AnhBia}`}
+                          alt={comic.TenBo}
+                        />
+                      </td>
+                      <td>
+                        <h6 className="mb-1">{comic.TenBo}</h6>
+                        <p className="m-0">Lượt xem: {comic.TongLuotXem}</p>
+                      </td>
+                      <td>
+                        <h6 className="text-muted">
+                          <i className="fa fa-circle text-c-green f-10 m-r-15" />
+                          {comic.latestChapter?.ThoiGian
+                            ? new Date(comic.latestChapter.ThoiGian).toLocaleDateString()
+                            : 'Chưa có chương'}
+                        </h6>
+                      </td>
+                      <td>
+                        <Link to={`/truyen/${comic._id}`} className="label theme-bg text-white f-12">
+                          Chi tiết
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </Card.Body>
-          </Card>
+    </Card>
         </Col>
         <Col md={6} xl={4}>
           <Card className="card-event">
             <Card.Body>
               <div className="row align-items-center justify-content-center">
                 <div className="col">
-                  <h5 className="m-0">Upcoming Event</h5>
+                  <h5 className="m-0">Tổng Số Truyện</h5>
                 </div>
                 <div className="col-auto">
-                  <label className="label theme-bg2 text-white f-14 f-w-400 float-end">34%</label>
+                  <label className="label theme-bg2 text-white f-14 f-w-400 float-end" style={{cursor:'pointer'}}>
+                    <a href='' className='text-white'>View</a>
+                  </label>
                 </div>
               </div>
+
               <h2 className="mt-2 f-w-300">
-                45<sub className="text-muted f-14">Competitors</sub>
+                {totalSeries}<sub className="text-muted f-14">  Bộ truyện</sub>
               </h2>
-              <h6 className="text-muted mt-3 mb-0">You can participate in event </h6>
-              <i className="fab fa-angellist text-c-purple f-50" />
+              <i className="fa-solid fa-chart-column text-c-purple f-50" />
             </Card.Body>
           </Card>
           <Card>
@@ -287,25 +295,47 @@ const DashDefault = () => {
                   <i className="feather icon-zap f-30 text-c-green" />
                 </div>
                 <div className="col">
-                  <h3 className="f-w-300">235</h3>
-                  <span className="d-block text-uppercase">total ideas</span>
+                  <h3 className="f-w-300">{totalChapters}</h3>
+                  <span className="d-block text-uppercase">Chapter Active</span>
                 </div>
               </div>
             </Card.Body>
             <Card.Body>
               <div className="row d-flex align-items-center">
                 <div className="col-auto">
-                  <i className="feather icon-map-pin f-30 text-c-blue" />
+                  <i className="fa-solid fa-person f-30 text-c-blue" />
                 </div>
                 <div className="col">
-                  <h3 className="f-w-300">26</h3>
-                  <span className="d-block text-uppercase">total locations</span>
+                  <h3 className="f-w-300">{totalAuthors}</h3>
+                  <span className="d-block text-uppercase">Authors</span>
+                </div>
+              </div>
+            </Card.Body>
+            <Card.Body>
+              <div className="row d-flex align-items-center">
+                <div className="col-auto">
+                  <i className="fa-solid fa-person f-30 text-c-blue" />
+                </div>
+                <div className="col">
+                  <h3 className="f-w-300">{totalAuthors}</h3>
+                  <span className="d-block text-uppercase">Authors</span>
+                </div>
+              </div>
+            </Card.Body>
+            <Card.Body>
+              <div className="row d-flex align-items-center">
+                <div className="col-auto">
+                  <i className="fa-solid fa-person f-30 text-c-blue" />
+                </div>
+                <div className="col">
+                  <h3 className="f-w-300">{totalAuthors}</h3>
+                  <span className="d-block text-uppercase">Authors</span>
                 </div>
               </div>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={6} xl={4}>
+        {/* <Col md={6} xl={4}>
           <Card className="card-social">
             <Card.Body className="border-bottom">
               <div className="row align-items-center justify-content-center">
@@ -457,113 +487,51 @@ const DashDefault = () => {
               </div>
             </Card.Body>
           </Card>
-        </Col>
+        </Col> */}
         <Col md={6} xl={4}>
-          <Card>
-            <Card.Header>
-              <Card.Title as="h5">Rating</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <div className="row align-items-center justify-content-center m-b-20">
-                <div className="col-6">
-                  <h2 className="f-w-300 d-flex align-items-center float-start m-0">
-                    4.7 <i className="fa fa-star f-10 m-l-10 text-c-yellow" />
-                  </h2>
-                </div>
-                <div className="col-6">
-                  <h6 className="d-flex  align-items-center float-end m-0">
-                    0.4 <i className="fa fa-caret-up text-c-green f-22 m-l-10" />
-                  </h6>
-                </div>
+        <Card>
+      <Card.Header>
+        <Card.Title as="h5">Rating</Card.Title>
+      </Card.Header>
+      <Card.Body>
+        <div className="row align-items-center justify-content-center m-b-20">
+          <div className="col-6">
+            <h2 className="f-w-300 d-flex align-items-center float-start m-0">
+              4.7 <i className="fa fa-star f-10 m-l-10 text-c-yellow" />
+            </h2>
+          </div>
+          <div className="col-6">
+            <h6 className="d-flex align-items-center float-end m-0">
+              {totalRatings} lượt đánh giá
+            </h6>
+          </div>
+        </div>
+
+        <div className="row">
+          {ratings.map((rating) => (
+            <div className="col-xl-12" key={rating.star}>
+              <h6 className="align-items-center float-start">
+                <i className="fa fa-star f-10 m-r-10 text-c-yellow" />
+                {rating.star}
+              </h6>
+              <h6 className="align-items-center float-end">{rating.count}</h6>
+              <div className="progress m-t-30 m-b-20" style={{ height: '6px' }}>
+                <div
+                  className="progress-bar progress-c-theme"
+                  role="progressbar"
+                  style={{
+                    width: `${(rating.count / totalRatings) * 100}%`, // Tỷ lệ % so với tổng đánh giá
+                  }}
+                  aria-valuenow={rating.count}
+                  aria-valuemin="0"
+                  aria-valuemax={totalRatings}
+                />
               </div>
-
-              <div className="row">
-                <div className="col-xl-12">
-                  <h6 className="align-items-center float-start">
-                    <i className="fa fa-star f-10 m-r-10 text-c-yellow" />5
-                  </h6>
-                  <h6 className="align-items-center float-end">384</h6>
-                  <div className="progress m-t-30 m-b-20" style={{ height: '6px' }}>
-                    <div
-                      className="progress-bar progress-c-theme"
-                      role="progressbar"
-                      style={{ width: '70%' }}
-                      aria-valuenow="70"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-xl-12">
-                  <h6 className="align-items-center float-start">
-                    <i className="fa fa-star f-10 m-r-10 text-c-yellow" />4
-                  </h6>
-                  <h6 className="align-items-center float-end">145</h6>
-                  <div className="progress m-t-30  m-b-20" style={{ height: '6px' }}>
-                    <div
-                      className="progress-bar progress-c-theme"
-                      role="progressbar"
-                      style={{ width: '35%' }}
-                      aria-valuenow="35"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-xl-12">
-                  <h6 className="align-items-center float-start">
-                    <i className="fa fa-star f-10 m-r-10 text-c-yellow" />3
-                  </h6>
-                  <h6 className="align-items-center float-end">24</h6>
-                  <div className="progress m-t-30  m-b-20" style={{ height: '6px' }}>
-                    <div
-                      className="progress-bar progress-c-theme"
-                      role="progressbar"
-                      style={{ width: '25%' }}
-                      aria-valuenow="25"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-xl-12">
-                  <h6 className="align-items-center float-start">
-                    <i className="fa fa-star f-10 m-r-10 text-c-yellow" />2
-                  </h6>
-                  <h6 className="align-items-center float-end">1</h6>
-                  <div className="progress m-t-30  m-b-20" style={{ height: '6px' }}>
-                    <div
-                      className="progress-bar progress-c-theme"
-                      role="progressbar"
-                      style={{ width: '10%' }}
-                      aria-valuenow="10"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-                <div className="col-xl-12">
-                  <h6 className="align-items-center float-start">
-                    <i className="fa fa-star f-10 m-r-10 text-c-yellow" />1
-                  </h6>
-                  <h6 className="align-items-center float-end">0</h6>
-                  <div className="progress m-t-30  m-b-5" style={{ height: '6px' }}>
-                    <div
-                      className="progress-bar"
-                      role="progressbar"
-                      style={{ width: '0%' }}
-                      aria-valuenow="0"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
+            </div>
+          ))}
+        </div>
+      </Card.Body>
+    </Card>
         </Col>
         <Col md={6} xl={8} className="user-activity">
           <Card>

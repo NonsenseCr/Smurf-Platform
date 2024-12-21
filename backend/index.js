@@ -17,7 +17,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Import models
 const TacGia = require('./src/model/tacgia.model');
 const BoTruyen = require('./src/model/botruyen.model');
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "defaultSecret",
@@ -48,6 +47,7 @@ const userRoutes = require('./src/routes/user.route');
 const registerRoutes = require('./src/routes/register.route'); 
 const loginRoutes = require('./src/routes/login.route');
 const authRoutes = require('./src/routes/auth.route'); 
+const statisticRoutes = require('./src/routes/Admin/Statistic.route'); 
 
 
 // Use routes
@@ -62,6 +62,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/register', registerRoutes);
 app.use('/api/login', loginRoutes); 
 app.use('/api/auth', authRoutes);
+app.use('/api/statistics', statisticRoutes);
 console.log(process.env);
 
 
@@ -72,8 +73,11 @@ const comicRoutes = require("./src/area-manager/routes/comic.route");
 app.use("/api/comic", comicRoutes); 
 const genreRoutes = require("./src/area-manager/routes/genre.route");
 app.use("/api/genres", genreRoutes); 
+const staffRoutes = require("./src/area-manager/routes/staff.route");
+app.use("/api/staff", staffRoutes); 
 const userMRoutes = require("./src/area-manager/routes/user.route");
-// app.use("/api/user-manager", userMRoutes); 
+app.use("/api/user-manager", userMRoutes); 
+
 // const rbacRoutes = require("./src/area-manager/routes/rbac-auth.route");
 // app.use("/api/rbac", rbacRoutes); 
 // const serviceRoutes = require("./src/area-manager/routes/service.route");

@@ -6,19 +6,11 @@ import numpy as np
 app = Flask(__name__)
 
 # load dữ liệu
-popular_df = pickle.load(open('popular.pkl','rb'))
+# popular_df = pickle.load(open('popular.pkl','rb'))
 pt = pickle.load(open('pt.pkl','rb'))
 books = pickle.load(open('books.pkl','rb'))
 similarity_scores = pickle.load(open('similarity_scores.pkl','rb'))
 
-@app.route('/')
-def index():
-    return render_template('index.html',
-                           book_name = list(popular_df['Book-Id'].values),
-                           author=list(popular_df['Book-Author'].values),
-                           votes=list(popular_df['num_ratings'].values),
-                           rating=list(popular_df['avg_rating'].values)
-                           )
 
 @app.route('/recommend')
 def recommend_ui():
@@ -28,7 +20,7 @@ def recommend_ui():
 def recommend():
     user_input = request.form.get('user_input')
     index = np.where(pt.index == user_input)[0][0]
-    similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:5]
+    similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:10]
 
     data = []
     for i in similar_items:
@@ -55,10 +47,10 @@ def goi_y_sach():
         if book_id:
             try:
                 print(f"Book ID: {book_id}")
-                recommended_books = recommend(int(book_id))
+                recommended_books = recommend(book_id)
                 print(f"Recommended Books: {recommended_books}")
                 if recommended_books:
-                    recommended_books_json = [int(item[0]) for item in recommended_books]
+                    recommended_books_json = [item[0] for item in recommended_books]
                     return jsonify({
                         "status": 200,
                         "recommended_books_id": recommended_books_json
@@ -85,24 +77,26 @@ def goi_y_sach():
             "message": "Request must be in JSON format"
         }), 400
 def recommend(book_id):
-    book_id = int(book_id)
-    # Kiểm tra xem book_name có tồn tại trong pt.index không
+    book_id = str(book_id)
     if book_id in pt.index:
-        # index fetch
         index = np.where(pt.index == book_id)[0][0]
-        similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:13]
-        
+        similar_items = sorted(
+            enumerate(similarity_scores[index]), key=lambda x: x[1], reverse=True
+        )[1:10]
+
         data = []
         for i in similar_items:
             item = []
             temp_df = books[books['Book-Id'] == pt.index[i[0]]]
             item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Id'].values))
-            
+
             data.append(item)
         
         return data
+    
     else:
-        print("Book not found in database")
+        print ("Book not found")
         return None
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

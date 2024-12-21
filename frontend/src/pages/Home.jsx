@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchTopReadBoTruyen, fetchBoTruyenLatest} from '../services/BoTruyenServices';
+import { fetchTopReadBoTruyen, fetchBoTruyenLatest, fetchRecommendedBoTruyen } from '../services/BoTruyenServices'; // Import thêm service
 import { fetchActiveLoaiTruyen } from '../services/LoaiTruyenService';
 import CarouselComponent from '../components/Home/CarouselComics';
 import ComicList from '../components/Home/ComicsList';
@@ -8,12 +8,12 @@ import TopRankingBanner from '../components/Home/TopRankingBanner';
 import RecommendType from '../components/Home/RecommendTypeList';
 import ShowListComics from '../components/Home/ShowListComics';
 import RecommendBanner from '../components/Home/RecommendBanner';
-
 import Loader from "../components/Element/Loader";
+
 const Home = () => {
-    // const [comic, setComics] = useState([]);
-    const [comicsLatest, setlatestComics] = useState([]);
+    const [comicsLatest, setLatestComics] = useState([]);
     const [topReadComics, setTopReadComics] = useState([]);
+    const [recommendedComics, setRecommendedComics] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -22,28 +22,29 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [ topReadData, categoryData, LatestData] = await Promise.all([
-                    // fetchActiveBoTruyen(),
+                const bookId = "67507c32968ff0f3ba4c2c25";
+                const [topReadData, categoryData, latestData, recommendedData] = await Promise.all([
                     fetchTopReadBoTruyen(),
                     fetchActiveLoaiTruyen(),
                     fetchBoTruyenLatest(),
+                    fetchRecommendedBoTruyen(bookId),
                 ]);
-                // setComics(activeData);
                 setTopReadComics(topReadData);
                 setCategories(categoryData);
-                setlatestComics(LatestData);
+                setLatestComics(latestData);
+                setRecommendedComics(recommendedData);
                 setLoading(false);
-
             } catch (err) {
                 setError(err.message);
                 setLoading(false);
             }
         };
+
         fetchData();
     }, []);
 
     if (loading) {
-        return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
+        return  <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
     }
 
     if (error) {
@@ -53,23 +54,26 @@ const Home = () => {
     return (
         <div className="home-container">
             <CarouselComponent comics={topReadComics.slice(0, 10)} />
-            <ComicList comics={topReadComics.slice(0, 10)} title="Đề Cử Hôm Nay" />
+            <ComicList comics={recommendedComics} title="Đề Cử Hôm Nay" />
+            
             <ShowListComics 
                 comics={comicsLatest}
                 subtitle="Mới Cập Nhật"
                 description="Danh sách các truyện mới nhất với chất lượng cao."
-                link="http://localhost:5173/latest"/>
-                
-            <RecommendType/>
+                link="http://localhost:5173/latest"
+            />
+            <RecommendType />
             
             <ShowListComics 
                 comics={comicsLatest}
-                subtitle="Danh Sách truyện"
-                description="Danh sách các truyện mới nhất cập nhật liên tục"
-                link="http://localhost:5173/trending"/>
+                subtitle="Danh Sách Truyện"
+                description="Danh sách các truyện cập nhật liên tục."
+                link="http://localhost:5173/trending"
+            />
+            
             <TopRankingBanner topComics={topReadComics} />
             <CategoryList categories={categories} title={"Loại truyện phổ biến"} />
-            <RecommendBanner/>
+            <RecommendBanner />
         </div>
     );
 };
