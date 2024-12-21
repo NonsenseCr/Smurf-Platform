@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Modal, Form, Input, Button, Upload, message, Switch, Alert, Spin } from "antd";
-import { PlusOutlined, ExpandOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { addChapter, addImagesToChapter, completeChapter, checkChapterExists } from "@/area-manager/services/comicService";
 import styles from "@/area-manager/styles/AddComic.module.css";
+import ImagePreviewPopup from "../chapter/Preview";
 
 const { TextArea } = Input;
 
@@ -15,7 +16,9 @@ const AddChapter = ({ visible, onClose, comicId }) => {
   const [viewingImage, setViewingImage] = useState(null);
   const [showExitWarning, setShowExitWarning] = useState(false);
   const [exitMessage, setExitMessage] = useState("");
-
+  const [previewVisible, setPreviewVisible] = useState(false);
+const openPreviewPopup = () => setPreviewVisible(true);
+  const closePreviewPopup = () => setPreviewVisible(false);
   const handleFinishStep1 = async (values) => {
     setLoading(true);
     try {
@@ -42,6 +45,7 @@ const AddChapter = ({ visible, onClose, comicId }) => {
       console.log("Dữ liệu gửi đi:", Array.from(formData.entries()));
 
       await addImagesToChapter(chapterId, formData);
+      
       message.success("Bước 2: Thêm ảnh thành công!");
       setStep(3);
     } catch (error) {
@@ -91,13 +95,11 @@ const AddChapter = ({ visible, onClose, comicId }) => {
     setShowExitWarning(false);
   };
 
-  const handleViewImage = (file) => {
-    setViewingImage(file.url || URL.createObjectURL(file.originFileObj));
-  };
 
   const closeImageView = () => {
     setViewingImage(null);
   };
+
 
   const validateChapterNumber = async (_, value) => {
     if (value <= 0) {
@@ -175,23 +177,33 @@ const AddChapter = ({ visible, onClose, comicId }) => {
               </Button>
             </Form>
           )}
+     
           {step === 2 && (
             <div className={styles.stepContainer}>
-              <h2 className={styles.stepTitle}>BƯỚC 2: UPLOAD ẢNH</h2>
-              <Upload
-                listType="picture-card"
-                multiple
-                onChange={({ fileList: newFileList }) => setFileList(newFileList)}
-                beforeUpload={() => false}
-              >
-                {fileList.length < 10 && <PlusOutlined />}
+<h2 className={styles.stepTitle}>BƯỚC 2: UPLOAD ẢNH</h2>
+              <div className={styles.uploadSection}>
+                <Upload
+                  listType="picture-card"
+                  multiple
+                  onChange={({ fileList: newFileList }) => setFileList(newFileList)}
+                  beforeUpload={() => false}
+                >
+                  {fileList.length < 10 && <PlusOutlined />}
                 </Upload>
-    {fileList.map((file, index) => (
-      <div key={index} className={styles.imageActions}>
-        <ExpandOutlined onClick={() => handleViewImage(file)} />
-      </div>
-    ))}
-              <Button type="primary" onClick={handleFinishStep2} className={styles.buttonPrimary} block>
+                <Button
+                  type="primary"
+                  onClick={openPreviewPopup}
+                  className={styles.previewButton}
+                >
+                  Xem Trước Ảnh
+                </Button>
+              </div>
+              <Button
+                type="primary"
+                onClick={handleFinishStep2}
+                block
+                className={styles.nextButton}
+              >
                 Tiếp Tục
               </Button>
             </div>
@@ -215,6 +227,15 @@ const AddChapter = ({ visible, onClose, comicId }) => {
           )}
         </Spin>
       </Modal>
+
+      {/* Popup Xem Trước Ảnh */}
+      <ImagePreviewPopup
+              visible={previewVisible}
+              onClose={closePreviewPopup}
+              images={fileList}
+            />
+    
+  
 
       {viewingImage && (
         <Modal
@@ -244,6 +265,7 @@ const AddChapter = ({ visible, onClose, comicId }) => {
           </div>
         </Modal>
       )}
+      
     </>
   );
 };
