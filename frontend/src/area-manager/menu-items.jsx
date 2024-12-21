@@ -49,8 +49,46 @@ const menuItems = {
             },
           ],
         },
+        {
+          id: 'trans-manager',
+          title: 'User Manager',
+          type: 'collapse',
+          icon: 'feather icon-layers',
+          children: [
+            {
+              id: 'staff-list',
+              title: 'Staff Index',
+              type: 'item',
+              icon: 'feather icon-book',
+              url: '/manager/user/staff-index',
+            },
+            {
+              id: 'rbac-control',
+              title: 'RBAC Manager',
+              type: 'item',
+              icon: 'feather icon-edit',
+              url: '/manager/config/rbac-control',
+            },
+            {
+              id: 'rbac-control',
+              title: 'RBAC Control',
+              type: 'item',
+              icon: 'feather icon-edit',
+              url: '/manager/config/rbac-control/rbac-staff-detail',
+            },
+            {
+              id: 'customer-control',
+              title: 'Customer Index',
+              type: 'item',
+              icon: 'feather icon-book',
+              url: '/manager/user/customer-index',
+            },
+            
+          ],
+        },
       ],
     },
+
     {
       id: 'ui-element',
       title: 'UI ELEMENT',

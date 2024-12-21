@@ -2,6 +2,8 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
+import PrivateRoute from "../area-manager/PrivateRoute";
+
 import Loader from './components/Loader/Loader';
 import AdminLayout from './layouts/AdminLayout';
 
@@ -24,7 +26,9 @@ const ComicIndex = lazy(() => import('./pages/comic/Index'));
 const ChapterDetail = lazy(() => import('./pages/comic/chapter/DemoReadingMode'));
 const ComicDetail = lazy(() => import('./pages/comic/Detail'));
 const GerneIndex = lazy(() => import('./pages/comic/gerne/Index'));
-
+const StaffIndex = lazy(() => import('./pages/user/staff/Index'));
+const RBACIndex = lazy(() => import('./pages/config-service/RBAC-index'));
+const RBACDetail = lazy(() => import('./pages/config-service/RBAC-controll'));
 
 export default function AdminRoutes() {
   return (
@@ -34,33 +38,41 @@ export default function AdminRoutes() {
           <Route path="login" element={<SignIn1 />} />
           <Route path="auth/signin-1" element={<SignIn1 />} />
           <Route path="auth/signup-1" element={<SignUp1 />} />
-          <Route path="*" element={
-            <AdminLayout>
-              <Suspense fallback={<Loader />}>
-                <Routes>
-                  <Route index element={<Dashboard />} />
-                  <Route path="basic/button" element={<BasicButton />} />
-                  <Route path="basic/badges" element={<BasicBadges />} />
-                  <Route path="basic/breadcrumb" element={<BasicBreadcrumb />} />
-                  <Route path="basic/collapse" element={<BasicCollapse />} />
-                  <Route path="basic/tabs" element={<BasicTabsPills />} />
-                  <Route path="basic/typography" element={<BasicTypography />} />
-                  <Route path="form" element={<FormsElements />} />
-                  <Route path="bootstrap" element={<BasicBadges />} />
-                  <Route path="nvd3" element={<Chart />} />
-                  <Route path="map" element={<GoogleMaps />} />
-                  <Route path="basic/page" element={<SamplePage />} />
-                  <Route path="*" element={<Navigate to="/manager" />} />
+          <Route
+            path="*"
+            element={
+              <PrivateRoute> {/* Bọc route cần bảo vệ */}
+                <AdminLayout>
+                  <Suspense fallback={<Loader />}>
+                    <Routes>
+                      <Route index element={<Dashboard />} />
+                      <Route path="basic/button" element={<BasicButton />} />
+                      <Route path="basic/badges" element={<BasicBadges />} />
+                      <Route path="basic/breadcrumb" element={<BasicBreadcrumb />} />
+                      <Route path="basic/collapse" element={<BasicCollapse />} />
+                      <Route path="basic/tabs" element={<BasicTabsPills />} />
+                      <Route path="basic/typography" element={<BasicTypography />} />
+                      <Route path="form" element={<FormsElements />} />
+                      <Route path="bootstrap" element={<BasicBadges />} />
+                      <Route path="nvd3" element={<Chart />} />
+                      <Route path="map" element={<GoogleMaps />} />
+                      <Route path="basic/page" element={<SamplePage />} />
+                      <Route path="*" element={<Navigate to="/manager" />} />
 
-                  <Route path="comic/comic-index" element={<ComicIndex />} />
-                  <Route path="comic/comic-index/comic-detail/:id" element={<ComicDetail />} />
-                  <Route path="comic/comic-index/comic-detail/chapter-detail/demo-reading-mode-view/:chapterId" element={<ChapterDetail />} />
-                  <Route path="comic/author-index" element={<AuthorIndex />} />
-                  <Route path="comic/gerne-index" element={<GerneIndex />} />
-                </Routes>
-              </Suspense>
-            </AdminLayout>
-          } />
+                      <Route path="comic/comic-index" element={<ComicIndex />} />
+                      <Route path="comic/comic-index/comic-detail/:id" element={<ComicDetail />} />
+                      <Route path="comic/comic-index/comic-detail/chapter-detail/demo-reading-mode-view/:chapterId" element={<ChapterDetail />} />
+                      <Route path="comic/author-index" element={<AuthorIndex />} />
+                      <Route path="comic/gerne-index" element={<GerneIndex />} />
+                      <Route path="user/staff-index" element={<StaffIndex />} />
+                      <Route path="config/rbac-control" element={<RBACIndex />} />
+                      <Route path="config/rbac-control/rbac-staff-detail" element={<RBACDetail />} />
+                    </Routes>
+                  </Suspense>
+                </AdminLayout>
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Suspense>
     </div>

@@ -155,3 +155,17 @@
   background-color: #6a1b9a;
   color: #fff;
 }
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa các thành phần */
+}
+
+.searchInput {
+  flex: 1; /* Để input chiếm không gian còn lại */
+  max-width: 300px; /* Giới hạn chiều rộng tối đa */
+}
+
+.staffDropdown {
+  width: 200px; /* Chiều rộng cố định của dropdown */
+}
