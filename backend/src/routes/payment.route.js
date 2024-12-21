@@ -24,4 +24,24 @@ router.get('/:idUser/payments', async (req, res) => {
     }
 });
 
+// Route: Lấy tất cả payments
+router.get('/payments', async (req, res) => {
+    try {
+        // Lấy tất cả các bản ghi từ collection Payment
+        const payments = await Payment.find();
+
+        // Trả về danh sách payments
+        res.status(200).json({
+            message: 'Danh sách tất cả payments',
+            data: payments,
+        });
+    } catch (error) {
+        console.error('Error fetching payments:', error.message);
+        res.status(500).json({
+            message: 'Đã xảy ra lỗi khi lấy danh sách payments',
+            error: error.message,
+        });
+    }
+});
+
 module.exports = router;

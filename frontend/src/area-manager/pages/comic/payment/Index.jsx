@@ -1,29 +1,23 @@
 import { useNavigate } from "react-router-dom"; 
 import { useState, useEffect } from "react";
 import { Table, Button, message, Modal, Form, Input, Popover } from "antd";
-import { SortAscendingOutlined, SortDescendingOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { SortAscendingOutlined, SortDescendingOutlined, /*ExclamationCircleOutlined*/ } from "@ant-design/icons";
 import {
-  fetchAuthors,
-  deleteAuthor,
-  toggleAuthorActive,
-  updateAuthor,
-} from "@/area-manager/services/AuthorService";
+  getAllPayments 
+} from "@/area-manager/services/paymentService";
 import AddAuthor from "../author/Add";
 import styles from "@/area-manager/styles/author-index.module.css";
 import { Collapse } from "antd";
-
 const PaymentIndex = () => {
   const navigate = useNavigate(); // Hook điều hướng
-  const [originalAuthors, setOriginalAuthors] = useState([]);
   
   const handleDoubleClick = (record) => {
     navigate(`/manager/comic/author-index/comic-index-author-id/${record._id}`);
   };
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const [hoverTimeout, setHoverTimeout] = useState(null);
-
-  const [authors, setAuthors] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [payments, setpayments] = useState([]);
+  // const [loading, setLoading] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [hoveredAuthor, setHoveredAuthor] = useState(null); // Xử lý hover
   const [pinnedAuthor, setPinnedAuthor] = useState(null); // Neo popup
@@ -33,79 +27,98 @@ const PaymentIndex = () => {
   const [isAscending, setIsAscending] = useState(true);
   const [countdown, setCountdown] = useState(5);
   const [advancedFilterVisible, setAdvancedFilterVisible] = useState(false); // Hiển thị dòng thứ 2
+  // const [filters, setFilters] = useState({
+  //   active: null, // "all", "active", "inactive"
+  //   toppayments: false, // Hóa Đơn hàng đầu
+  //   mostBooks: false, // Nhiều tác phẩm nhất
+  //   leastBooks: false, // Ít tác phẩm nhất
+  // });
+
+
+  const [originalPayments, setOriginalPayments] = useState([]); // Lưu danh sách gốc
+  const [payments, setPayments] = useState([]); // Hiển thị danh sách
+  const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
   const [filters, setFilters] = useState({
-    active: null, // "all", "active", "inactive"
-    topAuthors: false, // Tác giả hàng đầu
-    mostBooks: false, // Nhiều tác phẩm nhất
-    leastBooks: false, // Ít tác phẩm nhất
+    status: "all", // "all", "Completed", "Pending", "Cancelled"
+    minAmount: null, // Số tiền tối thiểu
+    maxAmount: null, // Số tiền tối đa
+    method: "all", // Phương thức thanh toán: Cash, Card, Other, paypal
   });
   
   useEffect(() => {
-    if (countdown === 0 && confirmAction?.type === "delete") {
-      executeDelete();
-      return;
-    }
+    loadPayments();
+    // if (countdown === 0 && confirmAction?.type === "delete") {
+    //   executeDelete();
+    //   return;
+    // }
     if (confirmAction?.type === "delete") {
       const timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
       return () => clearTimeout(timer);
     }
   }, [countdown, confirmAction]);
 
-  const loadAuthors = async () => {
+  const loadPayments = async () => {
     setLoading(true);
     try {
-      const data = await fetchAuthors();
-      const authorsData = data.map((author) => ({
-        ...author,
-        key: author._id,
-        soLuongTruyen: author.soLuongTruyen || 0,
-        soTruyenHoatDong: author.soTruyenHoatDong || 0,
-        soTruyenTamNgung: author.soTruyenTamNgung || 0,
+      const data = await getAllPayments(); // Gọi API từ service
+      const paymentData = data.map((payment) => ({
+        ...payment,
+        key: payment.IdPayment, // Sử dụng IdPayment làm key
+        PayAmountFormatted: `${payment.PayAmount.toFixed(2)} VND`,
+        PayDateFormatted: new Date(payment.PayDate).toLocaleString(),
       }));
-      setOriginalAuthors(authorsData); // Lưu danh sách gốc
-      setAuthors(authorsData); // Hiển thị danh sách ban đầu
-    } catch {
-      message.error("Không thể tải danh sách tác giả");
+      setOriginalPayments(paymentData); // Lưu danh sách gốc
+      setPayments(paymentData); // Hiển thị danh sách
+    } catch (error) {
+      message.error("Không thể tải danh sách hóa đơn", error);
     } finally {
       setLoading(false);
     }
   };
+
+  // const handleDoubleClick = (record) => {
+  //   navigate(`/manager/payment/details/${record.IdPayment}`);
+  // };
   
+  // Hàm áp dụng bộ lọc
   const applyFilter = (type) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [type]: !prevFilters[type],
     }));
+
     const newFilters = { ...filters, [type]: !filters[type] };
-  
+
     // Bắt đầu từ dữ liệu gốc
-    let filteredAuthors = [...originalAuthors]; // Sử dụng originalAuthors thay vì authors
-  
-    if (newFilters.active === "active") {
-      filteredAuthors = filteredAuthors.filter((author) => author.active);
-    } else if (newFilters.active === "inactive") {
-      filteredAuthors = filteredAuthors.filter((author) => !author.active);
-    }
-  
-    if (newFilters.topAuthors) {
-      filteredAuthors = filteredAuthors
-        .sort((a, b) => b.soLuongTruyen - a.soLuongTruyen)
-        .slice(0, 10);
-    }
-  
-    if (newFilters.mostBooks) {
-      filteredAuthors = filteredAuthors.sort(
-        (a, b) => b.soLuongTruyen - a.soLuongTruyen
+    let filteredPayments = [...originalPayments];
+
+    // Lọc theo trạng thái
+    if (newFilters.status !== "all") {
+      filteredPayments = filteredPayments.filter(
+        (payment) => payment.PayStats === newFilters.status
       );
     }
-  
-    if (newFilters.leastBooks) {
-      filteredAuthors = filteredAuthors.sort(
-        (a, b) => a.soLuongTruyen - b.soLuongTruyen
+
+    // Lọc theo số tiền
+    if (newFilters.minAmount !== null) {
+      filteredPayments = filteredPayments.filter(
+        (payment) => payment.PayAmount >= newFilters.minAmount
       );
     }
-  
-    setAuthors(filteredAuthors);
+    if (newFilters.maxAmount !== null) {
+      filteredPayments = filteredPayments.filter(
+        (payment) => payment.PayAmount <= newFilters.maxAmount
+      );
+    }
+
+    // Lọc theo phương thức thanh toán
+    if (newFilters.method !== "all") {
+      filteredPayments = filteredPayments.filter(
+        (payment) => payment.PayMethod === newFilters.method
+      );
+    }
+
+    setPayments(filteredPayments);
   };
   
   const toggleAdvancedFilter = () => {
@@ -115,7 +128,7 @@ const PaymentIndex = () => {
   const handleDelete = (author) => {
     if (author.soLuongTruyen > 0) {
       Modal.info({
-        title: "Không thể xóa tác giả",
+        title: "Không thể xóa Hóa Đơn",
         content: (
           <div style={{ textAlign: "center" }}>
             <img
@@ -124,7 +137,7 @@ const PaymentIndex = () => {
               style={{ width: "200px", height: "250px", marginBottom: "20px" }}
             />
             <p>
-              Tác giả <strong>{author.ten_tg}</strong> có{" "}
+              Hóa Đơn <strong>{author.ten_tg}</strong> có{" "}
               <strong>{author.soLuongTruyen}</strong> bộ truyện liên quan.
             </p>
             <Button
@@ -159,45 +172,45 @@ const PaymentIndex = () => {
   
   
 
-  const executeDelete = async () => {
-    if (confirmAction?.type !== "delete") return;
-    try {
-      await deleteAuthor(confirmAction.record._id);
-      message.success("Xóa tác giả thành công");
-      loadAuthors();
-    } catch {
-      message.error("Không thể xóa tác giả");
-    } finally {
-      setConfirmAction(null);
-      setCountdown(5);
-    }
-  };
+  // const executeDelete = async () => {
+  //   if (confirmAction?.type !== "delete") return;
+  //   try {
+  //     await deleteAuthor(confirmAction.record._id);
+  //     message.success("Xóa Hóa Đơn thành công");
+  //     loadpayments();
+  //   } catch {
+  //     message.error("Không thể xóa Hóa Đơn");
+  //   } finally {
+  //     setConfirmAction(null);
+  //     setCountdown(5);
+  //   }
+  // };
 
-  const handleToggleActive = (record) => {
-    Modal.confirm({
-      title: "Xác nhận thay đổi trạng thái",
-      icon: <ExclamationCircleOutlined />,
-      content: `Bạn có chắc chắn muốn ${
-        record.active ? "vô hiệu hóa" : "kích hoạt"
-      } tác giả "${record.ten_tg}" không?`,
-      onOk: async () => {
-        try {
-          await toggleAuthorActive(record._id);
-          message.success(
-            `Trạng thái đã được ${
-              record.active ? "vô hiệu hóa" : "kích hoạt"
-            } thành công`
-          );
-          loadAuthors();
-        } catch {
-          message.error("Không thể thay đổi trạng thái tác giả");
-        }
-      },
-      onCancel: () => {
-        message.info("Hủy thao tác thay đổi trạng thái");
-      },
-    });
-  };
+  // const handleToggleActive = (record) => {
+  //   Modal.confirm({
+  //     title: "Xác nhận thay đổi trạng thái",
+  //     icon: <ExclamationCircleOutlined />,
+  //     content: `Bạn có chắc chắn muốn ${
+  //       record.active ? "vô hiệu hóa" : "kích hoạt"
+  //     } Hóa Đơn "${record.ten_tg}" không?`,
+  //     onOk: async () => {
+  //       try {
+  //         await toggleAuthorActive(record._id);
+  //         message.success(
+  //           `Trạng thái đã được ${
+  //             record.active ? "vô hiệu hóa" : "kích hoạt"
+  //           } thành công`
+  //         );
+  //         loadpayments();
+  //       } catch {
+  //         message.error("Không thể thay đổi trạng thái Hóa Đơn");
+  //       }
+  //     },
+  //     onCancel: () => {
+  //       message.info("Hủy thao tác thay đổi trạng thái");
+  //     },
+  //   });
+  // };
   
 
   const handleUpdate = (author) => {
@@ -205,16 +218,16 @@ const PaymentIndex = () => {
     setIsEditModalVisible(true);
   };
 
-  const handleEditSubmit = async (values) => {
-    try {
-      await updateAuthor(editingAuthor._id, values);
-      message.success("Cập nhật tác giả thành công");
-      setIsEditModalVisible(false);
-      loadAuthors();
-    } catch {
-      message.error("Không thể cập nhật tác giả");
-    }
-  };
+  // const handleEditSubmit = async (values) => {
+  //   try {
+  //     await updateAuthor(editingAuthor._id, values);
+  //     message.success("Cập nhật Hóa Đơn thành công");
+  //     setIsEditModalVisible(false);
+  //     loadpayments();
+  //   } catch {
+  //     message.error("Không thể cập nhật Hóa Đơn");
+  //   }
+  // };
 
   const handleHover = (author, event) => {
     const { clientX, clientY } = event;
@@ -255,92 +268,101 @@ const PaymentIndex = () => {
   };
 
   const handleSort = () => {
-    const sortedAuthors = [...authors].sort((a, b) =>
+    const sortedpayments = [...payments].sort((a, b) =>
       isAscending ? a.ten_tg.localeCompare(b.ten_tg) : b.ten_tg.localeCompare(a.ten_tg)
     );
-    setAuthors(sortedAuthors);
+    setPayments(sortedpayments);
     setIsAscending(!isAscending);
   };
 
   useEffect(() => {
-    loadAuthors();
+    loadPayments();
   }, []);
 
   const columns = [
     {
-      title: "ID Tác Giả",
-      dataIndex: "_id",
-      key: "_id",
+      title: "Mã Thanh Toán",
+      dataIndex: "IdPayment",
+      key: "IdPayment",
     },
     {
-      title: "Tên Tác Giả",
-      dataIndex: "ten_tg",
-      key: "ten_tg",
+      title: "Người Dùng",
+      dataIndex: "IdUser",
+      key: "IdUser",
     },
     {
-      title: "Số Truyện Đang Hoạt Động",
-      dataIndex: "soTruyenHoatDong",
-      key: "soTruyenHoatDong",
-      render: (text) => <span className={styles.activeStoryCount}>{text}</span>,
+      title: "Số Tiền",
+      dataIndex: "PayAmount",
+      key: "PayAmount",
+      render: (amount) => <span style={{ color: "#3c8dbc" }}>{amount.toFixed(2)} VND</span>,
     },
     {
-      title: "Số Truyện Ẩn",
-      dataIndex: "soTruyenTamNgung",
-      key: "soTruyenTamNgung",
-      render: (text) => <span className={styles.hiddenStoryCount}>{text}</span>,
+      title: "Phương Thức",
+      dataIndex: "PayMethod",
+      key: "PayMethod",
+      render: (method) => (
+        <span style={{ color: method === "paypal" ? "green" : "gray" }}>
+          {method.toUpperCase()}
+        </span>
+      ),
     },
     {
       title: "Trạng Thái",
-      key: "active",
-      render: (record) => (
-        <div
-          onClick={() => handleToggleActive(record)}
+      dataIndex: "PayStats",
+      key: "PayStats",
+      render: (status) => (
+        <span
           style={{
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "5px",
-            color: record.active ? "green" : "red",
+            color:
+              status === "Completed"
+                ? "green"
+                : status === "Pending"
+                ? "orange"
+                : "red",
           }}
         >
-          {record.active ? (
-            <>
-              <i className="feather icon-check-circle" /> Hoạt Động
-            </>
-          ) : (
-            <>
-              <i className="feather icon-slash" /> Vô Hiệu
-            </>
-          )}
-        </div>
+          {status === "Completed"
+            ? "Hoàn Thành"
+            : status === "Pending"
+            ? "Chờ Xử Lý"
+            : "Hủy"}
+        </span>
       ),
     },
-    
+    {
+      title: "Ngày Thanh Toán",
+      dataIndex: "PayDate",
+      key: "PayDate",
+      render: (date) => (
+        <span>{new Date(date).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })}</span>
+      ),
+    },
     {
       title: "Thao Tác",
       key: "action",
       render: (_, record) => (
-        <div className={styles.actionButtons}>
+        <div style={{ display: "flex", gap: "10px" }}>
           <Button
             type="link"
             icon={<i className="feather icon-edit" />}
             onClick={() => handleUpdate(record)}
           />
-               <Button
-        type="link"
-        icon={<i className="feather icon-trash" />}
-        onClick={() => handleDelete(record)} // Truyền toàn bộ record
-        danger
-      />
+          <Button
+            type="link"
+            icon={<i className="feather icon-trash" />}
+            onClick={() => handleDelete(record)}
+            danger
+          />
         </div>
       ),
     },
   ];
+  
 
   return (
     <div className={styles.authorIndexContainer}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
-        <h1 className={styles.authorIndexTitle}>Danh Sách Tác Giả</h1>
+        <h1 className={styles.authorIndexTitle}>danh sách hóa đơn</h1>
         <div className={styles.filters}>
           {/* Dòng 1 */}
           <div
@@ -411,14 +433,14 @@ const PaymentIndex = () => {
                 }}
               >
                 <Button
-                  onClick={() => applyFilter("topAuthors")}
+                  onClick={() => applyFilter("toppayments")}
                   style={{
-                    backgroundColor: filters.topAuthors ? "#6a1b9a" : "#fff",
-                    color: filters.topAuthors ? "#fff" : "#000",
+                    backgroundColor: filters.toppayments ? "#6a1b9a" : "#fff",
+                    color: filters.toppayments ? "#fff" : "#000",
                     borderRadius: "20px",
                   }}
                 >
-                  Tác Giả Hàng Đầu
+                  Hóa Đơn Hàng Đầu
                 </Button>
                 <Button
                   onClick={() => applyFilter("mostBooks")}
@@ -457,11 +479,8 @@ const PaymentIndex = () => {
           }}
         />
       </div>
-      <Button className={styles.addAuthorBtn} onClick={() => setIsAddModalVisible(true)}>
-        Thêm Tác Giả
-      </Button>
       <Table
-  dataSource={authors}
+  dataSource={payments}
   columns={columns}
   loading={loading}
   className={styles.antTable}
@@ -477,7 +496,7 @@ const PaymentIndex = () => {
       <AddAuthor
         isVisible={isAddModalVisible}
         onClose={() => setIsAddModalVisible(false)}
-        onAddSuccess={loadAuthors}
+        onAddSuccess={loadPayments}
       />
      {(hoveredAuthor || pinnedAuthor) && (
   <Popover
@@ -521,7 +540,7 @@ const PaymentIndex = () => {
       <Modal
         title="Cảnh báo xóa"
         visible={confirmAction?.type === "delete"}
-        onOk={executeDelete}
+        onOk={""}
         onCancel={() => setConfirmAction(null)}
         okText={`Xóa ngay (${countdown})`}
         cancelText="Hủy"
@@ -530,19 +549,19 @@ const PaymentIndex = () => {
           style: { backgroundColor: "red", borderColor: "red" },
         }}
       >
-        <p>Bạn có chắc chắn muốn xóa tác giả này không? Thao tác không thể hoàn tác.</p>
+        <p>Bạn có chắc chắn muốn xóa Hóa Đơn này không? Thao tác không thể hoàn tác.</p>
       </Modal>
       <Modal
-        title="Cập Nhật Tác Giả"
+        title="Cập Nhật Hóa Đơn"
         visible={isEditModalVisible}
         onCancel={() => setIsEditModalVisible(false)}
         footer={null}
       >
-        <Form layout="vertical" onFinish={handleEditSubmit} initialValues={{ ten_tg: editingAuthor?.ten_tg }}>
+        <Form layout="vertical" onFinish={""} initialValues={{ ten_tg: editingAuthor?.ten_tg }}>
           <Form.Item
             name="ten_tg"
-            label="Tên Tác Giả"
-            rules={[{ required: true, message: "Vui lòng nhập tên tác giả!" }]}
+            label="Tên Hóa Đơn"
+            rules={[{ required: true, message: "Vui lòng nhập tên Hóa Đơn!" }]}
           >
             <Input />
           </Form.Item>
