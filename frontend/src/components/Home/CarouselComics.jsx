@@ -129,7 +129,7 @@ const CarouselComponent = ({ comics = [] }) => {
                         </div>
                 </div>
                 <div className="main__random bg-random">
-                    <a id="btnPay" style={{ fontWeight: 600, letterSpacing: '1px' }} className="btn-pre nav__buttons-Pre">
+                    <a href="/premium" id="btnPay" style={{ fontWeight: 600, letterSpacing: '1px' }} className="btn-pre nav__buttons-Pre">
                         <i className="fa-solid fa-crown"></i>
                         <span style={{ paddingRight: '.3rem', fontWeight: 500, color: '#FAB818' }}>Thử </span> Ngay
                     </a>

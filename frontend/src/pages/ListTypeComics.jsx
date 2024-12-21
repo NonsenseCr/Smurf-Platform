@@ -10,9 +10,9 @@ const ListTypeComics = () => {
   const [subtitle, setSubtitle] = useState(""); // Tên thể loại
   const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
   const [totalPages, setTotalPages] = useState(0); // Tổng số trang
-  const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
+  const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
   // Map giữa id và tên thể loại (cố định trong frontend)
   const categoryMap = {
     "67406e4ec03445f4711481f2": "Hành động",
@@ -30,16 +30,16 @@ const ListTypeComics = () => {
     "67406eedc03445f471148216": "Manga",
     "67406ef1c03445f471148219": "Comic",
     "67406ef6c03445f47114821c": "Webtoon",
-    
+
   };
 
   // Hàm load danh sách truyện
-  const loadComics = async (page) => {
+  const loadComics = async (page, status = null) => {
     setLoading(true);
     try {
-      const fetchedComics = await fetchBoTruyenByCategory(id, page);
-      setComics(fetchedComics);
-      setTotalPages(totalPages);
+      const fetchedComics = await fetchBoTruyenByCategory(id, page, 12, status);
+      setComics(fetchedComics.comics);
+      setTotalPages(fetchedComics.totalPages);
     } catch (error) {
       console.error("Error fetching BoTruyen by category:", error);
       setError(error.message || "Đã xảy ra lỗi khi tải danh sách.");
@@ -47,6 +47,7 @@ const ListTypeComics = () => {
       setLoading(false);
     }
   };
+  
 
   // Cập nhật tên thể loại từ categoryMap
   useEffect(() => {
@@ -58,9 +59,14 @@ const ListTypeComics = () => {
     loadComics(currentPage);
   }, [currentPage, id]);
 
+  const handleFilter = (status) => {
+    setCurrentPage(1); // Reset về trang đầu tiên
+    loadComics(1, status); // Gọi lại API với trạng thái mới
+  };
+
+
   if (loading) {
     return <Loader isLoading={isLoading} setIsLoading={setIsLoading} />
-
   }
 
   if (!comics || comics.length === 0) {
@@ -71,8 +77,8 @@ const ListTypeComics = () => {
           <div className="section-bottom container w-100" style={{ height: "60vh" }}>
             <img src={imgInfo} alt="cat Image" />
             <span>
-              <h4 className="section__subtitle" style={{color:"#8770F9"}}>Opps !!!</h4> 
-              <h5 className="section__des">{error || "KHÔNG CÓ TRUYỆN TRONG DANH SÁCH TRUYỆN "} <span style={{ color: "#9858F1",fontSize:"1.5rem" }}>{subtitle}</span></h5>
+              <h4 className="section__subtitle" style={{ color: "#8770F9" }}>Opps !!!</h4>
+              <h5 className="section__des">{error || "KHÔNG CÓ TRUYỆN TRONG DANH SÁCH TRUYỆN "} <span style={{ color: "#9858F1", fontSize: "1.5rem" }}>{subtitle}</span></h5>
             </span>
             <Link to="/" className="btn" style={{ marginTop: '1rem' }}>
               Trang Chủ
@@ -82,14 +88,14 @@ const ListTypeComics = () => {
       </>
     );
   }
-  
+
 
   return (
     <div className="main__top ">
       <div className="list__container containers list">
         {/* Tiêu đề và các nút điều khiển */}
-        <div className="top__content " style={{padding:'2rem'}}>
-          <h2 className="section__subtitle">DANH SÁCH TRUYỆN <span style={{color: "#9858F1"}}>{subtitle}</span></h2>
+        <div className="top__content " style={{ padding: '2rem' }}>
+          <h2 className="section__subtitle">DANH SÁCH TRUYỆN <span style={{ color: "#9858F1" }}>{subtitle}</span></h2>
           <div className="controls">
             <div className="dropdown">
               <button className="btn" type="button">
@@ -97,19 +103,28 @@ const ListTypeComics = () => {
               </button>
               <ul className="dropdown-menu dropdown-menu-end">
                 <li>
-                  <Link to="/listTruyen" className="dropdown-item">
+                  <a
+                    className="dropdown-item"
+                    onClick={() => handleFilter(null)} // Tất cả
+                  >
                     Tất cả
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link to="/listTruyenTT/1" className="dropdown-item">
+                  <a
+                    className="dropdown-item"
+                    onClick={() => handleFilter('hoan_thanh')} // Hoàn thành
+                  >
                     Hoàn thành
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link to="/listTruyenTT/0" className="dropdown-item">
+                  <a
+                    className="dropdown-item"
+                    onClick={() => handleFilter('hoat_dong')} // Đang tiến hành
+                  >
                     Đang tiến hành
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -145,7 +160,7 @@ const ListTypeComics = () => {
               <div key={comic._id} className="item col-2 update-item">
                 <Link to={`/comic/${comic._id}`}>
                   <figure className="position-relative">
-                    {comic.poster  && (
+                    {comic.poster && (
                       <>
                         <span className="hot-icon">HOT</span>
                         <img
@@ -200,7 +215,7 @@ const ListTypeComics = () => {
           </li>
           <li>
             <span>
-              {currentPage} 
+              {currentPage}
               {/* Trang {currentPage} / {totalPages} */}
             </span>
           </li>

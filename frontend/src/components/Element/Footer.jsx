@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Footer() {
   return (
     // style={{ position: 'relative', padding: '2rem 0', lineHeight: '20px' }}
-    <footer className="footer" >
+    <footer className="footer" style={{zIndex: "10"}} >
       <div className="footer__container sections grid row align-content-md-between pt-5">
         <div className="footer__content col-12 col-md-6">
           {/* Main Menu */}

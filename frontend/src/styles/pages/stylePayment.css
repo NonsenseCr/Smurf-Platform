@@ -168,3 +168,31 @@
 .btn-fan {
     color: #4857B4;
 }
+
+.modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.modal-dialog {
+    position: fixed; /* Cố định modal trên màn hình */
+    top: 50%; /* Đưa modal xuống giữa màn hình theo chiều dọc */
+    left: 50%; /* Đưa modal sang giữa màn hình theo chiều ngang */
+    transform: translate(-50%, -50%); /* Dịch chuyển modal để căn chính giữa */
+    width: 100%; /* Chiếm toàn bộ chiều rộng (tùy chỉnh nếu cần nhỏ hơn) */
+    max-width: 600px; /* Đặt giới hạn chiều rộng tối đa */
+    background-color: white; /* Nền trắng */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tạo bóng */
+    border-radius: 8px; /* Bo góc cho modal */
+    z-index: 1050; /* Đảm bảo modal nằm trên các phần tử khác */
+    padding: 20px; /* Khoảng cách nội dung bên trong */
+  }
+  

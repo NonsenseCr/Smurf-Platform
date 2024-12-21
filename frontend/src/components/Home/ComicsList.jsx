@@ -21,13 +21,13 @@ const ComicList = ({ comics, title }) => {
             {
                 breakpoint: 1280,
                 settings: {
-                    slidesToShow: 10,
+                    slidesToShow: 8,
                 },
             },
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 4,
+                    slidesToShow: 6,
                 },
             },
             {

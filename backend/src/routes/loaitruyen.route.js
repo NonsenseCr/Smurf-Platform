@@ -170,21 +170,43 @@ router.post('/:id/remove-bo-truyen', async (req, res) => {
 
 // Lấy danh sách truyện theo idloaitruyen
 router.get('/:id', async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; // ID thể loại
+    const { page = 1, limit = 12, trangthai } = req.query; // Lấy tham số từ query
 
     try {
-        // Tìm các bộ truyện thuộc thể loại cụ thể
-        const boTruyen = await BoTruyen.find({ listloai: id, active: true })
-            .populate('id_tg', 'ten') 
-            .select('tenbo poster TongLuotXem id_tg') 
-            .sort({ createdAt: -1 }); 
+        const query = { listloai: id, active: true };
 
-        res.status(200).json(boTruyen);
+        // Lọc theo trạng thái nếu có
+        if (trangthai) {
+            query.trangthai = trangthai;
+        }
+
+        // Tính toán phân trang
+        const skip = (page - 1) * limit;
+
+        // Lấy danh sách bộ truyện
+        const boTruyen = await BoTruyen.find(query)
+            .populate('id_tg', 'ten') // Lấy tên tác giả
+            .select('tenbo poster TongLuotXem id_tg') // Lựa chọn các trường cần lấy
+            .sort({ createdAt: -1 }) // Sắp xếp theo thời gian tạo
+            .skip(skip)
+            .limit(parseInt(limit));
+
+        // Tính tổng số truyện thuộc thể loại
+        const total = await BoTruyen.countDocuments(query);
+
+        // Trả về danh sách bộ truyện cùng thông tin phân trang
+        res.status(200).json({
+            comics: boTruyen,
+            totalPages: Math.ceil(total / limit),
+            currentPage: parseInt(page),
+        });
     } catch (error) {
         console.error('Error fetching Bo Truyen by idloaitruyen:', error);
         res.status(500).json({ message: 'Lỗi khi lấy danh sách bộ truyện theo thể loại' });
     }
 });
+
 
 // Cập nhật thông tin thể loại
 router.put('/:id', async (req, res) => {

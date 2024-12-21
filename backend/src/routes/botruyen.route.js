@@ -1152,7 +1152,7 @@ router.get("/:id/chapters", async (req, res) => {
 
         const chapters = await Chapter.find({ id_bo: id, active: true })
             .sort({ stt_chap: 1 })
-            .select("stt_chap ten_chap thoi_gian ticket_cost premium");
+            .select("stt_chap ten_chap thoi_gian ticket_cost luotxem premium");
 
         if (!chapters || chapters.length === 0) {
             return res.status(200).json([]);

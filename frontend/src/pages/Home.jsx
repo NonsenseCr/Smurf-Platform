@@ -9,7 +9,7 @@ import RecommendType from '../components/Home/RecommendTypeList';
 import ShowListComics from '../components/Home/ShowListComics';
 import RecommendBanner from '../components/Home/RecommendBanner';
 import Loader from "../components/Element/Loader";
-
+import Swal from 'sweetalert2';
 const Home = () => {
     const [comicsLatest, setLatestComics] = useState([]);
     const [topReadComics, setTopReadComics] = useState([]);
@@ -42,6 +42,25 @@ const Home = () => {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const paymentStatus = queryParams.get('paymentStatus');
+    
+        if (paymentStatus === 'success') {
+          Swal.fire({
+            icon: 'success',
+            title: 'Thanh toán thành công!',
+            text: 'Cảm ơn bạn đã sử dụng dịch vụ.',
+          });
+        } else if (paymentStatus === 'error') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Thanh toán thất bại!',
+            text: 'Vui lòng thử lại hoặc liên hệ hỗ trợ.',
+          });
+        }
+      }, []);
 
     if (loading) {
         return  <Loader isLoading={isLoading} setIsLoading={setIsLoading} />

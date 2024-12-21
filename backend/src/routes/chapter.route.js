@@ -1,8 +1,9 @@
 const express = require('express');
-const Chapter = require('../model/chapter.model'); // Import model Chapter
-const BoTruyen = require('../model/botruyen.model'); // Import model BoTruyen
+const Chapter = require('../model/chapter.model'); 
+const BoTruyen = require('../model/botruyen.model'); 
 const router = express.Router();
-
+const mongoose = require('mongoose');
+const moment = require('moment'); 
 // Tạo mới một chương
 router.post('/create', async (req, res) => {
     const { id_bo, stt_chap, ten_chap, content, premium, ticket_cost } = req.body;
@@ -65,7 +66,50 @@ router.get('/by-book/:id_bo', async (req, res) => {
     }
 });
 
+//Lấy danh sách ctchapter dựa vào Id_bo và stt chapchap
+router.get('/:id_bo/:stt_chap/pages', async (req, res) => {
+    const { id_bo, stt_chap } = req.params;
 
+    try {
+        // Tìm chương và populate tên bộ truyện
+        const chapterInfo = await Chapter.findOne({ id_bo, stt_chap }).populate('id_bo', 'tenbo');
+        if (!chapterInfo) {
+            return res.status(404).json({ message: 'Không tìm thấy thông tin chương' });
+        }
+
+        // Tăng số lượt xem của chương
+        chapterInfo.luotxem += 1;
+        await chapterInfo.save();
+
+        // Tăng số lượt xem tổng của bộ truyện
+        const boTruyen = await BoTruyen.findById(id_bo);
+        if (boTruyen) {
+            boTruyen.TongLuotXem += 1;
+            await boTruyen.save();
+        }
+
+        // Định dạng thời gian
+        const formattedTime = moment(chapterInfo.thoi_gian).format('HH:mm DD/MM/YYYY');
+
+        // Chuẩn bị dữ liệu trả về
+        const response = {
+            ten_bo: chapterInfo.id_bo.tenbo, // Tên bộ truyện
+            ten_chap: chapterInfo.ten_chap, // Tên chương
+            thoi_gian: formattedTime, // Thời gian định dạng
+            luot_xem: chapterInfo.luotxem, // Lượt xem
+            chi_tiet: chapterInfo.list_pages, // Danh sách các trang
+        };
+
+        // Trả về dữ liệu
+        res.status(200).json({
+            message: 'Lấy thông tin chương thành công',
+            data: response,
+        });
+    } catch (error) {
+        console.error('Error fetching chapter info:', error);
+        res.status(500).json({ message: 'Lỗi khi lấy thông tin chương' });
+    }
+});
 
 
 // Cập nhật chương

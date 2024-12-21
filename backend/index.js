@@ -14,6 +14,10 @@ const port = process.env.PORT || 5000;
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
+// Paypal config
+const paypal = require('./src/services/paypal')
+
+
 // Import models
 const TacGia = require('./src/model/tacgia.model');
 const BoTruyen = require('./src/model/botruyen.model');
@@ -33,7 +37,9 @@ app.use(passport.session());
 app.use(express.json());
 app.use(cors());
 
-
+// Middleware để xử lý view engine (EJS)
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'src', 'views'));
 
 // Import routes
 const boTruyenRoutes = require("./src/routes/botruyen.route");
@@ -48,8 +54,9 @@ const registerRoutes = require('./src/routes/register.route');
 const loginRoutes = require('./src/routes/login.route');
 const authRoutes = require('./src/routes/auth.route'); 
 const statisticRoutes = require('./src/routes/Admin/Statistic.route'); 
-
-
+const paymentRoutes = require('./src/routes/payment.route');
+// Import Payment routes
+const paypalRoutes = require('./src/routes/paypal.route');
 // Use routes
 app.use("/api/botruyen", boTruyenRoutes);
 app.use("/api/loaitruyen", loaiTruyenRoutes);
@@ -63,7 +70,12 @@ app.use('/api/register', registerRoutes);
 app.use('/api/login', loginRoutes); 
 app.use('/api/auth', authRoutes);
 app.use('/api/statistics', statisticRoutes);
+app.use('/api/payment', paymentRoutes)
+// Payment routes
+app.use('/paypal', paypalRoutes);
+
 console.log(process.env);
+
 
 
 // area manager 

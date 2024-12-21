@@ -9,6 +9,7 @@ import Header from "./components/Element/Header";
 import Footer from "./components/Element/Footer";
 import ScrollToTopButton from "./components/Element/ScrollToTopButton";
 import Loader from "./components/Element/Loader";
+import Payment from "pages/Payment";
 
 // Lazy-load các component chính
 const Home = lazy(() => import("./pages/Home"));
@@ -16,7 +17,6 @@ const About = lazy(() => import("./pages/About"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Rankings = lazy(() => import("./pages/Rankings"));
-const Payment = lazy(() => import("./pages/Payment"));
 const ListTrendingComics = lazy(() => import("./pages/ListTrendingComics"));
 const ListTypeComics = lazy(() => import("./pages/ListTypeComics"));
 const ListLatestComics = lazy(() => import("./pages/ListLatestComics"));

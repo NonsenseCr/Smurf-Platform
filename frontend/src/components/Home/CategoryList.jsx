@@ -15,7 +15,7 @@ const CategoryList = ({ categories , title}) => {
                         {categories.map((category) => (
                             <Link
                                 key={category._id}
-                                to={`/categories/${category.ten_loai}`} 
+                                to={`/${category._id}`} 
                                 className="col-auto item-loai"
                             >
                                 {category.ten_loai} 

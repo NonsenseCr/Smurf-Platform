@@ -13,14 +13,17 @@ export const fetchActiveLoaiTruyen  = async () => {
     }
 };
 
-export const fetchBoTruyenByCategory = async (categoryId, page = 1, limit = 12) => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/${categoryId}`, {
-        params: { page, limit },
-      });
+export const fetchBoTruyenByCategory = async (categoryId, page = 1, limit = 12, status = null) => {
+  try {
+      const params = { page, limit };
+      if (status) {
+          params.trangthai = status; // Thêm trạng thái nếu có
+      }
+
+      const response = await axios.get(`${API_BASE_URL}/${categoryId}`, { params });
       return response.data;
-    } catch (error) {
+  } catch (error) {
       console.error("Error fetching BoTruyen by category:", error);
       throw new Error("Không thể tải danh sách bộ truyện theo thể loại");
-    }
-  };
+  }
+};

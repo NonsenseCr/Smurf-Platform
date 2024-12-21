@@ -87,7 +87,7 @@ const CtBoTruyen = () => {
 
     fetchData();
   }, []);
-  useEffect(() => {
+  useEffect(() => {`  `
     const fetchCTBoTruyen = async () => {
       try {
         if (!id || !user?.id) return;
@@ -155,6 +155,7 @@ const CtBoTruyen = () => {
   const toggleContent = () => setContentExpanded(!contentExpanded);
   const handleChapterClick = (id_bo, stt_chap) => {
     navigate(`/chapter/${id_bo}/${stt_chap}`);
+
   };
 
   if (!boTruyen) {
@@ -328,11 +329,11 @@ const CtBoTruyen = () => {
               </div>
               <div className="view">
                 <i className="ri-eye-line"></i>
-                <span className="count">{boTruyen.tongLuotXem || 0}</span> Lượt xem
+                <span className="count">{boTruyen.TongLuotXem || 0}</span> Lượt xem
               </div>
               <div className="review">
                 <i className="ri-message-2-fill"></i>
-                <span className="count">{boTruyen.theodoi || 0}</span> Theo Dõi
+                <span className="count">{boTruyen.theodoi || 0}</span> Lượt Theo Dõi
               </div>
             </div>
             <div className="content-close" onClick={toggleContent}>
@@ -360,8 +361,21 @@ const CtBoTruyen = () => {
                       {new Date(chapter.thoi_gian).toLocaleDateString()}
                     </div>
                     <div className="col view chap-col">
-                      {chapter.tk_luotxem || 0} lượt xem
-                    </div> []
+                      {chapter.luotxem || 0} lượt xem
+                    </div> 
+                    <div className="col view chap-col">
+                      {chapter.Premium ? (
+                        <div className="col view chap-col position-relative">
+                          <img
+                            style={{ width: '65px', height: '27px', borderRadius: '0' }}
+                            src={iconPremium}
+                            alt="Premium Icon"
+                          />
+                        </div>
+                      ) : (
+                        <div className="col-1 view chap-col position-relative"></div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))
