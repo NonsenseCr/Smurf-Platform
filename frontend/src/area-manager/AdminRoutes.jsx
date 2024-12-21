@@ -6,6 +6,7 @@ import PrivateRoute from "../area-manager/PrivateRoute";
 
 import Loader from './components/Loader/Loader';
 import AdminLayout from './layouts/AdminLayout';
+import PaymentIndex from './pages/comic/payment/Index';
 
 const Dashboard = lazy(() => import('./views/dashboard/index'));
 const SignIn1 = lazy(() => import('./views/auth/signin/SignIn1'));
@@ -63,6 +64,7 @@ export default function AdminRoutes() {
                       <Route path="comic/comic-index/comic-detail/:id" element={<ComicDetail />} />
                       <Route path="comic/comic-index/comic-detail/chapter-detail/demo-reading-mode-view/:chapterId" element={<ChapterDetail />} />
                       <Route path="comic/author-index" element={<AuthorIndex />} />
+                      <Route path="comic/payment-index" element={<PaymentIndex />} />
                       <Route path="comic/gerne-index" element={<GerneIndex />} />
                       <Route path="user/staff-index" element={<StaffIndex />} />
                       <Route path="config/rbac-control" element={<RBACIndex />} />

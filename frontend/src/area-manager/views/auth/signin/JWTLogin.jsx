@@ -56,11 +56,9 @@ const JWTLogin = () => {
           email: userData.Email,
           staffRole: userData.StaffRole,
         }, 3600000);
-  
         // Lấy danh sách quyền
         const permissionsResponse = await axios.get(`http://localhost:5000/api/rbac/permissions/${userData.IdUser}`);
         setWithExpiry("permissions", permissionsResponse.data, 3600000);
-  
         // Chuyển hướng đến trang /manager
         navigate("/manager");
       } else {

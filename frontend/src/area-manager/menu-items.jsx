@@ -88,59 +88,6 @@ const menuItems = {
         },
       ],
     },
-
-    {
-      id: 'ui-element',
-      title: 'UI ELEMENT',
-      type: 'group',
-      icon: 'icon-ui',
-      children: [
-        {
-          id: 'components',
-          title: 'Components',
-          type: 'collapse',
-          icon: 'feather icon-box',
-          children: [
-            {
-              id: 'button',
-              title: 'Button',
-              type: 'item',
-              url: '/manager/basic/button',
-            },
-            {
-              id: 'badges',
-              title: 'Badges',
-              type: 'item',
-              url: '/manager/basic/badges',
-            },
-            {
-              id: 'breadcrumb',
-              title: 'Breadcrumb & Pagination',
-              type: 'item',
-              url: '/manager/basic/breadcrumb',
-            },
-            {
-              id: 'collapse',
-              title: 'Collapse',
-              type: 'item',
-              url: '/manager/basic/collapse',
-            },
-            {
-              id: 'tabs-pills',
-              title: 'Tabs & Pills',
-              type: 'item',
-              url: '/manager/basic/tabs',
-            },
-            {
-              id: 'typography',
-              title: 'Typography',
-              type: 'item',
-              url: '/manager/basic/typography',
-            },
-          ],
-        },
-      ],
-    },
     {
       id: 'ui-config',
       title: 'Config website',
@@ -163,7 +110,7 @@ const menuItems = {
               id: 'payment',
               title: 'Payment',
               type: 'item',
-              url: '/manager/basic/button',
+              url: '/manager/comic/payment-index',
             },
           ],
         },

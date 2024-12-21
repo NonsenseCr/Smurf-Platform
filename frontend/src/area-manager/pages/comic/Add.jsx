@@ -89,7 +89,7 @@ const AddComic = ({ visible, onClose }) => {
       message.success("Bước 2: Upload ảnh và cập nhật stats thành công!");
       setStep(3);
     } catch (error) {
-      message.error("Lỗi khi upload ảnh hoặc cập nhật stats!");
+      message.error("Lỗi khi upload ảnh hoặc cập nhật stats!", error);
     } finally {
       setLoading(false);
     }

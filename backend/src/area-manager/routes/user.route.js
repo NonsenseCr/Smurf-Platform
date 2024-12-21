@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
         res.status(200).json({
             message: 'Đăng nhập thành công',
             data: {
-                IdUser: user._id,
+                IdUser: user.IdUser,
                 UserName: user.UserName,
                 FullName: user.FullName,
                 Email: user.Email,
