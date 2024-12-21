@@ -104,52 +104,28 @@ const menuItems = {
       ],
     },
     {
-      id: 'ui-element',
+      id: 'ui-config',
       title: 'Config website',
       type: 'group',
       icon: 'icon-ui',
       children: [
         {
-          id: 'components',
-          title: 'Config',
+          id: 'Config',
+          title: 'Config website',
           type: 'collapse',
           icon: 'feather icon-box',
           children: [
             {
-              id: 'button',
-              title: 'Button',
+              id: 'notification',
+              title: 'Notification',
+              type: 'item',
+              url: '/manager/basic',
+            },
+            {
+              id: 'payment',
+              title: 'Payment',
               type: 'item',
               url: '/manager/basic/button',
-            },
-            {
-              id: 'badges',
-              title: 'Badges',
-              type: 'item',
-              url: '/manager/basic/badges',
-            },
-            {
-              id: 'breadcrumb',
-              title: 'Breadcrumb & Pagination',
-              type: 'item',
-              url: '/manager/basic/breadcrumb',
-            },
-            {
-              id: 'collapse',
-              title: 'Collapse',
-              type: 'item',
-              url: '/manager/basic/collapse',
-            },
-            {
-              id: 'tabs-pills',
-              title: 'Tabs & Pills',
-              type: 'item',
-              url: '/manager/basic/tabs',
-            },
-            {
-              id: 'typography',
-              title: 'Typography',
-              type: 'item',
-              url: '/manager/basic/typography',
             },
           ],
         },
