@@ -2,12 +2,10 @@ const express = require('express');
 const paypal = require('../services/paypal'); // Đường dẫn tới paypal.js
 const Payment = require('../model/Payments.model');
 const KhachHang= require('../model/khachhang.model');
+const User= require('../model/user.model');
+const { sendEmail } = require('../services/emailService'); 
 const router = express.Router();
 const mongoose = require('mongoose');
-// Hiển thị giao diện EJS (index.ejs)
-router.get('/', (req, res) => {
-    res.render('index'); // Render file EJS từ thư mục views
-});
 
 router.post('/pay', async (req, res) => {
     try {
@@ -29,6 +27,11 @@ router.post('/pay', async (req, res) => {
       if (!khachHang) {
         return res.status(404).json({ message: 'Không tìm thấy khách hàng.' });
       }
+
+      const user = await User.findOne({ IdUser: IdUser });
+        if (!user) {
+            return res.status(404).json({  message: 'User not found' });
+        }
   
       // Tạo Payment
       const newPayment = new Payment({
@@ -36,7 +39,7 @@ router.post('/pay', async (req, res) => {
         IdUser,
         PayAmount,
         PayMethod,
-        PayStats: 'Pending',
+        PayStats: 'Completed',
       });
   
       // Lưu Payment vào MongoDB
@@ -50,6 +53,22 @@ router.post('/pay', async (req, res) => {
   
       // Tạo đơn hàng trên PayPal
       const approvalUrl = await paypal.createOrder(PayAmount);
+
+      const placeholders = {
+        name: user.FullName || 'Khách hàng',
+        subject: 'Thanh toán thành công',
+        package: 'Gói Premium',
+        price: `${PayAmount} VND`,
+        link: 'http://localhost:5173/',
+      };
+
+      await sendEmail(
+        user.Email,
+        'Xác nhận thanh toán', 
+        placeholders, 
+        'payment-success.html'
+      );
+
       res.json({ approvalUrl }); // Gửi URL phê duyệt cho client
     } catch (error) {
       console.error('Error in /pay:', error.message);

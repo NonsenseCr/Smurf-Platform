@@ -10,6 +10,7 @@ import Footer from "./components/Element/Footer";
 import ScrollToTopButton from "./components/Element/ScrollToTopButton";
 import Loader from "./components/Element/Loader";
 import Payment from "pages/Payment";
+import SendEmail from "pages/SendEmail";
 
 // Lazy-load các component chính
 const Home = lazy(() => import("./pages/Home"));
@@ -69,6 +70,7 @@ const PublicRoutes = () => {
                         <Route path="/history" element={<History />} />
                         <Route path="/following" element={<Following />} />
                         <Route path="/auth/success" element={<AuthSuccess />} />
+                        <Route path="/email" element={<SendEmail />} />
                     </Routes>
                 </Suspense>
                 <ScrollToTopButton />

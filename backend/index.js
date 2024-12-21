@@ -57,6 +57,9 @@ const statisticRoutes = require('./src/routes/Admin/Statistic.route');
 const paymentRoutes = require('./src/routes/payment.route');
 // Import Payment routes
 const paypalRoutes = require('./src/routes/paypal.route');
+const emailRoutes = require('./src/routes/email.routes');
+// Import Email routes
+
 // Use routes
 app.use("/api/botruyen", boTruyenRoutes);
 app.use("/api/loaitruyen", loaiTruyenRoutes);
@@ -71,12 +74,12 @@ app.use('/api/login', loginRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/statistics', statisticRoutes);
 app.use('/api/payment', paymentRoutes)
+
 // Payment routes
 app.use('/paypal', paypalRoutes);
 
-console.log(process.env);
-
-
+// Payment routes
+app.use('/api/emails', emailRoutes);
 
 // area manager 
 const authorManager = require("./src/area-manager/routes/author.route");

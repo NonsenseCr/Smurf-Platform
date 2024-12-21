@@ -7,10 +7,6 @@ import avatar1 from '../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../assets/images/user/avatar-3.jpg';
 
-
-
-
-
 const DashDefault = () => {
   const [totalSeries, setTotalSeries] = useState('00'); 
   const [totalChapters, setTotalChapters] = useState('00'); 
@@ -38,11 +34,13 @@ const DashDefault = () => {
   
         // Cập nhật dữ liệu cho từng phần tử trong dashSalesData
         setDashSalesData((prevData) => [
-          { ...prevData[0], amount: `${revenueRes.data.amount} VND` }, 
+          { ...prevData[0], amount: `${revenueRes.data.amount} USD` }, 
           { ...prevData[1], amount: visitsRes.data.amount },
           { ...prevData[2], amount: activeUsersRes.data.amount }, 
 
         ]);
+
+        console.log(revenueRes.data);
       } catch (error) {
         console.error('Lỗi khi lấy dữ liệu thống kê:', error);
       }
@@ -77,7 +75,7 @@ const DashDefault = () => {
     const fetchTrendingComics = async () => {
       try {
         const response = await axios.get('/api/botruyen/trending', {
-          params: { page: 1, limit: 5 }, // Lấy 5 truyện đầu tiên
+          params: { page: 1, limit: 4 }, 
         });
         setTrendingComics(response.data.comics); // Cập nhật danh sách truyện
       } catch (error) {
@@ -257,7 +255,7 @@ const DashDefault = () => {
                         </h6>
                       </td>
                       <td>
-                        <Link to={`/truyen/${comic._id}`} className="label theme-bg text-white f-12">
+                        <Link to={`/manager/comic/comic-index/comic-detail/${comic._id}`} className="label theme-bg text-white f-12">
                           Chi tiết
                         </Link>
                       </td>
@@ -277,7 +275,7 @@ const DashDefault = () => {
                 </div>
                 <div className="col-auto">
                   <label className="label theme-bg2 text-white f-14 f-w-400 float-end" style={{cursor:'pointer'}}>
-                    <a href='' className='text-white'>View</a>
+                    <a href='/manager/comic/comic-index' className='text-white'>View</a>
                   </label>
                 </div>
               </div>
@@ -322,172 +320,8 @@ const DashDefault = () => {
                 </div>
               </div>
             </Card.Body>
-            <Card.Body>
-              <div className="row d-flex align-items-center">
-                <div className="col-auto">
-                  <i className="fa-solid fa-person f-30 text-c-blue" />
-                </div>
-                <div className="col">
-                  <h3 className="f-w-300">{totalAuthors}</h3>
-                  <span className="d-block text-uppercase">Authors</span>
-                </div>
-              </div>
-            </Card.Body>
           </Card>
         </Col>
-        {/* <Col md={6} xl={4}>
-          <Card className="card-social">
-            <Card.Body className="border-bottom">
-              <div className="row align-items-center justify-content-center">
-                <div className="col-auto">
-                  <i className="fab fa-facebook-f text-primary f-36" />
-                </div>
-                <div className="col text-end">
-                  <h3>12,281</h3>
-                  <h5 className="text-c-green mb-0">
-                    +7.2% <span className="text-muted">Total Likes</span>
-                  </h5>
-                </div>
-              </div>
-            </Card.Body>
-            <Card.Body>
-              <div className="row align-items-center justify-content-center card-active">
-                <div className="col-6">
-                  <h6 className="text-center m-b-10">
-                    <span className="text-muted m-r-5">Target:</span>35,098
-                  </h6>
-                  <div className="progress">
-                    <div
-                      className="progress-bar progress-c-theme"
-                      role="progressbar"
-                      style={{ width: '60%', height: '6px' }}
-                      aria-valuenow="60"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-                <div className="col-6">
-                  <h6 className="text-center  m-b-10">
-                    <span className="text-muted m-r-5">Duration:</span>350
-                  </h6>
-                  <div className="progress">
-                    <div
-                      className="progress-bar progress-c-theme2"
-                      role="progressbar"
-                      style={{ width: '45%', height: '6px' }}
-                      aria-valuenow="45"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={6} xl={4}>
-          <Card className="card-social">
-            <Card.Body className="border-bottom">
-              <div className="row align-items-center justify-content-center">
-                <div className="col-auto">
-                  <i className="fab fa-twitter text-c-blue f-36" />
-                </div>
-                <div className="col text-end">
-                  <h3>11,200</h3>
-                  <h5 className="text-c-purple mb-0">
-                    +6.2% <span className="text-muted">Total Likes</span>
-                  </h5>
-                </div>
-              </div>
-            </Card.Body>
-            <Card.Body>
-              <div className="row align-items-center justify-content-center card-active">
-                <div className="col-6">
-                  <h6 className="text-center m-b-10">
-                    <span className="text-muted m-r-5">Target:</span>34,185
-                  </h6>
-                  <div className="progress">
-                    <div
-                      className="progress-bar progress-c-green"
-                      role="progressbar"
-                      style={{ width: '40%', height: '6px' }}
-                      aria-valuenow="40"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-                <div className="col-6">
-                  <h6 className="text-center  m-b-10">
-                    <span className="text-muted m-r-5">Duration:</span>800
-                  </h6>
-                  <div className="progress">
-                    <div
-                      className="progress-bar progress-c-blue"
-                      role="progressbar"
-                      style={{ width: '70%', height: '6px' }}
-                      aria-valuenow="70"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xl={4}>
-          <Card className="card-social">
-            <Card.Body className="border-bottom">
-              <div className="row align-items-center justify-content-center">
-                <div className="col-auto">
-                  <i className="fab fa-google-plus-g text-c-red f-36" />
-                </div>
-                <div className="col text-end">
-                  <h3>10,500</h3>
-                  <h5 className="text-c-blue mb-0">
-                    +5.9% <span className="text-muted">Total Likes</span>
-                  </h5>
-                </div>
-              </div>
-            </Card.Body>
-            <Card.Body>
-              <div className="row align-items-center justify-content-center card-active">
-                <div className="col-6">
-                  <h6 className="text-center m-b-10">
-                    <span className="text-muted m-r-5">Target:</span>25,998
-                  </h6>
-                  <div className="progress">
-                    <div
-                      className="progress-bar progress-c-theme"
-                      role="progressbar"
-                      style={{ width: '80%', height: '6px' }}
-                      aria-valuenow="80"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-                <div className="col-6">
-                  <h6 className="text-center  m-b-10">
-                    <span className="text-muted m-r-5">Duration:</span>900
-                  </h6>
-                  <div className="progress">
-                    <div
-                      className="progress-bar progress-c-theme2"
-                      role="progressbar"
-                      style={{ width: '50%', height: '6px' }}
-                      aria-valuenow="50"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col> */}
         <Col md={6} xl={4}>
         <Card>
       <Card.Header>
@@ -536,15 +370,15 @@ const DashDefault = () => {
         <Col md={6} xl={8} className="user-activity">
           <Card>
             <Tabs defaultActiveKey="today" id="uncontrolled-tab-example">
-              <Tab eventKey="today" title="Today">
+              <Tab eventKey="today" title="Staff active">
                 {tabContent}
               </Tab>
-              <Tab eventKey="week" title="This Week">
+              {/* <Tab eventKey="week" title="This Week">
                 {tabContent}
               </Tab>
               <Tab eventKey="all" title="All">
                 {tabContent}
-              </Tab>
+              </Tab> */}
             </Tabs>
           </Card>
         </Col>

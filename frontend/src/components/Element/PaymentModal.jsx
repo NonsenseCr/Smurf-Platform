@@ -32,6 +32,18 @@ const PaymentModal = ({ show, handleClose, selectedPackage }) => {
     }, []);
 
 
+    useEffect(() => {
+        if (inforUser?.Email && email === '') {
+            setEmail(inforUser.Email);
+        }
+    }, [inforUser, email]);
+
+    useEffect(() => {
+        if (inforUser?.FullName && name === '') {
+            setName(inforUser.FullName);
+        }
+    }, [inforUser, name]);
+
     const EXCHANGE_RATE = 25458;
 
     if (!show) return null;
@@ -69,7 +81,7 @@ const PaymentModal = ({ show, handleClose, selectedPackage }) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                value={name !== '' ? name : inforUser?.FullName || ''}
+                                value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Nhập họ và tên"
                             />
@@ -79,7 +91,7 @@ const PaymentModal = ({ show, handleClose, selectedPackage }) => {
                             <input
                                 type="email"
                                 className="form-control"
-                                value={email !== '' ? email : inforUser?.Email || ''}
+                                value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Nhập email"
                             />
@@ -160,15 +172,16 @@ const PaymentModal = ({ show, handleClose, selectedPackage }) => {
                             type="button"
                             className="btn btn-primary"
                             onClick={() => {
-                                if (!name || !email || !selectedMethod) {
-                                    alert('Vui lòng nhập đầy đủ thông tin và chọn phương thức thanh toán!');
-                                    return;
-                                }
                                 console.log(user.id);
                                 console.log(selectedPackage.price);
                                 console.log(selectedMethod);
-                                console.log(selectedPackage.Ticket);
-
+                                console.log(name);
+                                console.log(email);
+                                console.log(selectedPackage.ticket);
+                                if (!name.trim() || !email.trim() || !selectedMethod.trim()) {
+                                    alert('Vui lòng nhập đầy đủ thông tin và chọn phương thức thanh toán!');
+                                    return;
+                                }
                                 fetch('http://localhost:5000/paypal/pay', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },

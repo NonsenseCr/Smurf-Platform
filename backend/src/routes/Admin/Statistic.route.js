@@ -8,18 +8,48 @@ const TacGia = require('../../model/tacgia.model');
 
 
 // Route: Tổng doanh thu
+// Route: Tổng doanh thu
 router.get('/total-revenue', async (req, res) => {
     try {
+        // Kiểm tra các bản ghi có `PayStats` là "Completed"
+        const payments = await Payment.find({ PayStats: 'Completed' });
+
+        // Debug: Log các bản ghi để kiểm tra
+        console.log('Payments:', payments);
+
+        // Nếu không có bản ghi nào với `PayStats: "Completed"`, trả về amount là 0
+        if (payments.length === 0) {
+            return res.json({
+                title: 'Doanh thu',
+                amount: '0.00',
+            });
+        }
+
+        // Thực hiện tính tổng doanh thu
         const totalRevenue = await Payment.aggregate([
             { $match: { PayStats: 'Completed' } },
             { $group: { _id: null, total: { $sum: '$PayAmount' } } },
         ]);
+
+        // Kiểm tra kết quả từ aggregate
+        console.log('Total Revenue Aggregate:', totalRevenue);
+
+        // Lấy giá trị tổng doanh thu, nếu không có bản ghi nào thì mặc định là 0
         const revenue = totalRevenue[0]?.total || 0;
-        res.json({ title: 'Doanh thu', amount: revenue.toFixed(2) });
+
+        // Trả về kết quả dưới dạng JSON
+        res.json({
+            title: 'Doanh thu',
+            amount: revenue.toFixed(2), // Làm tròn đến 2 chữ số thập phân
+        });
     } catch (error) {
+        console.error('Error calculating total revenue:', error);
         res.status(500).json({ message: 'Lỗi khi tính tổng doanh thu', error });
     }
 });
+
+
+
 
 
 // Route: Tính tổng số lượt xem 
