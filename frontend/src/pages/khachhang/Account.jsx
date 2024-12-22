@@ -184,7 +184,7 @@ const Account = () => {
                                                 </div>
                                                 <div className="mb-2">
                                                     <label className="form-label" style={{color: "#8770F9", fontWeight:600}}>Trạng thái tài khoản</label>
-                                                    <input type="text" className="form-control" value={inforUser.Active ? 'Thành viên Premium' : 'Thành viên thông thường'} readOnly />
+                                                    <input type="text" className="form-control" value={KH.ActivePremium ? 'Thành viên Premium' : 'Thành viên thông thường'} readOnly />
                                                 </div>
                                                 <div className="mb-2">
                                                     <label className="form-label" style={{color: "#8770F9", fontWeight:600}}>Birthday</label>

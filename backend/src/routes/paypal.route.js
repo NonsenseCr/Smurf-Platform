@@ -59,7 +59,7 @@ router.post('/pay', async (req, res) => {
         subject: 'Thanh toán thành công',
         package: 'Gói Premium',
         price: `${PayAmount} VND`,
-        link: 'http://localhost:5173/',
+        link: 'http://localhost:5173/account',
       };
 
       await sendEmail(

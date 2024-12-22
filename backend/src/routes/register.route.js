@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
         TimeCreated: new Date(),
         TimeUpdated: new Date(),
         Active: true,
-        UserRole: false, // Mặc định là user thường
+        UserRole: false, 
       });
 
       await newUser.save({ session });
@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
         IdUser: newUser.IdUser,
         GoogleAccount: null,
         FacebookAccount: null,
-        IdAvatar: null, // Nếu cần, có thể thêm logic chọn avatar mặc định
+        IdAvatar: null, 
         TicketSalary: 0,
         ActivePremium: false,
         ActiveStats: 1,

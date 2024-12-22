@@ -1,23 +1,26 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import avatarPlaceholder from "../assets/1004-the-worlds-finest-assassin-maha.png";
 import HeaderLogin from "../components/Login/HeaderLogin";
 
 const Infor = () => {
   // khai báo dom và biến
   const navigate = useNavigate();
-  const location = useLocation();
-  const params = new URLSearchParams(window.location.search);
-  const userFromParams = params.get("user")
-    ? JSON.parse(decodeURIComponent(params.get("user")))
-    : null;
-  const user = location.state?.user || userFromParams;
+  // const location = useLocation();
+  // const params = new URLSearchParams(window.location.search);
+  // const userFromParams = params.get("user")
+  //   ? JSON.parse(decodeURIComponent(params.get("user")))
+  //   : null;
+  // const user = location.state?.user || userFromParams;
   const [avatar, setAvatar] = useState("");
   const [avatarsList, setAvatarsList] = useState([]);
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [user, setUser] = useState(null);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     username: "",
     fullName: "",
@@ -26,35 +29,68 @@ const Infor = () => {
     avatar: "",
   });
 
+  useEffect(() => {
+    const userDataFromStorage = localStorage.getItem("user");
+    if (userDataFromStorage) {
+      const parsedUser = JSON.parse(userDataFromStorage);
+      setUser(parsedUser);
+
+      // Kiểm tra avatar
+      if (parsedUser.avatar) {
+        setAvatar(parsedUser.avatar); // Sử dụng avatar của user
+      } else {
+        // Nếu không có avatar, chọn ngẫu nhiên từ danh sách
+        setAvatar((prevAvatar) => {
+          if (avatarsList.length > 0) {
+            const randomAvatar =
+              avatarsList[Math.floor(Math.random() * avatarsList.length)];
+            return randomAvatar.AvatarContent; // Đặt avatar ngẫu nhiên
+          }
+          return prevAvatar; // Nếu danh sách trống, giữ nguyên
+        });
+      }
+    }
+  }, [avatarsList]);
+
   /* useEffect */
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Lấy danh sách avatar từ API
         const avatarResponse = await axios.get("http://localhost:5000/api/avatar/");
         const avatars = avatarResponse.data || [];
         setAvatarsList(avatars);
 
-        // Lấy ngẫu nhiên một avatar từ danh sách
-        if (avatars.length > 0) {
-          const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
-          setAvatar(randomAvatar.AvatarContent);
+        // Kiểm tra nếu `user` tồn tại
+        if (user) {
+          if (user.avatar) {
+            // Nếu user đã có avatar, sử dụng avatar này
+            setAvatar(user.avatar);
+          } else if (avatars.length > 0) {
+            // Nếu không, chọn ngẫu nhiên một avatar từ danh sách
+            const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+            setAvatar(randomAvatar.AvatarContent);
+          }
         }
       } catch (error) {
-        setErrorMessage("Error fetching data. Please try again later.", error);
+        console.error("Error fetching avatar data:", error);
+        setErrorMessage("Error fetching avatar data. Please try again later.");
       }
     };
 
     fetchData();
-  }, []);
+  }, [user]); // Thêm `user` vào dependency array
+
 
 
   useEffect(() => {
     const fetchCustomerDetails = async () => {
       if (!user?.id) {
+        
         setErrorMessage("User ID is missing!");
         return;
       }
-  
+
       try {
         const response = await axios.get(`http://localhost:5000/api/khachhang/${user.id}`);
         const customerDetails = response.data;
@@ -75,7 +111,7 @@ const Infor = () => {
         setErrorMessage("Error fetching customer details. Please try again later.");
       }
     };
-  
+
     fetchCustomerDetails();
   }, [user?.id]);
 
@@ -83,14 +119,14 @@ const Infor = () => {
     setOverlayVisible((prev) => !prev);
   };
 
+  // Xử lý khi chọn avatar trong danh sách
   const handleAvatarSelect = (avatarUrl) => {
     setAvatar(avatarUrl);
-    setUserInfo({
+    setUserInfo((prevInfo) => ({
+      ...prevInfo,
       avatar: avatarUrl,
-    });
-    console.log("infor", userInfo);
-    setOverlayVisible(true);
-    // setOverlayVisible(false); // Ẩn overlay sau khi chọn avatar
+    }));
+    console.log("Avatar selected:", avatarUrl);
   };
 
   const handleInputChange = (e) => {
@@ -103,7 +139,7 @@ const Infor = () => {
     console.log("User", user);
     try {
       if (!user?.id) {
-        // console.log("User IdUser is missing:", user?.IdUser);
+        console.log("User IdUser is missing:", user?.id);
         setErrorMessage("User ID is missing on the client!");
         return;
       }
@@ -204,7 +240,7 @@ const Infor = () => {
                   <input type="hidden" name="id" id="avatarId" />
                   <a
                     className="btn-cancel"
-                    onClick={() => setOverlayVisible(false)} 
+                    onClick={() => setOverlayVisible(false)}
                   >
                     CANCEL
                   </a>
@@ -222,7 +258,9 @@ const Infor = () => {
                   key={av._id}
                   className="col item-avatar"
                   onClick={() => {
+                    console.log("Selected avatar:", av.AvatarContent); // Log giá trị
                     handleAvatarSelect(av.AvatarContent);
+                    setOverlayVisible(false)
                   }}
                 >
                   <img
@@ -250,8 +288,8 @@ const Infor = () => {
                 <img
                   src={
                     userInfo?.avatar
-                      ? `http://localhost:5000${userInfo.avatar}` 
-                      : `http://localhost:5000${avatar}` 
+                      ? `http://localhost:5000${userInfo.avatar}`
+                      : `http://localhost:5000${avatar}`
                   }
                   alt="Avatar"
                 />
@@ -259,7 +297,7 @@ const Infor = () => {
                   type="button"
                   id="btn-avatar"
                   className="btn-avatar"
-                  onClick={toggleOverlay}
+                  onClick={toggleOverlay} // Mở popup chọn avatar
                 >
                   <i className="ri-pencil-line"></i>
                 </a>

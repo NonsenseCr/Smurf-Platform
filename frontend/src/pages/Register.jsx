@@ -28,14 +28,22 @@ const Register = () => {
       const response = await axios.post("http://localhost:5000/api/register", formData);
   
       if (response.data.success) {
+        localStorage.setItem("session", JSON.stringify(response.data.session));
+        localStorage.setItem("user", JSON.stringify({
+          id: response.data.user.id,
+          username: response.data.user.username,
+          avatar: response.data.user.avatar,
+        }));
+
         setSuccessMessage("Đăng ký thành công! Đang chuyển hướng...");
         setErrorMessage("");
         setTimeout(() => {
           navigate("/infor", {
             state: {
               user: {
-                IdUser: response.data.user.id, 
+                id: response.data.user.id, 
                 username: response.data.user.username,
+                avatar: response.data.user.avatar,
                 email: response.data.user.email,
               },
             },
