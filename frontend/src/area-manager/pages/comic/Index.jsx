@@ -1,11 +1,12 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, Tab } from "react-bootstrap";
-import {  message } from "antd";
+import { message } from "antd";
 
 import { fetchComics } from "@/area-manager/services/comicService";
 import GridView from "../../../area-manager/components/GridView";
 import CardView from "../../../area-manager/components/CardView";
 import AddComic from "../../../area-manager/pages/comic/Add";
+import UpdateComic from "../../../area-manager/pages/comic/Update";
 import styles from "../../../area-manager/styles/ComicIndex.module.css";
 
 // Import HOC withPermission
@@ -15,6 +16,8 @@ const ComicIndex = () => {
   const [comics, setComics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAddComicVisible, setIsAddComicVisible] = useState(false);
+  const [isUpdateComicVisible, setIsUpdateComicVisible] = useState(false);
+  const [selectedComic, setSelectedComic] = useState(null);
 
   useEffect(() => {
     const fetchComicss = async () => {
@@ -39,7 +42,8 @@ const ComicIndex = () => {
   };
 
   const handleEdit = (comic) => {
-    message.info(`Sửa bộ truyện ${comic.tenbo}`);
+    setSelectedComic(comic);
+    setIsUpdateComicVisible(true);
   };
 
   const handleDelete = (comic) => {
@@ -61,6 +65,13 @@ const ComicIndex = () => {
     setIsAddComicVisible(false); // Đóng popup
   };
 
+  const handleUpdateComicSuccess = () => {
+    message.success("Cập nhật bộ truyện thành công!");
+    setIsUpdateComicVisible(false); // Đóng popup
+    // Reload danh sách sau khi cập nhật
+    fetchComics().then((data) => setComics(data));
+  };
+
   return (
     <div className={styles.comicIndexContainer}>
       <h2 className={styles.sectionTitle}>Danh sách bộ truyện</h2>
@@ -80,8 +91,8 @@ const ComicIndex = () => {
         </Tab>
       </Tabs>
 
-{/* Nút Add */}
-<div className={styles.addButton} onClick={handleAddComic}>
+      {/* Nút Add */}
+      <div className={styles.addButton} onClick={handleAddComic}>
         <i className="fa-solid fa-arrow-up-from-bracket"></i>
         <span className={styles.addButtonText}>ADD</span>
       </div>
@@ -92,6 +103,16 @@ const ComicIndex = () => {
         onClose={handleAddComicCancel}
         onSuccess={handleAddComicSuccess}
       />
+
+      {/* Popup Update Comic */}
+      {selectedComic && (
+        <UpdateComic
+          visible={isUpdateComicVisible}
+          onClose={() => setIsUpdateComicVisible(false)}
+          comicId={selectedComic._id}
+          onSuccess={handleUpdateComicSuccess}
+        />
+      )}
     </div>
   );
 };

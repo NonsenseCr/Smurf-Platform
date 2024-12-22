@@ -123,6 +123,107 @@ exports.updateComicImages = async (req, res) => {
   }
 };
 
+// Controller cập nhật thông tin bộ truyện
+exports.updateComic = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { tenbo, dotuoi, mota, listloai, premium, trangthai, active, id_tg } = req.body;
+
+    // Kiểm tra dữ liệu bắt buộc
+    if (!tenbo || !dotuoi || !id_tg) {
+      return res.status(400).json({ message: 'Dữ liệu bắt buộc bị thiếu!' });
+    }
+
+    // Chuyển đổi `listloai` sang ObjectId
+    let listloaiObjectId = [];
+    if (Array.isArray(listloai)) {
+      listloaiObjectId = listloai.map((id) => mongoose.Types.ObjectId(id));
+    }
+
+    const updatedComic = await BoTruyen.findByIdAndUpdate(
+      id,
+      {
+        tenbo,
+        dotuoi,
+        mota,
+        listloai: listloaiObjectId,
+        premium: premium === 'true',
+        trangthai,
+        active: active === 'true',
+        id_tg: mongoose.Types.ObjectId(id_tg),
+      },
+      { new: true }
+    );
+
+    if (!updatedComic) {
+      return res.status(404).json({ message: 'Không tìm thấy bộ truyện!' });
+    }
+
+    res.status(200).json({ message: 'Cập nhật thông tin thành công!', comic: updatedComic });
+  } catch (error) {
+    console.error('Lỗi khi cập nhật thông tin bộ truyện:', error);
+    res.status(500).json({ message: 'Lỗi khi cập nhật thông tin bộ truyện.', error });
+  }
+};
+
+
+// Controller cập nhật ảnh bìa và banner
+exports.uploadImages = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Kiểm tra nếu không có tệp nào được tải lên
+    if (!req.files || (!req.files.poster && !req.files.banner)) {
+      return res.status(400).json({ message: 'Không có tệp nào được tải lên!' });
+    }
+
+    const updatedFields = {};
+
+    // Upload ảnh bìa
+    if (req.files.poster) {
+      const posterResult = await cloudinary.uploader.upload(req.files.poster[0].path);
+      updatedFields.poster = posterResult.secure_url;
+    }
+
+    // Upload ảnh banner
+    if (req.files.banner) {
+      const bannerResult = await cloudinary.uploader.upload(req.files.banner[0].path);
+      updatedFields.banner = bannerResult.secure_url;
+    }
+
+    // Cập nhật dữ liệu bộ truyện
+    const updatedComic = await BoTruyen.findByIdAndUpdate(id, updatedFields, { new: true });
+
+    if (!updatedComic) {
+      return res.status(404).json({ message: 'Không tìm thấy bộ truyện!' });
+    }
+
+    res.status(200).json({ message: 'Cập nhật ảnh thành công!', comic: updatedComic });
+  } catch (error) {
+    console.error('Lỗi khi cập nhật ảnh:', error);
+    res.status(500).json({ message: 'Lỗi khi cập nhật ảnh.', error });
+  }
+};
+// Controller lấy thông tin bộ truyện
+exports.getComicById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const comic = await BoTruyen.findById(id)
+      .populate('id_tg', 'ten_tg')
+      .populate('listloai', 'ten_loai');
+
+    if (!comic) {
+      return res.status(404).json({ message: 'Không tìm thấy bộ truyện!' });
+    }
+
+    res.status(200).json(comic);
+  } catch (error) {
+    console.error('Lỗi khi lấy thông tin bộ truyện:', error);
+    res.status(500).json({ message: 'Lỗi khi lấy thông tin bộ truyện.', error });
+  }
+};
+
 // Xóa bộ truyện
 exports.deleteComic = async (req, res) => {
   try {
@@ -382,7 +483,7 @@ exports.deletePageFromChapter = async (req, res) => {
 };
 exports.checkChapterExists = async (req, res) => {
   try {
-    const { comicId } = req.params; // Lấy ID bộ truyện
+    const { comicId } = req.params; // Lấy ID bộ truyệna
     const { stt_chap } = req.query; // Lấy số thứ tự chương từ query string
 
     if (!comicId || !stt_chap) {

@@ -155,3 +155,13 @@ export const fetchChapterDetails = async (chapterId) => {
     throw error;
   }
 };
+
+export const fetchComicById = async (comicId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/${comicId}`);
+    return response.data; // Return the comic data
+  } catch (error) {
+    console.error(`Error fetching comic with ID ${comicId}:`, error);
+    throw new Error("Không thể tải thông tin bộ truyện!");
+  }
+};

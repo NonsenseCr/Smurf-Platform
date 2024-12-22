@@ -32,6 +32,37 @@ router.get("/customer/:IdUser", async (req, res) => {
   });
   
   
+  router.get('/group-by-method', async (req, res) => {
+    try {
+      const payments = await Payment.aggregate([
+        { $group: { _id: '$PayMethod', total: { $sum: '$PayAmount' } } },
+      ]);
+      res.json(payments.map((item) => ({ method: item._id, total: item.total })));
+    } catch (error) {
+      console.error('Error grouping payments by method:', error);
+      res.status(500).send('Error grouping payments by method');
+    }
+  });
+  
+  router.get('/group-by-date', async (req, res) => {
+    try {
+      const payments = await Payment.aggregate([
+        {
+          $group: {
+            _id: { $dateToString: { format: '%Y-%m-%d', date: '$PayDate' } },
+            total: { $sum: '$PayAmount' },
+          },
+        },
+      ]);
+      res.json(payments.map((item) => ({ date: item._id, total: item.total })));
+    } catch (error) {
+      console.error('Error grouping payments by date:', error);
+      res.status(500).send('Error grouping payments by date');
+    }
+  });
+  
+  
+
 
 
 module.exports = router;
