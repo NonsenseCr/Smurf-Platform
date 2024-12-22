@@ -1,8 +1,18 @@
-import { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "@/area-manager/styles/GridView.module.css";
 import { Table, Tag, Button, Tooltip } from "antd";
-import { EditOutlined, DeleteOutlined, EyeOutlined, StarOutlined, UserOutlined, IdcardOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  StarOutlined,
+  UserOutlined,
+  IdcardOutlined,
+} from "@ant-design/icons";
+
+// Import component UpdateComic
+import UpdateComic from "../pages/comic/Update";
 
 const buildImageUrl = (poster) => {
   if (/^https?:\/\//.test(poster)) {
@@ -24,9 +34,28 @@ const getStatusLabel = (status) => {
   }
 };
 
-const GridView = ({ comics, loading, onEdit, onDelete }) => {
+const GridView = ({ comics, loading, onDelete }) => {
   const [hoveredRowId, setHoveredRowId] = useState(null);
+
+  // State cho Modal update
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
+  const [comicIdToUpdate, setComicIdToUpdate] = useState(null);
+
   const navigate = useNavigate();
+
+  // Hàm mở popup update
+  const handleOpenUpdateModal = (record) => {
+    setComicIdToUpdate(record._id);
+    setIsUpdateModalVisible(true);
+  };
+
+  // Hàm đóng popup update
+  const handleCloseUpdateModal = () => {
+    setIsUpdateModalVisible(false);
+    setComicIdToUpdate(null);
+    // Nếu cần, bạn có thể gọi hàm load lại danh sách ở đây
+    // Ví dụ: loadComics();
+  };
 
   const columns = [
     {
@@ -105,7 +134,10 @@ const GridView = ({ comics, loading, onEdit, onDelete }) => {
             <Button
               type="link"
               icon={<EditOutlined />}
-              onClick={() => onEdit(record)}
+              onClick={(e) => {
+                e.stopPropagation(); // Ngăn Table onRow click
+                handleOpenUpdateModal(record);
+              }}
               className={styles.actionButton}
             />
           </Tooltip>
@@ -113,7 +145,10 @@ const GridView = ({ comics, loading, onEdit, onDelete }) => {
             <Button
               type="link"
               icon={<DeleteOutlined />}
-              onClick={() => onDelete(record)}
+              onClick={(e) => {
+                e.stopPropagation(); // Ngăn Table onRow click
+                onDelete(record);
+              }}
               danger
               className={styles.actionButton}
             />
@@ -124,17 +159,30 @@ const GridView = ({ comics, loading, onEdit, onDelete }) => {
   ];
 
   return (
-    <Table
-      dataSource={comics}
-      columns={columns}
-      rowKey="_id"
-      loading={loading}
-      pagination={{ pageSize: 10 }}
-      className={styles.tableContainer}
-      onRow={(record) => ({
-        onClick: () => navigate(`/manager/comic/comic-index/comic-detail/${record._id}`), // Chuyển hướng đến trang chi tiết
-      })}
-    />
+    <>
+      {/* Bảng hiển thị danh sách truyện */}
+      <Table
+        dataSource={comics}
+        columns={columns}
+        rowKey="_id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+        className={styles.tableContainer}
+        onRow={(record) => ({
+          onClick: () =>
+            navigate(`/manager/comic/comic-index/comic-detail/${record._id}`),
+        })}
+      />
+
+      {/* Popup/Modal UpdateComic */}
+      {isUpdateModalVisible && (
+        <UpdateComic
+          visible={isUpdateModalVisible}
+          onClose={handleCloseUpdateModal}
+          comicId={comicIdToUpdate}
+        />
+      )}
+    </>
   );
 };
 

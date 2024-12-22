@@ -24,3 +24,25 @@ export const fetchPaymentsByCustomer = async (IdUser) => {
   }
 };
 
+// Lấy dữ liệu nhóm theo phương thức thanh toán
+export const fetchPaymentsByMethod = async () => {
+  const response = await axios.get(`${API_BASE_URL}/group-by-method`);
+  return response.data;
+};
+
+// Lấy dữ liệu nhóm theo trạng thái thanh toán
+export const fetchPaymentsByStatus = async () => {
+  const response = await axios.get(`${API_BASE_URL}/group-by-status`);
+  return response.data;
+};
+
+// Lấy dữ liệu nhóm theo ngày
+export const fetchPaymentsByDate = async () => {
+  const response = await axios.get(`${API_BASE_URL}/group-by-date`);
+  return response.data;
+};
+
+export const fetchLineChartData = async () => {
+  const response = await axios.get(`${API_BASE_URL}/line`);
+  return response.data;
+};

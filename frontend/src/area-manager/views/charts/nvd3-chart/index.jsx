@@ -1,11 +1,6 @@
-import React from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
-
-import LineChart from './chart/LineChart';
-import BarDiscreteChart from './chart/BarDiscreteChart';
-import PieDonutChart from './chart/PieDonutChart';
-import PieBasicChart from './chart/PieBasicChart';
-import GroupedColumnChart from './chart/GroupedChart';
+import LineChartComponent from './chart/LineChart';
+import PieChartComponent from './chart/PieChart';
 
 const Nvd3Chart = () => {
   return (
@@ -14,50 +9,20 @@ const Nvd3Chart = () => {
         <Col md={6}>
           <Card>
             <Card.Header>
-              <Card.Title as="h5">Line Chart</Card.Title>
+              <Card.Title as="h5">Payments Over Time</Card.Title>
             </Card.Header>
-            <Card.Body>
-              <LineChart />
+            <Card.Body> 
+              <LineChartComponent />
             </Card.Body>
           </Card>
         </Col>
         <Col md={6}>
           <Card>
             <Card.Header>
-              <Card.Title as="h5">Discrete Bar Chart</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <BarDiscreteChart />
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card>
-            <Card.Header>
-              <Card.Title as="h5">Grouped Multi-Bar Chart</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <GroupedColumnChart />
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card>
-            <Card.Header>
-              <Card.Title as="h5">Pie Basic Chart</Card.Title>
+              <Card.Title as="h5">Payments by Method</Card.Title>
             </Card.Header>
             <Card.Body className="text-center">
-              <PieBasicChart />
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card>
-            <Card.Header>
-              <Card.Title as="h5">Donut Chart</Card.Title>
-            </Card.Header>
-            <Card.Body className="text-center">
-              <PieDonutChart />
+              <PieChartComponent />
             </Card.Body>
           </Card>
         </Col>

@@ -26,6 +26,7 @@ const AuthorIndex = lazy(() => import('./pages/comic/author/Index'));
 const ComicIndex = lazy(() => import('./pages/comic/Index'));
 const ChapterDetail = lazy(() => import('./pages/comic/chapter/DemoReadingMode'));
 const ComicDetail = lazy(() => import('./pages/comic/Detail'));
+const EditC = lazy(() => import('./pages/comic/Update'));
 const GerneIndex = lazy(() => import('./pages/comic/gerne/Index'));
 const StaffIndex = lazy(() => import('./pages/user/staff/Index'));
 const CustomerIndex = lazy(() => import('./pages/user/customer/Index'));
@@ -59,7 +60,7 @@ export default function AdminRoutes() {
                       <Route path="basic/typography" element={<BasicTypography />} />
                       <Route path="form" element={<FormsElements />} />
                       <Route path="bootstrap" element={<BasicBadges />} />
-                      <Route path="nvd3" element={<Chart />} />
+                  
                       <Route path="map" element={<GoogleMaps />} />
                       <Route path="basic/page" element={<SamplePage />} />
                       <Route path="*" element={<Navigate to="/manager" />} />
@@ -77,6 +78,10 @@ export default function AdminRoutes() {
                       <Route path="config/rbac-control" element={<RBACIndex />} />
                       <Route path="config/rbac-control/rbac-staff-detail" element={<RBACDetail />} />
                       
+                      <Route path="comic/edit" element={<EditC />} />
+                      <Route path="comic/payment-index/chart" element={<Chart />} />
+
+
                     </Routes>
                   </Suspense>
                 </AdminLayout>

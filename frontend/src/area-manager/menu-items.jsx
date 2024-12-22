@@ -41,11 +41,11 @@ const menuItems = {
               url: '/manager/comic/gerne-index',
             },
             {
-              id: 'chapter-list',
-              title: 'Chapter Manager',
+              id: 'Edit-Element',
+              title: 'Edit Manager',
               type: 'item',
               icon: 'feather icon-layers',
-              url: '/manager/comic/chapter',
+              url: '/manager/comic/Edit',
             },
           ],
         },
@@ -62,7 +62,14 @@ const menuItems = {
               icon: 'feather icon-book',
               url: '/manager/user/staff-index',
             },
-            
+            {
+              id: 'rbac-control',
+              title: 'RBAC Control',
+              type: 'item',
+              icon: 'feather icon-settings', // Icon phù hợp cho chi tiết quản lý quyền
+              url: '/manager/config/rbac-control/rbac-staff-detail',
+            },
+          
             {
               id: 'customer-control',
               title: 'Customer Index',
@@ -70,7 +77,20 @@ const menuItems = {
               icon: 'feather icon-book',
               url: '/manager/user/customer-index',
             },
-            
+            {
+              id: 'payment-chart',
+              title: 'Transactions Chart',
+              type: 'item',
+              icon: 'feather icon-bar-chart-2', // Icon phù hợp cho biểu đồ giao dịch
+              url: '/manager/comic/payment-index/chart',
+            },
+            {
+              id: 'payment',
+              title: 'Payment',
+              type: 'item',
+              icon: 'feather icon-credit-card', // Icon phù hợp cho thanh toán
+              url: '/manager/comic/payment-index',
+            },
           ],
         },
       ],
@@ -91,28 +111,19 @@ const menuItems = {
               id: 'notification',
               title: 'Notification',
               type: 'item',
+              icon: 'feather icon-bell', // Icon phù hợp cho thông báo
               url: '/manager/basic',
             },
+ 
             {
-              id: 'payment',
-              title: 'Payment',
-              type: 'item',
-              url: '/manager/comic/payment-index',
-            },
-            {
-              id: 'rbac-control',
+              id: 'rbac-manager',
               title: 'RBAC Manager',
               type: 'item',
-              icon: 'feather icon-edit',
+              icon: 'feather icon-shield', // Icon phù hợp cho quản lý quyền
               url: '/manager/config/rbac-control',
             },
-            {
-              id: 'rbac-control',
-              title: 'RBAC Control',
-              type: 'item',
-              icon: 'feather icon-edit',
-              url: '/manager/config/rbac-control/rbac-staff-detail',
-            },
+      
+          
           ],
         },
       ],

@@ -7,7 +7,7 @@ const {getChaptersByComicId ,
   completeChapter,
   updateChapterPages,
   getChapterDetails,
-  deletePageFromChapter,checkChapterExists } = require("../controllers/ComicController");
+  deletePageFromChapter,checkChapterExists,getComicById, uploadImages ,updateComic } = require("../controllers/ComicController");
 const multer = require("multer");
 
 
@@ -55,5 +55,15 @@ router.put("/complete-chapter/:id_chapter", completeChapter);
 router.delete("/:id_chapter/page/:so_trang", deletePageFromChapter);
 
 router.get("/:comicId/check-chapter", checkChapterExists);
+
+
+// Route cập nhật thông tin bộ truyện
+router.put('/:id/update-comic', updateComic);
+
+// Route cập nhật ảnh bìa và banner
+router.post('/:id/upload-images', uploadImages);
+
+// Route lấy thông tin bộ truyện theo ID
+router.get('/:id', getComicById);
 
 module.exports = router;

@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchBoTruyenById, fetchChaptersByComicId } from "@/services/BoTruyenServices";
-import { Button, Select, message, Table, Tag, Row, Col } from "antd";
+import { Button, Select, message, Table, Tag, Row, Col, Tooltip } from "antd";
 import { updateComicStats } from "@/area-manager/services/comicService";
 import "@/area-manager/styles/comic-detail.css";
 import AddChapter from "../../../area-manager/pages/comic/chapter/Add";
-// Import HOC withPermission
+import Update from "../../../area-manager/pages/comic/Update"; // Import popup cập nhật chương
+import { EditOutlined } from "@ant-design/icons";
 import withPermission from "@/area-manager/withPermission";
 const { Option } = Select;
 
 const buildImageUrl = (poster) => {
-  // Kiểm tra nếu đường dẫn đã là một URL đầy đủ
   if (/^https?:\/\//.test(poster)) {
-    return poster; // Trả về URL đầy đủ
+    return poster;
   }
-  // Nếu không, thêm domain localhost
   return `http://localhost:5000${poster}`;
 };
 
@@ -23,6 +22,8 @@ const Detail = () => {
   const [comic, setComic] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [isAddChapterVisible, setIsAddChapterVisible] = useState(false);
+  const [isUpdateVisible, setIsUpdateVisible] = useState(false); // Trạng thái popup cập nhật truyện
+
   useEffect(() => {
     const fetchComic = async () => {
       try {
@@ -40,43 +41,19 @@ const Detail = () => {
   if (!comic) {
     return <div>Đang tải...</div>;
   }
-  const handleAddChapter = () => {
-    setIsAddChapterVisible(true); // Mở popup
-    message.info("Thêm chương mới");
+
+  const handleUpdateClose = () => {
+    setIsUpdateVisible(false);
+    fetchBoTruyenById(id).then(setComic).catch(() => {
+      message.error("Không thể làm mới thông tin truyện!");
+    });
   };
+
   const handleAddChapterClose = () => {
-    setIsAddChapterVisible(false); // Đóng popup
-    // Làm mới danh sách chương sau khi thêm thành công
+    setIsAddChapterVisible(false);
     fetchChaptersByComicId(id).then(setChapters).catch(() => {
       message.error("Không thể làm mới danh sách chương!");
     });
-  };
-  const handleDemoRead = (id) => {
-    // Điều hướng đến trang demo đọc
-    window.location.href = `/manager/comic/comic-index/comic-detail/chapter-detail/demo-reading-mode-view/${id}`;
-  };
-  
-
-  const handleToggleActive = async () => {
-    try {
-      const newActiveState = !comic.active;
-      await updateComicStats(comic._id, { active: newActiveState });
-      setComic({ ...comic, active: newActiveState });
-      message.success(`Trạng thái được chuyển thành: ${newActiveState ? "Active" : "UnActive"}`);
-    } catch {
-      message.error("Không thể cập nhật trạng thái!");
-    }
-  };
-
-  const handleActivatePremium = async () => {
-    try {
-      const newPremiumState = !comic.premium;
-      await updateComicStats(comic._id, { premium: newPremiumState });
-      setComic({ ...comic, premium: newPremiumState });
-      message.success(`Premium ${newPremiumState ? "đã được kích hoạt" : "đã bị hủy"}`);
-    } catch {
-      message.error("Không thể cập nhật trạng thái premium!");
-    }
   };
 
   const columns = [
@@ -121,6 +98,14 @@ const Detail = () => {
       <div className="header-section">
         <h2 className="section-title">
           {comic.tenbo} <span className="comic-id">ID: {comic._id}</span>
+          <Tooltip title="Cập Nhật Truyện">
+            <Button
+              type="link"
+              icon={<EditOutlined />}
+              onClick={() => setIsUpdateVisible(true)}
+              style={{ marginLeft: "10px" }}
+            />
+          </Tooltip>
         </h2>
         <div className="timestamps">
           <Tag color="blue">Created: {new Date(comic.createdAt).toLocaleDateString()}</Tag>
@@ -130,7 +115,7 @@ const Detail = () => {
       <hr className="line" />
 
       <Row gutter={[20, 16]} align="middle">
-        <Col span={8} style={{ position: "relative" }}>
+        <Col span={8}>
           <div className="image-container">
             <div
               className="comic-poster"
@@ -140,13 +125,12 @@ const Detail = () => {
                 backgroundImage: `url(${buildImageUrl(comic.poster)})`,
                 backgroundSize: "cover",
                 borderRadius: "5px",
-                position: "relative",
               }}
             />
             <div className="image-tag">Poster</div>
           </div>
         </Col>
-        <Col span={8} style={{ position: "relative", marginLeft: "20px" }}>
+        <Col span={8} style={{ marginLeft: "20px" }}>
           <div className="image-container">
             <div
               className="comic-banner"
@@ -156,13 +140,12 @@ const Detail = () => {
                 backgroundImage: `url(${buildImageUrl(comic.banner)})`,
                 backgroundSize: "cover",
                 borderRadius: "5px",
-                position: "relative",
               }}
             />
             <div className="image-tag">Banner</div>
           </div>
         </Col>
-        <Col span={8} style={{ marginLeft: "40px" }}>
+        <Col span={8}>
           <div className="stats-section">
             <Row gutter={[16, 16]}>
               <Col span={12}>
@@ -187,58 +170,12 @@ const Detail = () => {
                   <Option value="hoan_thanh">Hoàn thành</Option>
                 </Select>
               </Col>
-              <Col span={12}>
-                <span>Premium:</span>
-              </Col>
-              <Col span={12}>
-                <Button onClick={handleActivatePremium} className="toggle-btn">
-                  {comic.premium ? "Hủy Premium" : "Kích Hoạt Premium"}
-                </Button>
-              </Col>
-              <Col span={12}>
-                <span>Hoạt động:</span>
-              </Col>
-              <Col span={12}>
-                <Button onClick={handleToggleActive} className="toggle-btn">
-                  {comic.active ? "UnActive" : "Active"}
-                </Button>
-              </Col>
             </Row>
           </div>
         </Col>
       </Row>
 
       <hr className="line purple-line" />
-      <div className="metadata-section">
-        <div className="metadata-item">
-          <span className="metadata-icon">👁️</span> Tổng View: {comic.TongLuotXem}
-        </div>
-        <div className="metadata-item">
-          <span className="metadata-icon">👤</span> Tổng Follow: {comic.theodoi}
-        </div>
-        <div className="metadata-item">
-          <span className="metadata-icon">⭐</span> Điểm số: {comic.danhgia}/10
-        </div>
-        <div className="metadata-item">
-          <span className="metadata-icon">🖊️</span> Tác giả: {comic.id_tg?.ten_tg || "Không rõ"}
-        </div>
-        <div className="genres-list">
-  {comic.listloai && comic.listloai.length > 0 ? (
-    comic.listloai.map((listloai) => {
-      const colors = ["#1B5E20", "#B71C1C", "#263238", "#4A148C", "#00695C"];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      return (
-        <Tag key={listloai._id} style={{ backgroundColor: randomColor, color: "#fff" }}>
-          {listloai.ten_loai || "Không rõ"}
-        </Tag>
-      );
-    })
-  ) : (
-    <span>Không có thể loại</span>
-  )}
-</div>
-
-      </div>
 
       <div className="description-section">
         <p>{comic.mota || "Chưa có mô tả"}</p>
@@ -256,18 +193,24 @@ const Detail = () => {
 
       <Button
         type="primary"
-        onClick={handleAddChapter}
+        onClick={() => setIsAddChapterVisible(true)}
         className="floating-add-button"
         style={{ position: "fixed", bottom: "20px", right: "20px" }}
       >
         Thêm Chương
       </Button>
+
       <AddChapter
         visible={isAddChapterVisible}
         onClose={handleAddChapterClose}
         comicId={comic._id}
       />
-    
+
+      <Update
+        visible={isUpdateVisible}
+        onClose={handleUpdateClose}
+        comicId={comic._id}
+      />
     </div>
   );
 };
