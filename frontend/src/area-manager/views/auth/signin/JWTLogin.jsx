@@ -47,32 +47,42 @@ const JWTLogin = () => {
       });
   
       if (response.data.message === "Đăng nhập thành công") {
-        // Lưu session và user vào localStorage
-        const userData = response.data.data;
-        setWithExpiry("session", userData, 7200000);
-        setWithExpiry("userM", {
-          id: userData.IdUser,
-          username: userData.UserName,
-          email: userData.Email,
-          staffRole: userData.StaffRole,
-        }, 3600000);
-        // Lấy danh sách quyền
-        const permissionsResponse = await axios.get(`http://localhost:5000/api/rbac/permissions/${userData.IdUser}`);
-        setWithExpiry("permissions", permissionsResponse.data, 3600000);
-        // Chuyển hướng đến trang /manager
+        const { data, permissions } = response.data;
+        localStorage.setItem("session", JSON.stringify({ loggedIn: true }));
+        console.log("Session set:", localStorage.getItem("session"));
+        // Hợp nhất user data với permissions
+        const userWithPermissions = {
+          id: data.IdUser,
+          username: data.UserName,
+          email: data.Email,
+          staffRole: data.StaffRole,
+        };
+  
+        console.log("User Data:", userWithPermissions);
+  
+        // Store permissions as a direct array in localStorage
+        if (Array.isArray(permissions)) {
+          localStorage.setItem("permissions", JSON.stringify(permissions));
+          console.log("Stored Permissions in LocalStorage:", permissions);
+        } else {
+          console.error("Permissions are not an array:", permissions);
+        }
+  
+        // Lưu user data vào localStorage
+        setWithExpiry("userM", userWithPermissions, 7200000); // Lưu trong 2 giờ
+  
+        // Chuyển hướng đến trang chính
         navigate("/manager");
       } else {
         setErrorMessage(response.data.message || "Đăng nhập thất bại!");
       }
     } catch (error) {
-      if (error.response) {
-        setErrorMessage(error.response.data.message || 'Đăng nhập thất bại.');
-      } else {
-        setErrorMessage('Lỗi kết nối đến server.');
-      }
       console.error("Error during login:", error);
+      setErrorMessage(error.response?.data?.message || "Đăng nhập thất bại.");
     }
   };
+  
+  
   
   
 

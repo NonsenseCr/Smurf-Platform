@@ -580,3 +580,70 @@
   color: rgba(191, 0, 0, 0.5);
   cursor: not-allowed;
 }
+
+.demoReadContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.readingSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #282c34;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.centeredArea {
+  text-align: center;
+}
+
+.adjustableArea {
+  background-color: #1a1a1d;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.pageContainer {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.pageHeader {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.chapterImage {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 5px;
+}
+
+.zoomControls {
+  margin-top: 20px;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cardHeader {
+  background-color: #4a148c;
+  color: white;
+  padding: 10px;
+  border-radius: 5px 5px 0 0;
+}
+
+.cardBody {
+  background-color: white;
+  padding: 20px;
+  border-radius: 0 0 5px 5px;
+}

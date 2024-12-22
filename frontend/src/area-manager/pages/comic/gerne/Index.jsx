@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+// Import HOC withPermission
+import withPermission from "@/area-manager/withPermission";
 import { Table, Button, message, Modal, Form, Input, Popover } from "antd";
 import {
   fetchGenres,
@@ -447,4 +448,4 @@ const GernIndex = () => {
   );
 };
 
-export default GernIndex;
+export default withPermission(GernIndex, 5);

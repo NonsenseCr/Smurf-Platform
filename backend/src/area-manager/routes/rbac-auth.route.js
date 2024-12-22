@@ -62,21 +62,43 @@ router.put('/:IdPermissions', async (req, res) => {
 
 router.put('/:IdPermissions/toggle-active', async (req, res) => {
   try {
-    const permission = await PermissionsList.findOne({ IdPermissions: req.params.IdPermissions });
+    const { IdPermissions } = req.params;
+
+    // Tìm quyền trong PermissionsList
+    const permission = await PermissionsList.findOne({ IdPermissions });
 
     if (!permission) {
       return res.status(404).json({ message: "Quyền không tồn tại" });
     }
 
-    permission.Active = !permission.Active;
+    // Đảo trạng thái Active
+    const newActiveState = !permission.Active;
+    permission.Active = newActiveState;
     await permission.save();
 
-    res.status(200).json({ message: "Thay đổi trạng thái thành công", active: permission.Active });
+    if (!newActiveState) {
+      // Nếu quyền bị vô hiệu hóa, cập nhật trong bảng StaffPermissionsDetail
+      await StaffPermissionsDetail.updateMany(
+        { IdPermissions, IdUser: { $ne: 'ST1734783055096' } }, // Trừ tài khoản đặc biệt
+        { $set: { Active: false } }
+      );
+
+      console.log(`Quyền ID ${IdPermissions} đã bị vô hiệu hóa trong StaffPermissionsDetail.`);
+    } else {
+      // Nếu quyền được bật lại, không thay đổi trạng thái trong StaffPermissionsDetail
+      console.log(`Quyền ID ${IdPermissions} được bật lại nhưng không thay đổi trạng thái trong StaffPermissionsDetail.`);
+    }
+
+    return res.status(200).json({ 
+      message: `Thay đổi trạng thái quyền thành công: ${newActiveState ? "Hoạt động" : "Vô hiệu hóa"}`, 
+      active: newActiveState 
+    });
   } catch (err) {
     console.error("Error toggling permission active status:", err);
     res.status(500).json({ message: "Lỗi khi thay đổi trạng thái quyền" });
   }
 });
+
 
 router.put('/:IdPermissions/update-stats', async (req, res) => {
   const { PermissionsStats } = req.body;
@@ -223,25 +245,15 @@ router.get('/permissions/:IdUser', async (req, res) => {
 
     console.log(`Permissions retrieved for user ${IdUser}:`, permissions);
 
-    // Kiểm tra nếu có bất kỳ quyền nào bị cấm (Active = false)
-    const inactivePermissions = permissions.filter((permission) => !permission.Active);
-
-    if (inactivePermissions.length > 0) {
-      console.log(`Inactive permissions for user ${IdUser}:`, inactivePermissions);
-      return res.status(403).json({
-        message: 'Một hoặc nhiều quyền của bạn đã bị cấm',
-        inactivePermissions,
-      });
-    }
-
-    console.log(`All permissions for user ${IdUser} are active`);
-    // Trả về danh sách quyền nếu tất cả đều hoạt động
+    // Trả về danh sách quyền
     return res.status(200).json(permissions);
   } catch (error) {
     console.error(`Error fetching permissions for user ${IdUser}:`, error);
     return res.status(500).json({ message: 'Lỗi khi lấy danh sách quyền' });
   }
 });
+
+
 
 
 module.exports = router;

@@ -13,7 +13,7 @@ import avatar4 from '../../../../assets/images/user/avatar-4.jpg';
 const NavRight = () => {
   const [listOpen, setListOpen] = useState(false);
   const [userName, setUserName] = useState('John Doe'); // State lưu tên người dùng
-  const [avatar, setAvatar] = useState(avatar1); // State lưu avatar người dùng
+  const [avatar] = useState(avatar1); // State lưu avatar người dùng
   const navigate = useNavigate();
 
   const notiData = [
@@ -72,9 +72,8 @@ const NavRight = () => {
     localStorage.removeItem('userM');
 
     // Chuyển hướng về trang login
-    navigate('/manager/login');
+    navigate('/manager');
   };
-
 
   return (
     <React.Fragment>
@@ -159,9 +158,6 @@ const NavRight = () => {
               <div className="pro-head">
                 <img src={avatar} className="img-radius" alt="User Profile" />
                 <span>{userName}</span> {/* Hiển thị tên từ localStorage */}
-                <Link to="#" className="dud-logout" title="Logout" onClick={handleLogout}>
-                  <i className="feather icon-log-out" />
-                </Link>
               </div>
               <ListGroup as="ul" bsPrefix=" " variant="flush" className="pro-body">
                 <ListGroup.Item as="li" bsPrefix=" ">
@@ -175,13 +171,8 @@ const NavRight = () => {
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
-                    <i className="feather icon-mail" /> My Messages
-                  </Link>
-                </ListGroup.Item>
-                <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
-                    <i className="feather icon-lock" /> Lock Screen
+                  <Link to="#" className="dropdown-item" onClick={handleLogout}>
+                    <i className="feather icon-log-out" /> Log Out
                   </Link>
                 </ListGroup.Item>
               </ListGroup>

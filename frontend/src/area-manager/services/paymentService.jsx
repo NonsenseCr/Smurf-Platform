@@ -1,16 +1,26 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = 'http://localhost:5000/api/payment';
+const API_BASE_URL = "/api/payment";
 
-/**
- * Lấy danh sách tất cả Payment
- */
-export const getAllPayments = async () => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/payments`);
-        return response.data; // Trả về dữ liệu từ API
-    } catch (error) {
-        console.error('Error fetching payments:', error.message);
-        throw new Error('Không thể lấy danh sách payments');
-    }
+// Lấy danh sách thanh toán
+export const fetchPayments = async () => {
+  try {
+    const response = await axios.get(API_BASE_URL);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching payments:", error);
+    throw error.response?.data || error;
+  }
 };
+
+// Lấy danh sách thanh toán theo khách hàng (IdUser)
+export const fetchPaymentsByCustomer = async (IdUser) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/customer/${IdUser}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching payments for customer ${IdUser}:`, error);
+    throw error.response?.data || error;
+  }
+};
+
