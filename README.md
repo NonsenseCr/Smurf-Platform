@@ -18,19 +18,16 @@ Here is a working live demo :  https://www.mangasmurfs.com (MAINTENANCE)
 ### TECH STACK
 
 ### Frontend:
-* [![Next][Next.js]][Next-url]
 * [![React][React.js]][React-url]
 * [![Vue][Vue.js]][Vue-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 * [![JQuery][JQuery.com]][JQuery-url]
 
-[Next.js]: https://img.shields.io/badge/Next.js-000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 
-[Next-url]: https://nextjs.org/
 [React-url]: https://reactjs.org/
 [Vue-url]: https://vuejs.org/
 [Bootstrap-url]: https://getbootstrap.com/
@@ -55,13 +52,15 @@ Here is a working live demo :  https://www.mangasmurfs.com (MAINTENANCE)
 
 ## Site
 
-### Home Page
-Currently it is working on all NSE (India) Stocks, BSE (India) Stocks Symbol will be added soon.
+### Home Page  
+> Welcome to MangaSmurf – your go-to site for manga!
+
+> Discover featured manga, try a random pick, or explore today's top recommendations. Join Premium for exclusive perks!
 
 ![](https://i.postimg.cc/3x55JLVJ/HomePage.png)
 
-### Genre Detail Page
-![](https://i.postimg.cc/3x55JLVJ/HomePage.png)
+> ### Genre Detail Page
+![](https://i.postimg.cc/xTmFhVRT/nh1.png)
 
 ### Comic Detail Page
 
@@ -80,12 +79,23 @@ This page is designed to display detailed information about a specific series. K
 ![](https://i.postimg.cc/GmWkfD4f/nh2.png)
 
 ### Login & Register Page
-![](https://i.postimg.cc/7PNrYMDg/nh3.png)
-![](https://i.postimg.cc/52TZksqM/nh4.png)
+> LOGIN
 
+![](https://i.postimg.cc/7PNrYMDg/nh3.png)
+
+> REGISTER
+
+![](https://i.postimg.cc/52TZksqM/nh4.png)
+##
 ### Management Pages
+>
 ![](https://i.postimg.cc/Y2DLVFVx/nh7.png)
+
+>
 ![](https://i.postimg.cc/tgbsPNZ9/nh9.png)
+
+- RBAC authorization
+
 ![](https://i.postimg.cc/VLbvVVXY/nh8.png)
 
 
